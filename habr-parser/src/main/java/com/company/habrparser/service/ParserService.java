@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class ParserService {
         this.rabbitMqService = rabbitMqService;
     }
 
+//    @Scheduled(initialDelay = 2000, fixedDelay = 3_600_000)
     @EventListener(ApplicationReadyEvent.class)
     public void parseAll() {
         String title = "java";
@@ -37,16 +39,13 @@ public class ParserService {
         if (doc != null) {
             final Elements sections = doc.getElementsByClass("section-box");
             for (int i = 1; i < 26; i++) {
-                System.out.println(sections.get(i).text());
-                System.out.println(sections.get(i).getElementsByClass("vacancy-card__title-link").first().absUrl("href"));
+                parseWebPage(sections.get(i).getElementsByClass("vacancy-card__title-link").first().absUrl("href"));
             }
-
         }
 
     }
 
-    public void parseWebPage() {
-        final String url = "https://career.habr.com/vacancies/1000120027";
+    private void parseWebPage(String url) {
         Document doc = null;
         try {
             doc = Jsoup.connect(url).get();
