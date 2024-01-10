@@ -16,7 +16,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>careerist-parser</module>
+        <module>hh-parser</module>
         <module>habr-parser</module>
         <module>aggregator-mvc</module>
     </modules>
