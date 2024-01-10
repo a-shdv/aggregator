@@ -1,6 +1,6 @@
-package com.company.aggregator.rabbitmq.configs;
+package com.company.aggregator.rabbitmq.config;
 
-import com.company.aggregator.rabbitmq.properties.ExecutorsProperties;
+import com.company.aggregator.rabbitmq.property.ExecutorsProperties;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -22,7 +22,7 @@ public class ExecutorsConfiguration {
         ThreadPoolExecutorFactoryBean result = new ThreadPoolExecutorFactoryBean();
         result.setCorePoolSize(executorsProperties.getCorePoolSize());
         result.setMaxPoolSize(executorsProperties.getCorePoolSize() * 2);
-        result.setThreadNamePrefix("ariston-e-core-");
+        result.setThreadNamePrefix("aggregator-api-e-core-");
         return result;
     }
 

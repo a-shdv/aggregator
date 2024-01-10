@@ -1,6 +1,5 @@
 package com.company.habrparser.rabbitmq.dto;
 
-import com.company.habrparser.model.Vacancy;
 import lombok.*;
 
 import java.io.Serializable;
@@ -9,5 +8,22 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 public class SendMessageDto implements Serializable {
-    private Vacancy vacancy;
+    String title;
+    String date;
+    String salary;
+    String company;
+    String requirements;
+    String description;
+
+    @Override
+    public String toString() {
+        return "\nVacancy {" +
+                "\n\ttitle='" + title + '\'' +
+                ", \n\tdate='" + date + '\'' +
+                ", \n\tsalary='" + salary + '\'' +
+                ", \n\tcompany='" + company + '\'' +
+                ", \n\trequirements='" + requirements + '\'' +
+                ", \n\tdescription='" + description + '\'' + "\n" +
+                '}';
+    }
 }

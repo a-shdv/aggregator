@@ -1,4 +1,4 @@
-package com.company.aggregator.rabbitmq.properties;
+package com.company.aggregator.rabbitmq.property;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -29,14 +29,8 @@ public class RabbitMqProperties {
     /** Наименование точки доступа в RabbitMQ. */
     private String topic;
 
-    /** Наименование очереди для отправки в RabbitMQ. */
-    private String queueToSend;
-
     /** Наименование очереди для приема в RabbitMQ. */
     private String queueToReceive;
-
-    /** Наименование routingKey для отправки в RabbitMQ. */
-    private String routingKeyToSend;
 
     /** Наименование routingKey для приема в RabbitMQ. */
     private String routingKeyToReceive;

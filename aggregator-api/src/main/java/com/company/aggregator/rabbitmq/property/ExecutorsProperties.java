@@ -1,9 +1,9 @@
-package com.company.aggregator.rabbitmq.properties;
+package com.company.aggregator.rabbitmq.property;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "kama.executors")
+@ConfigurationProperties(prefix = "aggregator.executors")
 @Data
 public class ExecutorsProperties {
 

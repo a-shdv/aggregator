@@ -1,7 +1,7 @@
-package com.company.aggregator.rabbitmq.configs;
+package com.company.aggregator.rabbitmq.config;
 
-import com.company.aggregator.rabbitmq.exceptions.RabbitMqException;
-import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
+import com.company.aggregator.rabbitmq.exception.RabbitMqException;
+import com.company.aggregator.rabbitmq.property.RabbitMqProperties;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Binding;
@@ -34,12 +34,6 @@ public class RabbitMqConfiguration {
     private Map<String, Object> rabbitArgs = new HashMap<>(){{
         put("x-message-ttl", 60000L);
     }};
-
-    @Bean
-    public Queue queueToSend() {
-        return new Queue(rabbitMqProperties.getQueueToSend(), true, false, false, rabbitArgs);
-    }
-
     @Bean
     public Queue queueToReceive() {
         return new Queue(rabbitMqProperties.getQueueToReceive(), true, false, false, rabbitArgs);
@@ -48,11 +42,6 @@ public class RabbitMqConfiguration {
     @Bean
     public DirectExchange exchangeEvents() {
         return new DirectExchange(rabbitMqProperties.getTopic());
-    }
-
-    @Bean
-    public Binding bindingToSend(DirectExchange exchange) {
-        return BindingBuilder.bind(queueToSend()).to(exchange).with(rabbitMqProperties.getQueueToSend());
     }
 
     @Bean

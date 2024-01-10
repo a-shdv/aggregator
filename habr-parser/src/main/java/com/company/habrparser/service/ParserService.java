@@ -1,6 +1,5 @@
 package com.company.habrparser.service;
 
-import com.company.habrparser.model.Vacancy;
 import com.company.habrparser.rabbitmq.dto.SendMessageDto;
 import com.company.habrparser.rabbitmq.service.RabbitMqService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +40,7 @@ public class ParserService {
         for (int i = 0; i < links.size() - 1; i++)
             requirements.add(links.get(i));
 
-        Vacancy vacancy = Vacancy.builder()
+        SendMessageDto vacancy = SendMessageDto.builder()
                 .title(sections.get(0).getElementsByClass("page-title__title").text())
                 .date(sections.get(0).getElementsByClass("basic-date").text())
                 .salary(sections.get(0).getElementsByClass("basic-salary basic-salary--appearance-vacancy-header").text())
@@ -49,10 +48,11 @@ public class ParserService {
                 .requirements(requirements.text())
                 .description(sections.get(1).text().replace("Описание вакансии О компании и команде", "О компании и команде:\n").replace("Ожидания от кандидата", "\nОжидания от кандидата:\n").replace("Условия работы", "\nУсловия работы:").replace("Необходимые знания:", "\nНеобходимые знания:\n").replace("Список задач:", "\nСписок задач:\n").replace("Бонусы", "\nБонусы:\n").replace("Дополнительные инструкции", "\nДополнительные инструкции:\n").replace("Поделиться:", "").replace("Обязанности", "\nОбязанности\n").replace("Требования", "\nТребования\n").replace("Условия", "\nУсловия\n").replace("Зона ответственности:", "\nЗона ответственности:\n").replace("Ключевые компетенции для кандидата", "\nКлючевые компетенции для кандидата\n"))
                 .build();
-        sendMessageToRabbit(new SendMessageDto(vacancy));
+        sendMessageToRabbit(vacancy);
     }
 
     private void sendMessageToRabbit(SendMessageDto sendMessageDto) {
         rabbitMqService.send(sendMessageDto);
+        log.info("SENT: {}", sendMessageDto);
     }
 }
