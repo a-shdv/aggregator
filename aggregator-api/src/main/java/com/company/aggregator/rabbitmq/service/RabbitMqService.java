@@ -29,7 +29,7 @@ public class RabbitMqService {
 
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(ReceiveMessageDto receiveMessageDto) {
-        log.info("Received: {}", receiveMessageDto);
+        log.info("RECEIVED: {}", receiveMessageDto.toString());
         aggregatorService.findAll(receiveMessageDto);
     }
 }

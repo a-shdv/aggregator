@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class AggregatorService {
     public void findAll(ReceiveMessageDto receiveMessageDto) {
-        System.out.println(receiveMessageDto);
-        System.out.println(receiveMessageDto);
-        System.out.println(receiveMessageDto);
-        System.out.println(receiveMessageDto);
+//        System.out.println(receiveMessageDto);
+//        System.out.println(receiveMessageDto);
+//        System.out.println(receiveMessageDto);
+//        System.out.println(receiveMessageDto);
     }
 }

@@ -1,12 +1,13 @@
 package com.company.aggregator.rabbitmq.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 import java.io.Serializable;
-
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@Builder
 public class ReceiveMessageDto implements Serializable {
     String title;
     String date;
@@ -14,4 +15,17 @@ public class ReceiveMessageDto implements Serializable {
     String company;
     String requirements;
     String description;
+    String source;
+
+    @Override
+    public String toString() {
+        return "\nReceiveMessageDto {" +
+                "\n\ttitle='" + title + '\'' +
+                ", \n\tdate='" + date + '\'' +
+                ", \n\tsalary='" + salary + '\'' +
+                ", \n\tcompany='" + company + '\'' +
+                ", \n\trequirements='" + requirements + '\'' +
+                ", \n\tsource='" + source + "\'" + "\n" +
+                '}';
+    }
 }

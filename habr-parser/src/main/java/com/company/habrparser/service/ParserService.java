@@ -29,8 +29,9 @@ public class ParserService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void parseWebPage() {
+        final String url = "https://career.habr.com/vacancies/1000120027";
         try {
-            doc = Jsoup.connect("https://career.habr.com/vacancies/1000120027").get();
+            doc = Jsoup.connect(url).get();
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -47,6 +48,7 @@ public class ParserService {
                 .company(links.last().text())
                 .requirements(requirements.text())
                 .description(sections.get(1).text().replace("Описание вакансии О компании и команде", "О компании и команде:\n").replace("Ожидания от кандидата", "\nОжидания от кандидата:\n").replace("Условия работы", "\nУсловия работы:").replace("Необходимые знания:", "\nНеобходимые знания:\n").replace("Список задач:", "\nСписок задач:\n").replace("Бонусы", "\nБонусы:\n").replace("Дополнительные инструкции", "\nДополнительные инструкции:\n").replace("Поделиться:", "").replace("Обязанности", "\nОбязанности\n").replace("Требования", "\nТребования\n").replace("Условия", "\nУсловия\n").replace("Зона ответственности:", "\nЗона ответственности:\n").replace("Ключевые компетенции для кандидата", "\nКлючевые компетенции для кандидата\n"))
+                .source(url)
                 .build();
         sendMessageToRabbit(vacancy);
     }

@@ -14,16 +14,17 @@ public class SendMessageDto implements Serializable {
     String company;
     String requirements;
     String description;
+    String source;
 
     @Override
     public String toString() {
-        return "\nVacancy {" +
+        return "\nSendMessageDto {" +
                 "\n\ttitle='" + title + '\'' +
                 ", \n\tdate='" + date + '\'' +
                 ", \n\tsalary='" + salary + '\'' +
                 ", \n\tcompany='" + company + '\'' +
                 ", \n\trequirements='" + requirements + '\'' +
-                ", \n\tdescription='" + description + '\'' + "\n" +
+                ", \n\tsource='" + source + "\'" + "\n" +
                 '}';
     }
 }
