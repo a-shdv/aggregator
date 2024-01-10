@@ -7,11 +7,9 @@ import lombok.Data;
 @Builder
 public class Vacancy {
     String title;
-    String datePublished;
+    String date;
     String salary;
     String company;
     String requirements;
-    String city;
-    String employmentType;
-    String remote;
+    String description;
 }
