@@ -46,6 +46,7 @@ public class ParserService {
                         sections.get(i).getElementsByClass("vacancy-card__company-title").text(),
                         sections.get(i).getElementsByClass("vacancy-card__skills").first().text(),
                         sections.get(i).getElementsByClass("vacancy-card__meta").text());
+                System.out.println();
                 sendMessageToRabbit(message);
             }
         }

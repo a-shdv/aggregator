@@ -22,7 +22,7 @@ public class RabbitMqService {
     }
 
     public void send(SendMessageDto message) {
-        rabbitTemplate.convertAndSend(rabbitProperties.getQueueToSend(), message);
+        rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), message);
     }
 }
 

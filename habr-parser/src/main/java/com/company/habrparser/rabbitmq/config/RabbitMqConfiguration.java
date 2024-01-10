@@ -4,10 +4,7 @@ import com.company.habrparser.rabbitmq.exception.RabbitMqException;
 import com.company.habrparser.rabbitmq.property.RabbitMqProperties;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -41,13 +38,13 @@ public class RabbitMqConfiguration {
     }
 
     @Bean
-    public DirectExchange exchangeEvents() {
-        return new DirectExchange(rabbitMqProperties.getTopic());
+    public TopicExchange exchangeEvents() {
+        return new TopicExchange(rabbitMqProperties.getTopic());
     }
 
     @Bean
-    public Binding bindingToSend(DirectExchange exchange) {
-        return BindingBuilder.bind(queueToSend()).to(exchange).with(rabbitMqProperties.getQueueToSend());
+    public Binding bindingToSend(TopicExchange exchange) {
+        return BindingBuilder.bind(queueToSend()).to(exchange).with(rabbitMqProperties.getRoutingKeyToSend());
     }
 
     @Bean

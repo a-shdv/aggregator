@@ -1,12 +1,12 @@
 server:
-    port: 8080
+  port: 8080
 
 rabbitmq:
-    services:
-        - host: localhost # 192.168.25.1
-          port: 5672
-    username: guest
-    password: guest
-    topic:
-    queue-to-receive: habr
-    routing-key-to-receive: habr
+  services:
+    - host: localhost # 192.168.25.1
+      port: 5672
+  username: guest
+  password: guest
+  topic: ch-topic-exchange
+  queue-to-receive: ch-queue
+  routing-key-to-receive: ch-routing-key

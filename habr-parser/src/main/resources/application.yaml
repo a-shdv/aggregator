@@ -7,6 +7,7 @@ rabbitmq:
       port: 5672
   username: guest
   password: guest
-  topic:
-  queue-to-send: habr
-  routing-key-to-send: habr
+  topic: ch-topic-exchange
+  queue-to-send: ch-queue
+  routing-key-to-send: ch-routing-key
+
