@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8080
 
 rabbitmq:
   services:
@@ -8,6 +8,5 @@ rabbitmq:
   username: guest
   password: guest
   topic: ch-topic-exchange
-  queue-to-send: ch-queue
-  routing-key-to-send: ch-routing-key
-
+  queue-to-receive: ch-queue
+  routing-key-to-receive: ch-routing-key

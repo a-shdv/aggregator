@@ -1,11 +1,12 @@
 package com.company.habrparser.service;
 
-import com.company.habrparser.model.WebPage;
+import com.company.habrparser.rabbitmq.dto.SendMessageDto;
+import com.company.habrparser.rabbitmq.service.RabbitMqService;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -15,43 +16,67 @@ import java.io.IOException;
 @Service
 @Slf4j
 public class ParserService {
+    private final RabbitMqService rabbitMqService;
+
+    @Autowired
+    public ParserService(RabbitMqService rabbitMqService) {
+        this.rabbitMqService = rabbitMqService;
+    }
+
+    //    @Scheduled(initialDelay = 2000, fixedDelay = 3_600_000)
     @EventListener(ApplicationReadyEvent.class)
-    public void parseWebPage() {
-        WebPage webPage;
+    public void findAllVacancies() {
+        String title = "java";
+        final String url = "https://career.habr.com/vacancies?q=" + title + "&type=all";
         Document doc = null;
         try {
-            doc = Jsoup.connect("https://career.habr.com/vacancies/1000135009").get();
+            doc = Jsoup.connect(url).get();
         } catch (IOException e) {
             log.error(e.getMessage());
         }
-        Elements header = doc.select("html body.vacancies_show_page div.page-container div.page-container__main div.page-width.page-width--responsive div.content-wrapper div.content-wrapper__main.content-wrapper__main--left div");
-        Elements body = doc.select("html body.vacancies_show_page div.page-container div.page-container__main div.page-width.page-width--responsive div.content-wrapper div.content-wrapper__main.content-wrapper__main--left div div.vacancy-description__text");
 
-        WebPage page = WebPage.builder()
-                .title(header.first().getElementsByClass("page-title__title").text()) // название вакансии
-                .date(header.first().getElementsByClass("basic-date").text()) // дата публикации
-                .salary(header.first().getElementsByClass("basic-salary basic-salary--appearance-vacancy-header").text()) // заработная плата
-                .companyTitle(header.first().getElementsByClass("link-comp link-comp--appearance-dark").last().text()) // название компании
-                .build();
-        page.setCompanyDescription(body.first().getElementsByClass("style-ugc").get(0).text()); // о компании (описание компании)
-        page.setExpectations(body.first().getElementsByClass("style-ugc").get(1).text()); // ожидания от кандидата
+        if (doc != null) {
+            final Elements sections = doc.getElementsByClass("section-box");
+            for (int i = 1; i < 26; i++) {
+                SendMessageDto message = parseWebPage(
+                        sections.get(i).getElementsByClass("vacancy-card__title-link").first().absUrl("href"),
+                        sections.get(i).getElementsByClass("vacancy-card__title").text(),
+                        sections.get(i).getElementsByClass("vacancy-card__date").text(),
+                        sections.get(i).getElementsByClass("vacancy-card__salary").text(),
+                        sections.get(i).getElementsByClass("vacancy-card__company-title").text(),
+                        sections.get(i).getElementsByClass("vacancy-card__skills").first().text(),
+                        sections.get(i).getElementsByClass("vacancy-card__meta").text());
+                System.out.println();
+                sendMessageToRabbit(message);
+            }
+        }
+    }
 
-        page.setResponsibilities(body.first().getElementsByClass("style-ugc").get(2).select("ul").get(0).text()); // обязанности
-        page.setRequirements(body.first().getElementsByClass("style-ugc").get(2).select("ul").get(1).text()); // требования
-        page.setConditions(body.first().getElementsByClass("style-ugc").get(2).select("ul").get(2).text()); // условия
-        page.setBonuses(body.first().getElementsByClass("style-ugc").get(3).text()); // бонусы
-        page.setAdditionals(body.first().getElementsByClass("style-ugc").get(4).text()); // дополнительные инструкции
+    private SendMessageDto parseWebPage(String url, String title, String date, String salary, String company, String requirements, String schedule) {
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(url).get();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+        if (doc != null) {
+            final String description = doc.select("html body.vacancies_show_page div.page-container div.page-container__main div.page-width.page-width--responsive div.content-wrapper div.content-wrapper__main.content-wrapper__main--left section").get(1).text();
+            return SendMessageDto.builder()
+                    .title(title)
+                    .date(date)
+                    .salary(salary)
+                    .company(company)
+                    .requirements(requirements)
+                    .description(description)
+                    .schedule(schedule)
+                    .source(url)
+                    .build();
+        }
+        return null;
+    }
 
-        System.out.println("Название вакансии: " + page.getTitle());
-        System.out.println("Дата публикации: " + page.getDate());
-        System.out.println("Заработная плата: " + page.getSalary());
-        System.out.println("Название компании: " + page.getCompanyTitle());
-        System.out.println("О компании: " + page.getCompanyDescription());
-        System.out.println("Ожидания от кандидата: " + page.getExpectations());
-        System.out.println("Обязанности: " + page.getResponsibilities());
-        System.out.println("Требования: " + page.getRequirements());
-        System.out.println("Условия: " + page.getConditions());
-        System.out.println("Бонусы: " + page.getBonuses());
-        System.out.println("Дополнительные инструкции: " + page.getAdditionals());
+    private void sendMessageToRabbit(SendMessageDto sendMessageDto) {
+        rabbitMqService.send(sendMessageDto);
+        log.info("SENT: {}", sendMessageDto);
     }
 }
