@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.company</groupId>
-    <artifactId>aggregator-api</artifactId>
+    <artifactId>aggregator-mvc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>aggregator</name>
     <description>aggregator</description>

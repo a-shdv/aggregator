@@ -18,7 +18,7 @@
     <modules>
         <module>careerist-parser</module>
         <module>habr-parser</module>
-        <module>aggregator-api</module>
+        <module>aggregator-mvc</module>
     </modules>
 
     <properties>

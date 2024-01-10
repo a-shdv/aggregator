@@ -4,6 +4,8 @@ import com.company.aggregator.model.Vacancy;
 import com.company.aggregator.rabbitmq.dto.ReceiveMessageDto;
 import com.company.aggregator.repository.AggregatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,10 +21,7 @@ public class AggregatorService {
         aggregatorRepository.save(ReceiveMessageDto.toVacancy(receiveMessageDto));
     }
 
-    public void findAll(ReceiveMessageDto receiveMessageDto) {
-//        System.out.println(receiveMessageDto);
-//        System.out.println(receiveMessageDto);
-//        System.out.println(receiveMessageDto);
-//        System.out.println(receiveMessageDto);
+    public Page<Vacancy> findAll(PageRequest pageRequest) {
+        return aggregatorRepository.findAll(pageRequest);
     }
 }
