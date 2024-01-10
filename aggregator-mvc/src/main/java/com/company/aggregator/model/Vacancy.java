@@ -22,5 +22,6 @@ public class Vacancy {
     private String company;
     private String requirements;
     private String description;
+    private String schedule;
     private String source;
 }

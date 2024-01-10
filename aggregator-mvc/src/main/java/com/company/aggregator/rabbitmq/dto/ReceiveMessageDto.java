@@ -17,6 +17,7 @@ public class ReceiveMessageDto implements Serializable {
     String company;
     String requirements;
     String description;
+    String schedule;
     String source;
 
     public static Vacancy toVacancy(ReceiveMessageDto receiveMessageDto) {
@@ -27,6 +28,7 @@ public class ReceiveMessageDto implements Serializable {
                 .company(receiveMessageDto.getCompany())
                 .requirements(receiveMessageDto.getRequirements())
                 .description(receiveMessageDto.getDescription())
+                .schedule(receiveMessageDto.getSchedule())
                 .source(receiveMessageDto.getSource())
                 .build();
     }
@@ -39,6 +41,8 @@ public class ReceiveMessageDto implements Serializable {
                 ", \n\tsalary='" + salary + '\'' +
                 ", \n\tcompany='" + company + '\'' +
                 ", \n\trequirements='" + requirements + '\'' +
+                ", \n\tdescription='" + description + '\'' +
+                ", \n\tschedule='" + schedule + '\'' +
                 ", \n\tsource='" + source + "\'" + "\n" +
                 '}';
     }

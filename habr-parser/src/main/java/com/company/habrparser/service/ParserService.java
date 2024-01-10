@@ -24,7 +24,7 @@ public class ParserService {
         this.rabbitMqService = rabbitMqService;
     }
 
-//    @Scheduled(initialDelay = 2000, fixedDelay = 3_600_000)
+    //    @Scheduled(initialDelay = 2000, fixedDelay = 3_600_000)
     @EventListener(ApplicationReadyEvent.class)
     public void parseAll() {
         String title = "java";
@@ -39,13 +39,19 @@ public class ParserService {
         if (doc != null) {
             final Elements sections = doc.getElementsByClass("section-box");
             for (int i = 1; i < 26; i++) {
-                parseWebPage(sections.get(i).getElementsByClass("vacancy-card__title-link").first().absUrl("href"));
+                parseWebPage(sections.get(i).getElementsByClass("vacancy-card__title-link").first().absUrl("href"),
+                        sections.get(i).getElementsByClass("vacancy-card__title").text(),
+                        sections.get(i).getElementsByClass("vacancy-card__date").text(),
+                        sections.get(i).getElementsByClass("vacancy-card__salary").text(),
+                        sections.get(i).getElementsByClass("vacancy-card__company-title").text(),
+                        sections.get(i).getElementsByClass("vacancy-card__skills").first().text(),
+                        sections.get(i).getElementsByClass("vacancy-card__meta").text());
             }
         }
 
     }
 
-    private void parseWebPage(String url) {
+    private void parseWebPage(String url, String title, String date, String salary, String company, String requirements, String schedule) {
         Document doc = null;
         try {
             doc = Jsoup.connect(url).get();
@@ -53,20 +59,15 @@ public class ParserService {
             log.error(e.getMessage());
         }
         if (doc != null) {
-            final Elements sections = doc.select("html body.vacancies_show_page div.page-container div.page-container__main div.page-width.page-width--responsive div.content-wrapper div.content-wrapper__main.content-wrapper__main--left section");
-            final Elements links = sections.get(0).getElementsByClass("link-comp link-comp--appearance-dark");
-            final Elements requirements = new Elements();
-
-            for (int i = 0; i < links.size() - 1; i++)
-                requirements.add(links.get(i));
-
+            final String description = doc.select("html body.vacancies_show_page div.page-container div.page-container__main div.page-width.page-width--responsive div.content-wrapper div.content-wrapper__main.content-wrapper__main--left section").get(1).text();
             SendMessageDto vacancy = SendMessageDto.builder()
-                    .title(sections.get(0).getElementsByClass("page-title__title").text())
-                    .date(sections.get(0).getElementsByClass("basic-date").text())
-                    .salary(sections.get(0).getElementsByClass("basic-salary basic-salary--appearance-vacancy-header").text())
-                    .company(links.last().text())
-                    .requirements(requirements.text())
-                    .description(sections.get(1).text().replace("Описание вакансии О компании и команде", "О компании и команде:\n").replace("Ожидания от кандидата", "\nОжидания от кандидата:\n").replace("Условия работы", "\nУсловия работы:").replace("Необходимые знания:", "\nНеобходимые знания:\n").replace("Список задач:", "\nСписок задач:\n").replace("Бонусы", "\nБонусы:\n").replace("Дополнительные инструкции", "\nДополнительные инструкции:\n").replace("Поделиться:", "").replace("Обязанности", "\nОбязанности\n").replace("Требования", "\nТребования\n").replace("Условия", "\nУсловия\n").replace("Зона ответственности:", "\nЗона ответственности:\n").replace("Ключевые компетенции для кандидата", "\nКлючевые компетенции для кандидата\n"))
+                    .title(title)
+                    .date(date)
+                    .salary(salary)
+                    .company(company)
+                    .requirements(requirements)
+                    .description(description)
+                    .schedule(schedule)
                     .source(url)
                     .build();
             sendMessageToRabbit(vacancy);
