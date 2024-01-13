@@ -1,13 +1,13 @@
-package com.company.careeristparser;
+package com.company.hhparser;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CareeristParserApplication {
+public class HhParserApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CareeristParserApplication.class, args);
+        SpringApplication.run(HhParserApplication.class, args);
     }
 
 }

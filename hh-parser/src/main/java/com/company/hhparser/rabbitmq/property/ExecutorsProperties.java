@@ -1,9 +1,9 @@
-package com.company.habrparser.rabbitmq.property;
+package com.company.hhparser.rabbitmq.property;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "habr.executors")
+@ConfigurationProperties(prefix = "hh.executors")
 @Data
 public class ExecutorsProperties {
 
