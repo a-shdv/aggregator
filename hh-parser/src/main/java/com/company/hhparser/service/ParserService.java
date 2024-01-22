@@ -43,8 +43,8 @@ public class ParserService {
             if (doc != null) {
                 final Elements sections = doc.getElementsByClass("serp-item");
                 for (Element section : sections) {
-                    var source = section.getElementsByClass("bloko-link").first().absUrl("href");
-                    SendMessageDto sendMessageDto = parseWebPage(source);
+                    String vacancyUrl = section.getElementsByClass("bloko-link").first().absUrl("href");
+                    SendMessageDto sendMessageDto = parseWebPage(vacancyUrl);
                     sendMessageToRabbit(sendMessageDto);
                 }
             }

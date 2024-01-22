@@ -31,7 +31,8 @@ public class ParserService {
         CompletableFuture.runAsync(() -> {
             System.out.println("Current Thread: " + Thread.currentThread().getName());
             String query = "java";
-            final String url = "https://career.habr.com/vacancies?q=" + query + "&type=all";
+            int page = 1;
+            final String url = "https://career.habr.com/vacancies?page=" + page + "&q=" + query + "&type=all";
             Document doc = null;
             try {
                 doc = Jsoup.connect(url).get();
@@ -40,9 +41,9 @@ public class ParserService {
             }
 
             if (doc != null) {
-                final Elements sections = doc.getElementsByClass("section-box");
+                Elements sections = doc.getElementsByClass("section-group section-group--gap-medium").last().getElementsByClass("section-box");
                 for (Element section : sections) {
-                    final String vacancyUrl = section.getElementsByClass("vacancy-card__title-link").first().absUrl("href");
+                    String vacancyUrl = section.getElementsByClass("vacancy-card__title-link").first().absUrl("href");
 
                     SendMessageDto sendMessageDto = SendMessageDto.builder()
                             .title(section.getElementsByClass("vacancy-card__title").text())
