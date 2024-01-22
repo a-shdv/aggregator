@@ -5,6 +5,7 @@ import com.company.hhparser.rabbitmq.service.RabbitMqService;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -67,13 +68,16 @@ public class ParserService {
             log.error(e.getMessage());
         }
         if (doc != null) {
-            var vacancyTitle = doc.getElementsByClass("vacancy-title").text();
-            var salary = parseSalary(doc.getElementsByClass("bloko-header-section-2 bloko-header-section-2_lite").text());
-            var company = doc.getElementsByClass("bloko-header-section-2 bloko-header-section-2_lite").first().text();
-            var requirements = doc.getElementsByClass("bloko-tag-list").text();
-            var description = doc.getElementsByClass("vacancy-section").first().text();
-            var schedule = doc.getElementsByClass("vacancy-description-list-item").text();
-            System.out.println();
+            return SendMessageDto.builder()
+                    .title(doc.getElementsByClass("vacancy-title").first().getElementsByClass("bloko-header-section-1").text())
+                    .salary(doc.getElementsByClass("vacancy-title").first().getElementsByTag("span").text())
+                    .company(doc.getElementsByClass("vacancy-company-details").first().getElementsByClass("vacancy-company-name").text())
+                    .requirements(doc.getElementsByClass("bloko-tag-list").text())
+                    .description(doc.getElementsByClass("vacancy-section").first().getElementsByAttribute("data-qa").first().text())
+                    .schedule(doc.getElementsByClass("vacancy-description-list-item").text())
+                    .date(doc.getElementsByClass("vacancy-creation-time-redesigned").text())
+                    .source(url)
+                    .build();
 //            final String description = doc.select("html body.vacancies_show_page div.page-container div.page-container__main div.page-width.page-width--responsive div.content-wrapper div.content-wrapper__main.content-wrapper__main--left section").get(1).text();
 //            return SendMessageDto.builder()
 //                    .title(title)
@@ -87,13 +91,6 @@ public class ParserService {
 //                    .build();
         }
         return null;
-    }
-
-    private String parseSalary(String salary) {
-        if (salary.matches(".*\\d.*")) {
-            return salary.split("")[0] + "₽";
-        }
-        return "-";
     }
 
     private void sendMessageToRabbit(SendMessageDto sendMessageDto) {
