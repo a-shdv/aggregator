@@ -1,4 +1,4 @@
-package com.company.aggregator.rabbitmq.property;
+package com.company.aggregatormvc.rabbitmq.property;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

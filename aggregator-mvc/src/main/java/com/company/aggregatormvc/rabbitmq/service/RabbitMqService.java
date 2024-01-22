@@ -1,9 +1,9 @@
-package com.company.aggregator.rabbitmq.service;
+package com.company.aggregatormvc.rabbitmq.service;
 
 
-import com.company.aggregator.rabbitmq.dto.ReceiveMessageDto;
-import com.company.aggregator.rabbitmq.property.RabbitMqProperties;
-import com.company.aggregator.service.AggregatorService;
+import com.company.aggregatormvc.rabbitmq.dto.ReceiveMessageDto;
+import com.company.aggregatormvc.rabbitmq.property.RabbitMqProperties;
+import com.company.aggregatormvc.service.AggregatorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

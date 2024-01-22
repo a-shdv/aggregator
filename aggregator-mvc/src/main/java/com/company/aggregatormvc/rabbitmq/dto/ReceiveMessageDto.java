@@ -1,6 +1,6 @@
-package com.company.aggregator.rabbitmq.dto;
+package com.company.aggregatormvc.rabbitmq.dto;
 
-import com.company.aggregator.model.Vacancy;
+import com.company.aggregatormvc.model.Vacancy;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

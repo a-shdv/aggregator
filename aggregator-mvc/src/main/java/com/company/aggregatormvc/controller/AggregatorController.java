@@ -1,6 +1,6 @@
-package com.company.aggregator.controller;
+package com.company.aggregatormvc.controller;
 
-import com.company.aggregator.service.AggregatorService;
+import com.company.aggregatormvc.service.AggregatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;

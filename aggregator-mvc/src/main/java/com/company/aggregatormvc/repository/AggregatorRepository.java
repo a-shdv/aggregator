@@ -1,6 +1,6 @@
-package com.company.aggregator.repository;
+package com.company.aggregatormvc.repository;
 
-import com.company.aggregator.model.Vacancy;
+import com.company.aggregatormvc.model.Vacancy;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

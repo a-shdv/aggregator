@@ -1,6 +1,6 @@
-package com.company.aggregator.rabbitmq.config;
+package com.company.aggregatormvc.rabbitmq.config;
 
-import com.company.aggregator.rabbitmq.property.ExecutorsProperties;
+import com.company.aggregatormvc.rabbitmq.property.ExecutorsProperties;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

@@ -1,4 +1,4 @@
-package com.company.aggregator.model;
+package com.company.aggregatormvc.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
