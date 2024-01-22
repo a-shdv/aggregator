@@ -5,6 +5,7 @@ import com.company.habrparser.rabbitmq.service.RabbitMqService;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -26,8 +27,8 @@ public class ParserService {
     //    @Scheduled(initialDelay = 2000, fixedDelay = 3_600_000)
     @EventListener(ApplicationReadyEvent.class)
     public void findAllVacancies() {
-        String title = "java";
-        final String url = "https://career.habr.com/vacancies?q=" + title + "&type=all";
+        String query = "java";
+        final String url = "https://career.habr.com/vacancies?q=" + query + "&type=all";
         Document doc = null;
         try {
             doc = Jsoup.connect(url).get();
@@ -37,22 +38,26 @@ public class ParserService {
 
         if (doc != null) {
             final Elements sections = doc.getElementsByClass("section-box");
-            for (int i = 1; i < 26; i++) {
-                SendMessageDto message = parseWebPage(
-                        sections.get(i).getElementsByClass("vacancy-card__title-link").first().absUrl("href"),
-                        sections.get(i).getElementsByClass("vacancy-card__title").text(),
-                        sections.get(i).getElementsByClass("vacancy-card__date").text(),
-                        sections.get(i).getElementsByClass("vacancy-card__salary").text(),
-                        sections.get(i).getElementsByClass("vacancy-card__company-title").text(),
-                        sections.get(i).getElementsByClass("vacancy-card__skills").first().text(),
-                        sections.get(i).getElementsByClass("vacancy-card__meta").text());
-                System.out.println();
-                sendMessageToRabbit(message);
+            for (Element section : sections) {
+                final String vacancyUrl = section.getElementsByClass("vacancy-card__title-link").first().absUrl("href");
+
+                SendMessageDto sendMessageDto = SendMessageDto.builder()
+                        .title(section.getElementsByClass("vacancy-card__title").text())
+                        .date(section.getElementsByClass("vacancy-card__date").text())
+                        .salary(section.getElementsByClass("vacancy-card__salary").text())
+                        .company(section.getElementsByClass("vacancy-card__company-title").text())
+                        .requirements(section.getElementsByClass("vacancy-card__skills").first().text())
+                        .schedule(section.getElementsByClass("vacancy-card__meta").text())
+                        .description(parseWebPageDescription(vacancyUrl))
+                        .source(vacancyUrl)
+                        .build();
+
+                sendMessageToRabbit(sendMessageDto);
             }
         }
     }
 
-    private SendMessageDto parseWebPage(String url, String title, String date, String salary, String company, String requirements, String schedule) {
+    private String parseWebPageDescription(String url) {
         Document doc = null;
         try {
             doc = Jsoup.connect(url).get();
@@ -60,17 +65,7 @@ public class ParserService {
             log.error(e.getMessage());
         }
         if (doc != null) {
-            final String description = doc.select("html body.vacancies_show_page div.page-container div.page-container__main div.page-width.page-width--responsive div.content-wrapper div.content-wrapper__main.content-wrapper__main--left section").get(1).text();
-            return SendMessageDto.builder()
-                    .title(title)
-                    .date(date)
-                    .salary(salary)
-                    .company(company)
-                    .requirements(requirements)
-                    .description(description)
-                    .schedule(schedule)
-                    .source(url)
-                    .build();
+            return doc.select("html body.vacancies_show_page div.page-container div.page-container__main div.page-width.page-width--responsive div.content-wrapper div.content-wrapper__main.content-wrapper__main--left section").get(1).text();
         }
         return null;
     }

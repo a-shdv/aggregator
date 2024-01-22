@@ -27,8 +27,8 @@ public class ParserService {
     //    @Scheduled(initialDelay = 2000, fixedDelay = 3_600_000)
     @EventListener(ApplicationReadyEvent.class)
     public void findAllVacancies() {
-        String title = "java";
-        final String url = "https://hh.ru/search/vacancy?text=" + title + "&area=98&hhtmFrom=main&hhtmFromLabel=vacancy_search_line";
+        String query = "java";
+        final String url = "https://hh.ru/search/vacancy?text=" + query + "&area=98&hhtmFrom=main&hhtmFromLabel=vacancy_search_line";
         Document doc = null;
         try {
             doc = Jsoup.connect(url).get();
