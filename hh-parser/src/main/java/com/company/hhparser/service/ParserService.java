@@ -10,9 +10,11 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
@@ -24,26 +26,29 @@ public class ParserService {
         this.rabbitMqService = rabbitMqService;
     }
 
-    //    @Scheduled(initialDelay = 2000, fixedDelay = 3_600_000)
     @EventListener(ApplicationReadyEvent.class)
     public void findAllVacancies() {
-        String query = "java";
-        final String url = "https://hh.ru/search/vacancy?text=" + query + "&area=98&hhtmFrom=main&hhtmFromLabel=vacancy_search_line";
-        Document doc = null;
-        try {
-            doc = Jsoup.connect(url).get();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-
-        if (doc != null) {
-            final Elements sections = doc.getElementsByClass("serp-item");
-            for (Element section : sections) {
-                var source = section.getElementsByClass("bloko-link").first().absUrl("href");
-                SendMessageDto sendMessageDto = parseWebPage(source);
-                sendMessageToRabbit(sendMessageDto);
+        CompletableFuture.runAsync(() -> {
+            System.out.println("Current Thread: " + Thread.currentThread());
+            String query = "developer";
+            int page = 1;
+            final String url = "https://hh.ru/search/vacancy?text=" + query + "&area=98&hhtmFrom=main&hhtmFromLabel=vacancy_search_line&page=" + page;
+            Document doc = null;
+            try {
+                doc = Jsoup.connect(url).get();
+            } catch (IOException e) {
+                log.error(e.getMessage());
             }
-        }
+
+            if (doc != null) {
+                final Elements sections = doc.getElementsByClass("serp-item");
+                for (Element section : sections) {
+                    var source = section.getElementsByClass("bloko-link").first().absUrl("href");
+                    SendMessageDto sendMessageDto = parseWebPage(source);
+                    sendMessageToRabbit(sendMessageDto);
+                }
+            }
+        });
     }
 
     private SendMessageDto parseWebPage(String url) {

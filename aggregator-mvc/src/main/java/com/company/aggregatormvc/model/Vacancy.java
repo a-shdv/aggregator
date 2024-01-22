@@ -20,8 +20,8 @@ public class Vacancy {
     private String date;
     private String salary;
     private String company;
-    private String requirements;
-    private String description;
-    private String schedule;
-    private String source;
+    @Column(columnDefinition = "text") private String requirements;
+    @Column(columnDefinition = "text") private String description;
+    @Column(columnDefinition = "text") private String schedule;
+    @Column(columnDefinition = "text") private String source;
 }
