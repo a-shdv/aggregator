@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.company</groupId>
-    <artifactId>habr-parser</artifactId>
+    <artifactId>hh-parser</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>habr-parser</name>
-    <description>habr-parser</description>
+    <name>careerist-parser</name>
+    <description>careerist-parser</description>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>

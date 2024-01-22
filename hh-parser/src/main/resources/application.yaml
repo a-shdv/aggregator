@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8081
 
 rabbitmq:
   services:
@@ -10,4 +10,3 @@ rabbitmq:
   topic: ch-topic-exchange
   queue-to-send: ch-queue
   routing-key-to-send: ch-routing-key
-
