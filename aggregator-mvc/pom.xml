@@ -11,8 +11,8 @@
     <groupId>com.company</groupId>
     <artifactId>aggregator-mvc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>aggregator</name>
-    <description>aggregator</description>
+    <name>aggregator-mvc</name>
+    <description>aggregator-mvc</description>
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -43,6 +43,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <!--Postgres-->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

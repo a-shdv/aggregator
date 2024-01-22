@@ -10,3 +10,27 @@ rabbitmq:
   topic: ch-topic-exchange
   queue-to-receive: ch-queue
   routing-key-to-receive: ch-routing-key
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+#  liquibase:
+#    url: jdbc:postgresql://localhost:5434/test_db
+#    user: postgres
+#    password: postgres
+#    change-log: liquibase/db.changelog-master.yaml
+#    enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
