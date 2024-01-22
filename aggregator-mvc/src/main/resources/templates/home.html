@@ -8,7 +8,61 @@
     <title>Document</title>
 </head>
 <body>
-
-    <div th:each="vacancy : ${vacancies}"></div>
+<table border="1">
+    <thead>
+    <tr>
+        <td>Название</td>
+        <td>Зарплата</td>
+        <td>Требования</td>
+        <td>График работы</td>
+        <td>Компания</td>
+        <td>Описание</td>
+        <td>Дата публикации</td>
+        <td>Ссылка</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="vacancy : ${vacancies}">
+        <td th:text="${vacancy.title}"></td>
+        <td th:text="${vacancy.salary}"></td>
+        <td th:text="${vacancy.requirements}"></td>
+        <td th:text="${vacancy.schedule}"></td>
+        <td th:text="${vacancy.company}"></td>
+        <td th:text="${vacancy.description}"></td>
+        <td th:text="${vacancy.date}"></td>
+        <td th:text="${vacancy.source}"></td>
+    </tr>
+    </tbody>
+</table>
+<!-- Pagination links -->
+<!--<div>-->
+<!--    <table>-->
+<!--        <tbody>-->
+<!--        <tr>-->
+<!--            <td>-->
+<!--                &lt;!&ndash;Prev.&ndash;&gt;-->
+<!--                <span th:if="${subjects.hasPrevious()}">-->
+<!--                        <form th:action="@{/subjects}" method="get">-->
+<!--                            <input type="hidden" name="page" th:value="${subjects.previousPageable().pageNumber}"/>-->
+<!--                            <input type="hidden" name="size" th:value="${subjects.previousPageable().pageSize}"/>-->
+<!--                            <input type="submit" value="<-"/>-->
+<!--                        </form>-->
+<!--                    </span>-->
+<!--            </td>-->
+<!--            <td>-->
+<!--                &lt;!&ndash;Next&ndash;&gt;-->
+<!--                <span th:if="${subjects.hasNext()}">-->
+<!--                        <form th:action="@{/subjects}" method="get">-->
+<!--                            <input type="hidden" name="page" th:value="${subjects.nextPageable().pageNumber}"/>-->
+<!--                            <input type="hidden" name="size" th:value="${subjects.nextPageable().pageSize}"/>-->
+<!--                            <input type="submit" value="->"/>-->
+<!--                        </form>-->
+<!--                    </span>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+<!--    <br>-->
+<!--</div>-->
 </body>
 </html>
