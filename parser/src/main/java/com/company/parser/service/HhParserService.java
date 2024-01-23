@@ -18,10 +18,10 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class HhParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
-    private static final int vacanciesPerPage = 50;
+    private static final int vacanciesPerPage = 20;
 
-    public void findAllVacancies(String query, Integer amount) {
-//        return CompletableFuture.runAsync(() -> {
+    public CompletableFuture<Void> findAllVacancies(String query, Integer amount) {
+        return CompletableFuture.runAsync(() -> {
             int page = 0;
             String url = "https://hh.ru/search/vacancy" +
                     "?hhtmFrom=main" +
@@ -55,7 +55,7 @@ public class HhParserService {
                     url = "https://hh.ru/search/vacancy?hhtmFrom=main&hhtmFromLabel=vacancy_search_line&search_field=name&search_field=company_name&search_field=description&enable_snippets=false&L_save_area=true&area=1&text=" + query + "&page=" + page + "&customDomain=1";
                 }
             }
-//        });
+        });
     }
 
     private SendMessageDto parseWebPage(String url) {

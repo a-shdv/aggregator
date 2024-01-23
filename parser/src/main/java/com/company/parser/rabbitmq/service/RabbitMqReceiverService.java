@@ -23,10 +23,10 @@ public class RabbitMqReceiverService {
     public void receive(ReceiveMessageDto receiveMessageDto) {
         log.info("RECEIVED: {}", receiveMessageDto.toString());
         hhParserService.findAllVacancies(receiveMessageDto.getTitle(), receiveMessageDto.getAmount());
-//        CompletableFuture.allOf(
-//                habrParserService
-//                        .findAllVacancies(receiveMessageDto.getTitle(), receiveMessageDto.getAmount()),
-//                hhParserService
-//                        .findAllVacancies(receiveMessageDto.getTitle(), receiveMessageDto.getAmount()));
+        CompletableFuture.allOf(
+                habrParserService
+                        .findAllVacancies(receiveMessageDto.getTitle(), receiveMessageDto.getAmount()),
+                hhParserService
+                        .findAllVacancies(receiveMessageDto.getTitle(), receiveMessageDto.getAmount()));
     }
 }
