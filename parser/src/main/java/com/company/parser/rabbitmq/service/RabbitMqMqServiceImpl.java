@@ -4,6 +4,7 @@ import com.company.parser.rabbitmq.dto.ReceiveMessageDto;
 import com.company.parser.rabbitmq.dto.SendMessageDto;
 import com.company.parser.rabbitmq.properties.RabbitMqProperties;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @EnableRabbit
+@Slf4j
 public class RabbitMqMqServiceImpl implements RabbitMqService {
 
     private final RabbitTemplate rabbitTemplate;
@@ -18,13 +20,14 @@ public class RabbitMqMqServiceImpl implements RabbitMqService {
     private final RabbitMqProperties rabbitProperties;
 
     @Override
-    public void receive(ReceiveMessageDto message) {
-
+    public void receive(ReceiveMessageDto receiveMessageDto) {
+        log.info("RECEIVED: {}", receiveMessageDto.toString());
     }
 
     @Override
-    public void send(SendMessageDto message) {
-        rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), message);
+    public void send(SendMessageDto sendMessageDto) {
+        rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), sendMessageDto);
+        log.info("SENT: {}", sendMessageDto);
     }
 
 /*    @Override

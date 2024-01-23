@@ -50,7 +50,7 @@ public class HabrParserService {
                             .source(vacancyUrl)
                             .build();
 
-                    sendMessageToRabbit(sendMessageDto);
+                    rabbitMqService.send(sendMessageDto);
                 }
             }
         });
@@ -68,10 +68,5 @@ public class HabrParserService {
             return doc.select("html body.vacancies_show_page div.page-container div.page-container__main div.page-width.page-width--responsive div.content-wrapper div.content-wrapper__main.content-wrapper__main--left section").get(1).text();
         }
         return null;
-    }
-
-    private void sendMessageToRabbit(SendMessageDto sendMessageDto) {
-        rabbitMqService.send(sendMessageDto);
-        log.info("SENT: {}", sendMessageDto);
     }
 }

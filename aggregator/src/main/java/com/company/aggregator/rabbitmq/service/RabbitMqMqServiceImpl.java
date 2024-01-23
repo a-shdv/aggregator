@@ -1,10 +1,10 @@
-package com.company.aggregatormvc.rabbitmq.service;
+package com.company.aggregator.rabbitmq.service;
 
 
-import com.company.aggregatormvc.rabbitmq.dto.ReceiveMessageDto;
-import com.company.aggregatormvc.rabbitmq.dto.SendMessageDto;
-import com.company.aggregatormvc.rabbitmq.property.RabbitMqProperties;
-import com.company.aggregatormvc.service.AggregatorService;
+import com.company.aggregator.rabbitmq.dto.ReceiveMessageDto;
+import com.company.aggregator.rabbitmq.dto.SendMessageDto;
+import com.company.aggregator.rabbitmq.property.RabbitMqProperties;
+import com.company.aggregator.service.AggregatorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -28,6 +28,7 @@ public class RabbitMqMqServiceImpl implements RabbitMqService {
         this.aggregatorService = aggregatorService;
     }
 
+    @Override
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(ReceiveMessageDto receiveMessageDto) {
         log.info("RECEIVED: {}", receiveMessageDto.toString());
@@ -35,8 +36,9 @@ public class RabbitMqMqServiceImpl implements RabbitMqService {
     }
 
     @Override
-    public void send(SendMessageDto message) {
-
+    public void send(SendMessageDto sendMessageDto) {
+        rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), sendMessageDto);
+        log.info("SENT: {}", sendMessageDto);
     }
 }
 

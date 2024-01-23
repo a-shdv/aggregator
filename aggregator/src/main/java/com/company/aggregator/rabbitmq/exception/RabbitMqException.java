@@ -1,4 +1,4 @@
-package com.company.aggregatormvc.rabbitmq.exception;
+package com.company.aggregator.rabbitmq.exception;
 
 public class RabbitMqException extends RuntimeException {
 

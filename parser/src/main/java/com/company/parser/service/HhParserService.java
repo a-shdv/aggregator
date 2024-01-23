@@ -39,7 +39,7 @@ public class HhParserService {
                 for (Element section : sections) {
                     String vacancyUrl = section.getElementsByClass("bloko-link").first().absUrl("href");
                     SendMessageDto sendMessageDto = parseWebPage(vacancyUrl);
-                    sendMessageToRabbit(sendMessageDto);
+                    rabbitMqService.send(sendMessageDto);
                 }
             }
         });
@@ -65,10 +65,5 @@ public class HhParserService {
                     .build();
         }
         return null;
-    }
-
-    private void sendMessageToRabbit(SendMessageDto sendMessageDto) {
-        rabbitMqService.send(sendMessageDto);
-        log.info("SENT: {}", sendMessageDto);
     }
 }
