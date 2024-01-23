@@ -23,7 +23,10 @@ public class HabrParserService {
     public CompletableFuture<Void> findAllVacancies(String query, Integer amount) {
         return CompletableFuture.runAsync(() -> {
             int page = 1;
-            String url = "https://career.habr.com/vacancies?page=" + page + "&q=" + query + "&type=all";
+            String url = "https://career.habr.com/vacancies" +
+                    "?page=" + page +
+                    "&q=" + query +
+                    "&type=all";
 
             Document doc = null;
             while (page <= amount / vacanciesPerPage) {

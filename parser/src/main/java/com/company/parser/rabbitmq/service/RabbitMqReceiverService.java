@@ -22,12 +22,10 @@ public class RabbitMqReceiverService {
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(ReceiveMessageDto receiveMessageDto) {
         log.info("RECEIVED: {}", receiveMessageDto.toString());
-//        habrParserService.findAllVacancies(receiveMessageDto.getTitle(), receiveMessageDto);
-        habrParserService.findAllVacancies(receiveMessageDto.getTitle(), receiveMessageDto.getAmount());
-//        CompletableFuture.allOf(
-//                habrParserService
-//                        .findAllVacancies(receiveMessageDto.getTitle(), receiveMessageDto.getAmount()),
-//                hhParserService
-//                        .findAllVacancies(receiveMessageDto.getTitle(), receiveMessageDto.getAmount()));
+        CompletableFuture.allOf(
+                habrParserService
+                        .findAllVacancies(receiveMessageDto.getTitle(), receiveMessageDto.getAmount()),
+                hhParserService
+                        .findAllVacancies(receiveMessageDto.getTitle(), receiveMessageDto.getAmount()));
     }
 }
