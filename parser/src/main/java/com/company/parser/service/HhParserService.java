@@ -21,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 public class HhParserService {
     private final RabbitMqService rabbitMqService;
 
-    @EventListener(ApplicationReadyEvent.class)
+//    @EventListener(ApplicationReadyEvent.class)
     public CompletableFuture<Void> findAllVacancies() {
         return CompletableFuture.runAsync(() -> {
             String query = "developer";

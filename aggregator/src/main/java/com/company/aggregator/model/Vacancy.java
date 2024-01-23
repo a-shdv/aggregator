@@ -1,10 +1,11 @@
 package com.company.aggregator.model;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "vacancies")
@@ -24,4 +25,5 @@ public class Vacancy {
     @Column(columnDefinition = "text") private String description;
     @Column(columnDefinition = "text") private String schedule;
     @Column(columnDefinition = "text") private String source;
+
 }
