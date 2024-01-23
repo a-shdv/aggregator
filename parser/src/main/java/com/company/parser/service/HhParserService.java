@@ -20,8 +20,8 @@ public class HhParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
     private static final int vacanciesPerPage = 50;
 
-    public CompletableFuture<Void> findAllVacancies(String query, Integer amount) {
-        return CompletableFuture.runAsync(() -> {
+    public void findAllVacancies(String query, Integer amount) {
+//        return CompletableFuture.runAsync(() -> {
             int page = 0;
             String url = "https://hh.ru/search/vacancy" +
                     "?hhtmFrom=main" +
@@ -38,7 +38,6 @@ public class HhParserService {
 
             Document doc = null;
 
-
             while (page < amount / vacanciesPerPage) {
                 try {
                     doc = Jsoup.connect(url).get();
@@ -46,7 +45,7 @@ public class HhParserService {
                     log.error(e.getMessage());
                 }
                 if (doc != null) {
-                    final Elements elements = doc.getElementsByClass("serp-item");
+                    final Elements elements = doc.getElementsByClass("vacancy-serp-content").first().getElementsByClass("serp-item");
                     for (Element element : elements) {
                         String vacancyUrl = element.getElementsByClass("bloko-link").first().absUrl("href");
                         SendMessageDto sendMessageDto = parseWebPage(vacancyUrl);
@@ -56,7 +55,7 @@ public class HhParserService {
                     url = "https://hh.ru/search/vacancy?hhtmFrom=main&hhtmFromLabel=vacancy_search_line&search_field=name&search_field=company_name&search_field=description&enable_snippets=false&L_save_area=true&area=1&text=" + query + "&page=" + page + "&customDomain=1";
                 }
             }
-        });
+//        });
     }
 
     private SendMessageDto parseWebPage(String url) {
