@@ -15,10 +15,10 @@
     <artifactId>job-hunter</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <modules>
-        <module>hh-parser</module>
-        <module>habr-parser</module>
-        <module>aggregator-mvc</module>
+        <module>parser</module>
+        <module>aggregator</module>
     </modules>
 
     <properties>

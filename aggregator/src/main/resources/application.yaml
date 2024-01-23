@@ -1,0 +1,38 @@
+server:
+  port: 8080
+
+rabbitmq:
+  services:
+    - host: localhost # 192.168.25.1
+      port: 5672
+  username: guest
+  password: guest
+  topic: jh-topic-exchange
+  queue-to-send: jh-queue-to-aggregator
+  queue-to-receive: jh-queue-to-parser
+  routing-key-to-send: jh-routing-key-to-aggregator
+  routing-key-to-receive: jh-routing-key-to-parser
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+#  liquibase:
+#    url: jdbc:postgresql://localhost:5434/test_db
+#    user: postgres
+#    password: postgres
+#    change-log: liquibase/db.changelog-master.yaml
+#    enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
