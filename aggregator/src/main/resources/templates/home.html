@@ -8,6 +8,13 @@
     <title>Document</title>
 </head>
 <body>
+
+<form action="">
+    <input type="text" value="Запрос">
+    <input type="submit" value="Отправить">
+    <br>
+</form>
+
 <table border="1">
     <thead>
     <tr>
@@ -22,13 +29,13 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="vacancy : ${vacancies}">
+    <tr th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}">
         <td th:text="${vacancy.title}"></td>
         <td th:text="${vacancy.salary}"></td>
         <td th:text="${vacancy.requirements}"></td>
         <td th:text="${vacancy.schedule}"></td>
         <td th:text="${vacancy.company}"></td>
-        <td th:text="${vacancy.description}"></td>
+        <td th:text="${#strings.abbreviate(vacancy.description, 50)}"></td>
         <td th:text="${vacancy.date}"></td>
         <td th:text="${vacancy.source}"></td>
     </tr>
