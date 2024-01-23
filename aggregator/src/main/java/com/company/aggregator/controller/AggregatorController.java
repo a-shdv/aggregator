@@ -25,9 +25,10 @@ public class AggregatorController {
     private final RabbitMqService rabbitMqService;
 
     @PostMapping
-    public String findVacanciesByTitle(String title, Model model) {
+    public String findVacanciesByTitle(String title, Integer amount) {
         rabbitMqService.send(SendMessageDto.builder()
                 .title(title)
+                .amount(amount)
                 .build());
         return "redirect:/";
     }

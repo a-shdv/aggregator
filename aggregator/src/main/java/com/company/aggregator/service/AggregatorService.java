@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -20,14 +21,17 @@ public class AggregatorService {
         this.aggregatorRepository = aggregatorRepository;
     }
 
+    @Transactional
     public CompletableFuture<Void> save(ReceiveMessageDto receiveMessageDto) {
         return CompletableFuture.runAsync(() -> aggregatorRepository.save(ReceiveMessageDto.toVacancy(receiveMessageDto)));
     }
 
+    @Transactional
     public CompletableFuture<List<Vacancy>> findAll() {
         return CompletableFuture.supplyAsync(aggregatorRepository::findAll);
     }
 
+    @Transactional
     public CompletableFuture<Page<Vacancy>> findAll(PageRequest pageRequest) {
         return CompletableFuture.supplyAsync(() -> aggregatorRepository.findAll(pageRequest));
     }

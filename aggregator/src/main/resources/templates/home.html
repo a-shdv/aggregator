@@ -8,11 +8,13 @@
     <title>Document</title>
 </head>
 <body>
-
 <form th:action="@{/}" th:method="post">
-    <input type="text" name="title" value="Запрос">
+    <input type="text" name="title" placeholder="Название вакансии">
+    <br> <br>
+    <input type="text" name="amount" placeholder="Количество вакансий">
+    <br> <br>
     <input type="submit" value="Отправить">
-    <br>
+    <br> <br>
 </form>
 
 <table border="1">
@@ -25,19 +27,21 @@
         <td>Компания</td>
         <td>Описание</td>
         <td>Дата публикации</td>
-        <td>Ссылка</td>
+        <!--        <td>Ссылка</td>-->
     </tr>
     </thead>
     <tbody>
     <tr th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}">
-        <td th:text="${vacancy.title}"></td>
+        <td>
+            <a th:href="${vacancy.source}" th:text="${vacancy.title}"></a>
+        </td>
         <td th:text="${vacancy.salary}"></td>
         <td th:text="${vacancy.requirements}"></td>
         <td th:text="${vacancy.schedule}"></td>
         <td th:text="${vacancy.company}"></td>
         <td th:text="${#strings.abbreviate(vacancy.description, 50)}"></td>
         <td th:text="${vacancy.date}"></td>
-        <td th:text="${vacancy.source}"></td>
+        <!--        <td th:text="${vacancy.source}"></td>-->
     </tr>
     </tbody>
 </table>
@@ -71,5 +75,6 @@
     </table>
     <br>
 </div>
+<a href="/">На главную</a>
 </body>
 </html>

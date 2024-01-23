@@ -13,11 +13,13 @@ import java.io.Serializable;
 @Builder
 public class ReceiveMessageDto implements Serializable {
     String title;
+    Integer amount;
 
     @Override
     public String toString() {
         return "ReceiveMessageDto {" +
                 "title='" + title + '\'' +
+                "amount='" + amount + '\'' +
                 '}';
     }
 }

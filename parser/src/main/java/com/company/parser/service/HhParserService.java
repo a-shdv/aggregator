@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 public class HhParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
 
-    public CompletableFuture<Void> findAllVacancies(String query) {
+    public CompletableFuture<Void> findAllVacancies(String query, Integer amount) {
         return CompletableFuture.runAsync(() -> {
             int page = 0;
             final String url = "https://hh.ru/search/vacancy?text=" + query + "&area=98&hhtmFrom=main&hhtmFromLabel=vacancy_search_line&page=" + page;
@@ -40,28 +40,6 @@ public class HhParserService {
             }
         });
     }
-
-//    public CompletableFuture<Void> findAllVacancies(String query) {
-//        return CompletableFuture.runAsync(() -> {
-//            int page = 1;
-//            final String url = "https://hh.ru/search/vacancy?text=" + query + "&area=98&hhtmFrom=main&hhtmFromLabel=vacancy_search_line&page=" + page;
-//            Document doc = null;
-//            try {
-//                doc = Jsoup.connect(url).get();
-//            } catch (IOException e) {
-//                log.error(e.getMessage());
-//            }
-//
-//            if (doc != null) {
-//                final Elements sections = doc.getElementsByClass("serp-item");
-//                for (Element section : sections) {
-//                    String vacancyUrl = section.getElementsByClass("bloko-link").first().absUrl("href");
-//                    SendMessageDto sendMessageDto = parseWebPage(vacancyUrl);
-//                    rabbitMqSenderService.send(sendMessageDto);
-//                }
-//            }
-//        });
-//    }
 
     private SendMessageDto parseWebPage(String url) {
         Document doc = null;
@@ -84,4 +62,24 @@ public class HhParserService {
         }
         return null;
     }
+
+    /*    public void testHhNotAsync(String query) {
+        int page = 0;
+        final String url = "https://hh.ru/search/vacancy?text=" + query + "&area=98&hhtmFrom=main&hhtmFromLabel=vacancy_search_line&page=" + page;
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(url).get();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+        if (doc != null) {
+            final Elements sections = doc.getElementsByClass("serp-item");
+            for (Element section : sections) {
+                String vacancyUrl = section.getElementsByClass("bloko-link").first().absUrl("href");
+                SendMessageDto sendMessageDto = parseWebPage(vacancyUrl);
+                rabbitMqSenderService.send(sendMessageDto);
+            }
+        }
+    }*/
 }
