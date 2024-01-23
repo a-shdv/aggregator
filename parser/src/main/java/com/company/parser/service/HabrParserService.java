@@ -22,10 +22,9 @@ public class HabrParserService {
     private final RabbitMqService rabbitMqService;
 
     @EventListener(ApplicationReadyEvent.class)
-    public void findAllVacancies() {
-        CompletableFuture.runAsync(() -> {
-            System.out.println("Current Thread: " + Thread.currentThread().getName());
-            String query = "java";
+    public CompletableFuture<Void> findAllVacancies() {
+        return CompletableFuture.runAsync(() -> {
+            String query = "developer";
             int page = 1;
             final String url = "https://career.habr.com/vacancies?page=" + page + "&q=" + query + "&type=all";
             Document doc = null;

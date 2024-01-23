@@ -22,8 +22,8 @@ public class HhParserService {
     private final RabbitMqService rabbitMqService;
 
     @EventListener(ApplicationReadyEvent.class)
-    public void findAllVacancies() {
-        CompletableFuture.runAsync(() -> {
+    public CompletableFuture<Void> findAllVacancies() {
+        return CompletableFuture.runAsync(() -> {
             String query = "developer";
             int page = 1;
             final String url = "https://hh.ru/search/vacancy?text=" + query + "&area=98&hhtmFrom=main&hhtmFromLabel=vacancy_search_line&page=" + page;
