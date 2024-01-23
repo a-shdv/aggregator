@@ -31,9 +31,9 @@ public class HhParserService {
             }
 
             if (doc != null) {
-                final Elements sections = doc.getElementsByClass("serp-item");
-                for (Element section : sections) {
-                    String vacancyUrl = section.getElementsByClass("bloko-link").first().absUrl("href");
+                final Elements elements = doc.getElementsByClass("serp-item");
+                for (Element element : elements) {
+                    String vacancyUrl = element.getElementsByClass("bloko-link").first().absUrl("href");
                     SendMessageDto sendMessageDto = parseWebPage(vacancyUrl);
                     rabbitMqSenderService.send(sendMessageDto);
                 }

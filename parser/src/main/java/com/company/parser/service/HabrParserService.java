@@ -18,18 +18,20 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class HabrParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
+    private static final int vacanciesPerPage = 25;
 
-    public CompletableFuture<Void> findAllVacancies(String query, Integer amount) {
-        return CompletableFuture.runAsync(() -> {
-            int page = 1;
-            final String url = "https://career.habr.com/vacancies?page=" + page + "&q=" + query + "&type=all";
-            Document doc = null;
-            try {
-                doc = Jsoup.connect(url).get();
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
+    public void findAllVacancies(String query, Integer amount) {
+//        return CompletableFuture.runAsync(() -> {
+        int page = 1;
+        String url = "https://career.habr.com/vacancies?page=" + page + "&q=" + query + "&type=all";
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(url).get();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
 
+        while (page <= amount / vacanciesPerPage) {
             if (doc != null) {
                 Elements sections = doc.getElementsByClass("section-group section-group--gap-medium").last().getElementsByClass("section-box");
                 for (Element section : sections) {
@@ -48,8 +50,16 @@ public class HabrParserService {
 
                     rabbitMqSenderService.send(sendMessageDto);
                 }
+                page++;
+                url = "https://career.habr.com/vacancies?page=" + page + "&q=" + query + "&type=all";
+                try {
+                    doc = Jsoup.connect(url).get();
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
             }
-        });
+        }
+//        });
     }
 
     private String parseWebPageDescription(String url) {
