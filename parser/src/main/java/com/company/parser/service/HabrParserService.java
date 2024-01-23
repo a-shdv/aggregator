@@ -1,15 +1,13 @@
 package com.company.parser.service;
 
 import com.company.parser.rabbitmq.dto.SendMessageDto;
-import com.company.parser.rabbitmq.service.RabbitMqService;
+import com.company.parser.rabbitmq.service.RabbitMqSenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,12 +17,10 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 @Slf4j
 public class HabrParserService {
-    private final RabbitMqService rabbitMqService;
+    private final RabbitMqSenderService rabbitMqSenderService;
 
-//    @EventListener(ApplicationReadyEvent.class)
-    public CompletableFuture<Void> findAllVacancies() {
+    public CompletableFuture<Void> findAllVacanciesByQuery(String query) {
         return CompletableFuture.runAsync(() -> {
-            String query = "developer";
             int page = 1;
             final String url = "https://career.habr.com/vacancies?page=" + page + "&q=" + query + "&type=all";
             Document doc = null;
@@ -50,11 +46,10 @@ public class HabrParserService {
                             .source(vacancyUrl)
                             .build();
 
-                    rabbitMqService.send(sendMessageDto);
+                    rabbitMqSenderService.send(sendMessageDto);
                 }
             }
         });
-
     }
 
     private String parseWebPageDescription(String url) {

@@ -14,15 +14,15 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @EnableRabbit
-public class RabbitMqMqServiceImpl implements RabbitMqService {
+public class RabbitMqServiceImpl implements RabbitMqService {
 
     private final RabbitTemplate rabbitTemplate;
 
     private final RabbitMqProperties rabbitProperties;
     private final AggregatorService aggregatorService;
 
-    public RabbitMqMqServiceImpl(RabbitTemplate rabbitTemplate, RabbitMqProperties rabbitProperties,
-                                 AggregatorService aggregatorService) {
+    public RabbitMqServiceImpl(RabbitTemplate rabbitTemplate, RabbitMqProperties rabbitProperties,
+                               AggregatorService aggregatorService) {
         this.rabbitTemplate = rabbitTemplate;
         this.rabbitProperties = rabbitProperties;
         this.aggregatorService = aggregatorService;
