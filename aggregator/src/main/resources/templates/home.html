@@ -33,14 +33,23 @@
     </thead>
     <tbody>
     <tr th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}">
+        <!--Название-->
         <td>
             <a th:href="${vacancy.source}" th:text="${vacancy.title}"></a>
         </td>
-        <td th:text="${vacancy.salary}"></td>
-        <td th:text="${vacancy.requirements}"></td>
+        <!--Зарплата-->
+        <td th:if="${vacancy.salary.isEmpty()}"  th:text="'Не указана'"></td>
+        <td th:unless="${vacancy.salary.isEmpty()}"  th:text="${vacancy.salary}"></td>
+        <!--Требования-->
+        <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указаны'"></td>
+        <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.requirements}"></td>
+        <!--График работы-->
         <td th:text="${vacancy.schedule}"></td>
+        <!--Компания-->
         <td th:text="${vacancy.company}"></td>
+        <!--Описание-->
         <td th:text="${#strings.abbreviate(vacancy.description, 50)}"></td>
+        <!--Дата публикации-->
         <td th:text="${vacancy.date}"></td>
         <td>
             <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}" th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
