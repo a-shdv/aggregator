@@ -11,6 +11,7 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -20,7 +21,7 @@ public class HhParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
     private static final int vacanciesPerPage = 20;
 
-    public CompletableFuture<Void> findAllVacancies(String query, Integer amount) {
+    public CompletableFuture<Void> findAllVacancies(String query, Integer amount, BigDecimal salary) {
         return CompletableFuture.runAsync(() -> {
             int page = 0;
             String url = "https://hh.ru/search/vacancy" +
@@ -34,6 +35,7 @@ public class HhParserService {
                     "&area=1" + // Москва
                     "&text=" + query +
                     "&page=" + page +
+                    "&salary=" + salary +
                     "&customDomain=1";
 
             Document doc = null;

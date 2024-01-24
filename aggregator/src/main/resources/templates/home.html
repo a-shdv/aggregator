@@ -20,12 +20,12 @@
     <br> <br>
 </form>
 
-<h2>Все вакансии</h2>
 <div th:if="${#lists.isEmpty(vacancies)}">
     Список вакансий пуст!
 </div>
-<table border="1" th:unless="${#lists.isEmpty(vacancies)}">
-    <thead>
+<table border="1">
+    <h2>Все вакансии</h2>
+    <thead th:unless="${#lists.isEmpty(vacancies)}">
     <tr>
         <td>Название</td>
         <td>Зарплата</td>
@@ -39,14 +39,14 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="vacancy : ${vacancies}">
+    <tr th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}">
         <!--Название-->
         <td>
             <a th:href="${vacancy.source}" th:text="${vacancy.title}"></a>
         </td>
         <!--Зарплата-->
-        <td th:if="${vacancy.salary.isEmpty()}"  th:text="'Не указана'"></td>
-        <td th:unless="${vacancy.salary.isEmpty()}"  th:text="${vacancy.salary}"></td>
+        <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указана'"></td>
+        <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.salary}"></td>
         <!--Требования-->
         <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указаны'"></td>
         <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.requirements}"></td>
@@ -59,14 +59,17 @@
         <!--Дата публикации-->
         <td th:text="${vacancy.date}"></td>
         <td>
-            <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}" th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
+            <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
+               th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
         </td>
-<!--        <td th:text="${#strings.arraySplit(vacancy.source, '/')[1]}"></td>-->
-<!--        <td th:text="${vacancy.date}"></td>-->
+        <!--        <td th:text="${#strings.arraySplit(vacancy.source, '/')[1]}"></td>-->
+        <!--        <td th:text="${vacancy.date}"></td>-->
     </tr>
     </tbody>
 </table>
-
+<form th:action="@{/clear}" th:method="post">
+    <input type="submit" value="Очистить">
+</form>
 <div>
     <table>
         <tbody>

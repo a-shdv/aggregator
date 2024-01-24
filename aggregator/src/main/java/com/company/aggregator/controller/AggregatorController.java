@@ -33,6 +33,11 @@ public class AggregatorController {
         return "redirect:/";
     }
 
+    @PostMapping("/clear")
+    public String deleteAllVacancies() {
+        aggregatorService.deleteAllVacancies().join();
+        return "redirect:/";
+    }
     @GetMapping
     public String findAll(@RequestParam(required = false, defaultValue = "0") int page,
                           @RequestParam(required = false, defaultValue = "10") int size,

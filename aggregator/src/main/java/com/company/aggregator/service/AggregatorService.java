@@ -37,6 +37,11 @@ public class AggregatorService {
     }
 
     @Transactional
+    public CompletableFuture<Void> deleteAllVacancies() {
+        return CompletableFuture.runAsync(aggregatorRepository::deleteAll);
+    }
+
+    @Transactional
     public CompletableFuture<Vacancy> findBySource(String source) {
         return CompletableFuture.supplyAsync(() -> aggregatorRepository.findBySource(source));
     }

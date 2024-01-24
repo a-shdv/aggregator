@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -14,12 +15,14 @@ import java.io.Serializable;
 public class ReceiveMessageDto implements Serializable {
     String title;
     Integer amount;
+    BigDecimal salary;
 
     @Override
     public String toString() {
         return "ReceiveMessageDto {" +
                 "title='" + title + '\'' +
                 "amount='" + amount + '\'' +
+                "salary='" + salary + '\'' +
                 '}';
     }
 }
