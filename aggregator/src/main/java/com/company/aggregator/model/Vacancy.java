@@ -25,5 +25,4 @@ public class Vacancy {
     @Column(columnDefinition = "text") private String description;
     @Column(columnDefinition = "text") private String schedule;
     @Column(columnDefinition = "text") private String source;
-
 }

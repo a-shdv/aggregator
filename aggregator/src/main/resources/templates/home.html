@@ -27,6 +27,7 @@
         <td>Компания</td>
         <td>Описание</td>
         <td>Дата публикации</td>
+        <td>Источник</td>
         <!--        <td>Ссылка</td>-->
     </tr>
     </thead>
@@ -41,7 +42,11 @@
         <td th:text="${vacancy.company}"></td>
         <td th:text="${#strings.abbreviate(vacancy.description, 50)}"></td>
         <td th:text="${vacancy.date}"></td>
-        <!--        <td th:text="${vacancy.source}"></td>-->
+        <td>
+            <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}" th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
+        </td>
+<!--        <td th:text="${#strings.arraySplit(vacancy.source, '/')[1]}"></td>-->
+<!--        <td th:text="${vacancy.date}"></td>-->
     </tr>
     </tbody>
 </table>
