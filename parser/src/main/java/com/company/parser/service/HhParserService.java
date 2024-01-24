@@ -79,24 +79,4 @@ public class HhParserService {
         }
         return null;
     }
-
-    /*    public void testHhNotAsync(String query) {
-        int page = 0;
-        final String url = "https://hh.ru/search/vacancy?text=" + query + "&area=98&hhtmFrom=main&hhtmFromLabel=vacancy_search_line&page=" + page;
-        Document doc = null;
-        try {
-            doc = Jsoup.connect(url).get();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-
-        if (doc != null) {
-            final Elements sections = doc.getElementsByClass("serp-item");
-            for (Element section : sections) {
-                String vacancyUrl = section.getElementsByClass("bloko-link").first().absUrl("href");
-                SendMessageDto sendMessageDto = parseWebPage(vacancyUrl);
-                rabbitMqSenderService.send(sendMessageDto);
-            }
-        }
-    }*/
 }

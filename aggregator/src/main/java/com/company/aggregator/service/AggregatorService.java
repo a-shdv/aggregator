@@ -35,4 +35,9 @@ public class AggregatorService {
     public CompletableFuture<Page<Vacancy>> findAll(PageRequest pageRequest) {
         return CompletableFuture.supplyAsync(() -> aggregatorRepository.findAll(pageRequest));
     }
+
+    @Transactional
+    public CompletableFuture<Vacancy> findBySource(String source) {
+        return CompletableFuture.supplyAsync(() -> aggregatorRepository.findBySource(source));
+    }
 }
