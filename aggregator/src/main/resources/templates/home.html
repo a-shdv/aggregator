@@ -8,16 +8,23 @@
     <title>Document</title>
 </head>
 <body>
+<h2>Вакансия</h2>
 <form th:action="@{/}" th:method="post">
     <input type="text" name="title" placeholder="Название вакансии">
     <br> <br>
     <input type="text" name="amount" placeholder="Количество вакансий">
     <br> <br>
-    <input type="submit" value="Отправить">
+    <input type="number" name="salary" min="0" placeholder="Зарплата (от ...)">
+    <br> <br>
+    <input type="submit" value="Найти">
     <br> <br>
 </form>
 
-<table border="1">
+<h2>Все вакансии</h2>
+<div th:if="${#lists.isEmpty(vacancies)}">
+    Список вакансий пуст!
+</div>
+<table border="1" th:unless="${#lists.isEmpty(vacancies)}">
     <thead>
     <tr>
         <td>Название</td>
@@ -32,7 +39,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}">
+    <tr th:each="vacancy : ${vacancies}">
         <!--Название-->
         <td>
             <a th:href="${vacancy.source}" th:text="${vacancy.title}"></a>
