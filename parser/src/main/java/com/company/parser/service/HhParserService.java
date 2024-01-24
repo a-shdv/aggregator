@@ -23,8 +23,9 @@ public class HhParserService {
 
     public CompletableFuture<Void> findAllVacancies(String query, Integer amount, BigDecimal salary) {
         return CompletableFuture.runAsync(() -> {
-            int page = 0;
-            String url = "https://hh.ru/search/vacancy" +
+            int currentPage = 0;
+            int previousPage;
+            StringBuilder url = new StringBuilder("https://hh.ru/search/vacancy" +
                     "?hhtmFrom=main" +
                     "&hhtmFromLabel=vacancy_search_line" +
                     "&search_field=name" +
@@ -34,15 +35,15 @@ public class HhParserService {
                     "&L_save_area=true" +
                     "&area=1" + // Москва
                     "&text=" + query +
-                    "&page=" + page +
+                    "&page=" + currentPage +
                     "&salary=" + salary +
-                    "&customDomain=1";
+                    "&customDomain=1");
 
             Document doc = null;
 
-            while (page < amount / vacanciesPerPage) {
+            while (currentPage < amount / vacanciesPerPage) {
                 try {
-                    doc = Jsoup.connect(url).get();
+                    doc = Jsoup.connect(url.toString()).get();
                 } catch (IOException e) {
                     log.error(e.getMessage());
                 }
@@ -53,8 +54,14 @@ public class HhParserService {
                         SendMessageDto sendMessageDto = parseWebPage(vacancyUrl);
                         rabbitMqSenderService.send(sendMessageDto);
                     }
-                    page++;
-                    url = "https://hh.ru/search/vacancy?hhtmFrom=main&hhtmFromLabel=vacancy_search_line&search_field=name&search_field=company_name&search_field=description&enable_snippets=false&L_save_area=true&area=1&text=" + query + "&page=" + page + "&customDomain=1";
+
+                    previousPage = currentPage;
+                    currentPage++;
+                    url.replace(
+                            url.indexOf("?page=" + previousPage),
+                            url.lastIndexOf("?page=" + previousPage),
+                            "?page=" + currentPage
+                    );
                 }
             }
         });

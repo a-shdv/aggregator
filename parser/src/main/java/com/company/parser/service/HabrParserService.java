@@ -23,17 +23,15 @@ public class HabrParserService {
 
     public CompletableFuture<Void> findAllVacancies(String query, Integer amount, BigDecimal salary) {
         return CompletableFuture.runAsync(() -> {
-            int page = 1;
-            String url = "https://career.habr.com/vacancies" +
-                    "?page=" + page +
-                    "&q=" + query +
-                    "&salary=" + salary +
-                    "&type=all";
+            int previousPage;
+            int currentPage = 1;
+            StringBuilder url = new StringBuilder("https://career.habr.com/vacancies" +
+                    "?page=" + currentPage + "&q=" + query + "&salary=" + salary + "&type=all");
 
             Document doc = null;
-            while (page <= amount / vacanciesPerPage) {
+            while (currentPage <= amount / vacanciesPerPage) {
                 try {
-                    doc = Jsoup.connect(url).get();
+                    doc = Jsoup.connect(url.toString()).get();
                 } catch (IOException e) {
                     log.error(e.getMessage());
                 }
@@ -56,8 +54,16 @@ public class HabrParserService {
 
                         rabbitMqSenderService.send(sendMessageDto);
                     }
-                    page++;
-                    url = "https://career.habr.com/vacancies?page=" + page + "&q=" + query + "&type=all";
+                    previousPage = currentPage;
+                    currentPage++;
+
+                    url.replace(
+                            url.indexOf("?page=" + previousPage),
+                            url.lastIndexOf("?page=" + previousPage),
+                            "?page=" + currentPage
+                            );
+
+//                    url = "https://career.habr.com/vacancies?page=" + currentPage + "&q=" + query + "&type=all" + "&salary=" + salary;
                 }
             }
         });
