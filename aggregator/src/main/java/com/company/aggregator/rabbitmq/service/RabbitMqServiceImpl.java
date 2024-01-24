@@ -34,11 +34,15 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(ReceiveMessageDto receiveMessageDto) {
         log.info("RECEIVED: {}", receiveMessageDto.toString());
-        if (aggregatorService.findBySource(receiveMessageDto.getSource()) == null) {
-            aggregatorService.save(receiveMessageDto);
-        } else {
-            log.info("Vacancy already exists: {}", receiveMessageDto.getSource());
-        }
+        aggregatorService
+                .findBySource(receiveMessageDto.getSource())
+                .thenAccept(vacancy -> {
+                    if (vacancy != null) {
+                        log.info("Vacancy already exists: {}", vacancy.getSource());
+                    } else {
+                        aggregatorService.save(receiveMessageDto);
+                    }
+                });
     }
 
     @Override
