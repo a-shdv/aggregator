@@ -29,7 +29,9 @@ public class RabbitMqReceiverService {
                                 receiveMessageDto.getAmount(),
                                 receiveMessageDto.getSalary(),
                                 receiveMessageDto.isOnlyWithSalary(),
-                                receiveMessageDto.getExperience()
+                                receiveMessageDto.getExperience(),
+                                receiveMessageDto.getCityId(),
+                                receiveMessageDto.isRemoteAvailable()
                         ),
                 hhParserService
                         .findAllVacancies(
@@ -37,7 +39,9 @@ public class RabbitMqReceiverService {
                                 receiveMessageDto.getAmount(),
                                 receiveMessageDto.getSalary(),
                                 receiveMessageDto.isOnlyWithSalary(),
-                                receiveMessageDto.getExperience()
+                                receiveMessageDto.getExperience(),
+                                receiveMessageDto.getCityId(),
+                                receiveMessageDto.isRemoteAvailable()
                         )
         );
     }

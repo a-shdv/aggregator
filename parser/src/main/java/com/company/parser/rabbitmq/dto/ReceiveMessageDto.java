@@ -18,6 +18,8 @@ public class ReceiveMessageDto implements Serializable {
     BigDecimal salary;
     boolean onlyWithSalary;
     int experience;
+    int cityId;
+    boolean isRemoteAvailable;
 
     @Override
     public String toString() {
@@ -27,6 +29,8 @@ public class ReceiveMessageDto implements Serializable {
                 "salary='" + salary + '\'' +
                 "onlyWithSalary='" + onlyWithSalary + '\'' +
                 "experience='" + experience + '\'' +
+                "cityId='" + cityId + '\'' +
+                "isRemoteAvailable='" + isRemoteAvailable + '\'' +
                 '}';
     }
 }

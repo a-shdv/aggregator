@@ -21,14 +21,14 @@ public class HabrParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
     private static final int vacanciesPerPage = 25;
 
-    public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean withSalary,
-                                                    int experience) {
+    public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary,
+                                                    int experience,int cityId, boolean isRemoteAvailable) {
         return CompletableFuture.runAsync(() -> {
             int previousPage;
             int currentPage = 1;
             StringBuilder url = new StringBuilder("https://career.habr.com/vacancies" +
-                    "?page=" + currentPage + "&q=" + query + "&salary=" + salary + "&with_salary=" + withSalary +
-                    "&type=all");
+                    "?page=" + currentPage + "&q=" + query + "&salary=" + salary + "&with_salary=" + onlyWithSalary +
+                    "&city_id=" + parseCityId(cityId) + "&remote=" + isRemoteAvailable + "&type=all");
 
             int parsedExperience = parseExperience(experience);
             if (parsedExperience != -1)  {
@@ -74,6 +74,23 @@ public class HabrParserService {
                 }
             }
         });
+    }
+
+    private int parseCityId(int cityId) {
+        int parsedCityId = 0;
+        switch (cityId) {
+            case 0 -> parsedCityId = 678; // Москва
+            case 1 -> parsedCityId = 679; // СПБ
+            case 2 -> parsedCityId = 693; // ЕКБ
+            case 3 -> parsedCityId = 717; // Новосибирск
+            case 4 -> parsedCityId = 698; // Казань
+            case 5 -> parsedCityId = 715; // Нижний Новгород
+            case 6 -> parsedCityId = 739; // Ульяновск
+            case 7 -> parsedCityId = 735; // Тольятти
+            case 8 -> parsedCityId = 683; // Астрахань
+            case 9 -> parsedCityId = 740; // Уфа
+        }
+        return parsedCityId;
     }
 
     private int parseExperience(int experience) {

@@ -22,10 +22,12 @@ public class HhParserService {
     private static final int vacanciesPerPage = 20;
 
     public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary,
-                                                    int experience) {
+                                                    int experience, int cityId, boolean isRemoteAvailable) {
         return CompletableFuture.runAsync(() -> {
             int currentPage = 0;
             int previousPage;
+
+            String schedule = isRemoteAvailable ? "&schedule=remote" : "";
             StringBuilder url = new StringBuilder("https://hh.ru/search/vacancy" +
                     "?hhtmFrom=main" +
                     "&hhtmFromLabel=vacancy_search_line" +
@@ -34,12 +36,13 @@ public class HhParserService {
                     "&search_field=description" +
                     "&enable_snippets=false" +
                     "&L_save_area=true" +
-                    "&area=1" + // Москва
+                    "&area=" + parseCityId(cityId) +
                     "&text=" + query +
                     "&page=" + currentPage +
                     "&salary=" + salary +
                     "&only_with_salary=" + onlyWithSalary +
                     "&experience=" + parseExperience(experience) +
+                    "&schedule=fullDay" + schedule +
                     "&customDomain=1");
 
             Document doc = null;
@@ -68,6 +71,23 @@ public class HhParserService {
                 }
             }
         });
+    }
+
+    private int parseCityId(int cityId) {
+        int parsedCityId = 0;
+        switch (cityId) {
+            case 0 -> parsedCityId = 1; // Москва
+            case 1 -> parsedCityId = 2; // СПБ
+            case 2 -> parsedCityId = 3; // ЕКБ
+            case 3 -> parsedCityId = 4; // Новосибирск
+            case 4 -> parsedCityId = 88; // Казань
+            case 5 -> parsedCityId = 66; // Нижний Новгород
+            case 6 -> parsedCityId = 98; // Ульяновск
+            case 7 -> parsedCityId = 212; // Тольятти
+            case 8 -> parsedCityId = 15; // Астрахань
+            case 9 -> parsedCityId = 99; // Уфа
+        }
+        return parsedCityId;
     }
 
     private String parseExperience(int experience) {

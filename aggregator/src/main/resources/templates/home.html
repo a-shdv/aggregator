@@ -35,7 +35,7 @@
     <div id="workExperience">
         <br>
         <!--Не имеет значения-->
-        <input id="0" type="radio" name="experience" value="0">
+        <input id="0" type="radio" name="experience" value="0" checked>
         <label for="0">Не имеет значения</label>
         <br><br>
 
@@ -59,6 +59,30 @@
         <label for="4">Более 6 лет</label>
         <br><br>
     </div>
+
+    <!--Город-->
+    <label>Город</label>
+    <label>
+        <select required name="cityId">
+            <option value="" disabled>Выберите город</option>
+            <option value="0" selected>Москва</option>
+            <option value="1">Санкт-Петербург</option>
+            <option value="2">Екатеринбург</option>
+            <option value="3">Новосибирск</option>
+            <option value="4">Казань</option>
+            <option value="5">Нижний Новгород</option>
+            <option value="6">Ульяновск</option>
+            <option value="7">Тольятти</option>
+            <option value="8">Астрахань</option>
+            <option value="9">Уфа</option>
+        </select>
+    </label>
+    <br><br>
+    <!--'Можно удаленно'-->
+    <label for="isRemoteAvailable">Можно удаленно</label>
+    <input id="isRemoteAvailable" type="checkbox" name="isRemoteAvailable">
+    <br><br>
+
     <!--Отправка формы-->
     <input type="submit" value="Найти">
     <br> <br>
@@ -84,7 +108,7 @@
     <tr th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}">
         <!--Название-->
         <td>
-            <a th:href="${vacancy.source}" th:text="${vacancy.title}"></a>
+            <a th:href="${vacancy.source}" th:text="${vacancy.title}" target="_blank"></a>
         </td>
         <!--Зарплата-->
         <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указана'"></td>
