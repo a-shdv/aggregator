@@ -5,169 +5,205 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Job Hunter</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <title>JobHunter</title>
 </head>
 <body>
-<h2>Вакансия</h2>
-<form th:action="@{/}" th:method="post">
-    <!--Название вакансии-->
-    <label for="title">Название вакансии</label>
-    <input id="title" type="text" name="title" required>
-    <br><br>
+<div th:include="/partials/navbar :: navbar"></div>
 
-    <!--Количество вакансий-->
-    <label for="amount">Количество вакансий</label>
-    <input id="amount" type="text" name="amount" required>
-    <br><br>
+<!--Вакансия-->
+<div class="container">
+    <div class="row justify-content-center">
+        <form th:action="@{/}" th:method="post" class="col-lg-4 mt-5">
+            <h2>Вакансия</h2>
+            <!--Название вакансии-->
+            <div class="form-group">
+                <label for="title">Название вакансии</label>
+                <input id="title" class="form-control" type="text" name="title" required>
+            </div>
 
-    <!--Зарплата-->
-    <label for="salary">Заработная плата (от ...)</label>
-    <input id="salary" type="number" name="salary" min="0">
-    <br> <br>
+            <!--Количество вакансий-->
+            <div class="form-group">
+                <label for="amount">Количество вакансий</label>
+                <input id="amount" class="form-control" type="text" name="amount" required>
+            </div>
 
-    <!--Заработная плата указана-->
-    <label for="onlyWithSalary"> Заработная плата указана</label>
-    <input id="onlyWithSalary" type="checkbox" name="onlyWithSalary">
-    <br> <br>
+            <!--Зарплата-->
+            <div class="form-group">
+                <label for="salary">Заработная плата (от ...)</label>
+                <input id="salary" class="form-control" type="number" name="salary" min="0">
+            </div>
 
-    <!--Опыт работы-->
-    <label for="workExperience">Опыт работы</label>
-    <div id="workExperience">
-        <br>
-        <!--Не имеет значения-->
-        <input id="0" type="radio" name="experience" value="0" checked>
-        <label for="0">Не имеет значения</label>
-        <br><br>
+            <!--Заработная плата указана-->
+            <div class="form-group">
+                <div class="form-check">
+                    <label class="form-check-label" for="onlyWithSalary"> Заработная плата указана</label>
+                    <input id="onlyWithSalary" class="form-check-input" type="checkbox" name="onlyWithSalary">
+                    <br><br>
+                </div>
+            </div>
 
-        <!--Нет опыта-->
-        <input id="1" type="radio" name="experience" value="1">
-        <label for="1">Нет опыта</label>
-        <br><br>
+            <!--Опыт работы-->
+            <div class="form-group">
+                <label class="form-check-label" for="workExperience">Опыт работы</label>
+                <div id="workExperience" class="form-check">
+                    <!--Не имеет значения-->
+                    <input id="0" class="form-check-input" type="radio" name="experience" value="0" checked>
+                    <label class="form-check-label" for="0">Не имеет значения</label>
+                    <br>
+                    <!--Нет опыта-->
+                    <input id="1" class="form-check-input" type="radio" name="experience" value="1">
+                    <label class="form-check-label" for="1">Нет опыта</label>
+                    <br>
+                    <!--От 1 года до 3 лет-->
+                    <input id="2" class="form-check-input" type="radio" name="experience" value="2">
+                    <label class="form-check-label" for="2">От 1 года до 3 лет</label>
+                    <br>
+                    <!--От 3 до 6 лет-->
+                    <input id="3" class="form-check-input" type="radio" name="experience" value="3">
+                    <label class="form-check-label" for="3">От 3 до 6 лет</label>
+                    <br>
+                    <!--Более 6 лет-->
+                    <input id="4" class="form-check-input" type="radio" name="experience" value="4">
+                    <label class="form-check-label" for="4">Более 6 лет</label>
+                    <br> <br>
+                </div>
+            </div>
 
-        <!--От 1 года до 3 лет-->
-        <input id="2" type="radio" name="experience" value="2">
-        <label for="2">От 1 года до 3 лет</label>
-        <br><br>
+            <!--Город-->
+            <div class="form-group">
+                <label>Город</label>
+                <label>
+                    <select required name="cityId">
+                        <option value="" disabled>Выберите город</option>
+                        <option value="0" selected>Москва</option>
+                        <option value="1">Санкт-Петербург</option>
+                        <option value="2">Екатеринбург</option>
+                        <option value="3">Новосибирск</option>
+                        <option value="4">Казань</option>
+                        <option value="5">Нижний Новгород</option>
+                        <option value="6">Ульяновск</option>
+                        <option value="7">Тольятти</option>
+                        <option value="8">Астрахань</option>
+                        <option value="9">Уфа</option>
+                    </select>
+                </label>
+                <br><br>
+            </div>
+            <div class="form-group">
+                <!--'Можно удаленно'-->
+                <div class="form-check">
+                    <label for="isRemoteAvailable" class="form-check-label">Можно удаленно</label>
+                    <input id="isRemoteAvailable" class="form-check-input" type="checkbox" name="isRemoteAvailable">
+                    <br><br>
+                </div>
+            </div>
+            <!--Отправка формы-->
+            <input type="submit" value="Найти">
+            <br> <br>
+        </form>
+    </div>
+</div>
 
-        <!--От 3 до 6 лет-->
-        <input id="3" type="radio" name="experience" value="3">
-        <label for="3">От 3 до 6 лет</label>
-        <br><br>
+<!--Все вакансии-->
+<div class="row justify-content-center">
+    <div th:if="${vacancies.isEmpty()}" class="alert alert-warning col-6 mb-5 mt-5" role="alert">
+        Список вакансий пуст!
+    </div>
+</div>
 
-        <!--Более 6 лет-->
-        <input id="4" type="radio" name="experience" value="4">
-        <label for="4">Более 6 лет</label>
-        <br><br>
+<div class="container" th:if="${!vacancies.isEmpty()}">
+    <div class="row justify-content-center mt-9 col-lg-12">
+        <table class="table table-hover">
+            <h2>Все вакансии</h2>
+            <thead>
+            <tr>
+                <td class="table-dark">Название</td>
+                <td class="table-dark">Зарплата</td>
+                <td class="table-dark">Требования</td>
+                <td class="table-dark">График работы</td>
+                <td class="table-dark">Компания</td>
+                <td class="table-dark">Описание</td>
+                <td class="table-dark">Дата публикации</td>
+                <td class="table-dark">Источник</td>
+                <!--        <td>Ссылка</td>-->
+            </tr>
+            <tr th:if="${#lists.isEmpty(vacancies)}" th:text="'Список вакансий пуст!'"></tr>
+            </thead>
+            <tbody>
+            <tr th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}">
+                <!--Название-->
+                <td>
+                    <a th:href="${vacancy.source}" th:text="${vacancy.title}" target="_blank"></a>
+                </td>
+                <!--Зарплата-->
+                <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указана'"></td>
+                <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.salary}"></td>
+                <!--Требования-->
+                <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указаны'"></td>
+                <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.requirements}"></td>
+                <!--График работы-->
+                <td th:text="${vacancy.schedule}"></td>
+                <!--Компания-->
+                <td th:text="${vacancy.company}"></td>
+                <!--Описание-->
+                <td th:text="${#strings.abbreviate(vacancy.description, 50)}"></td>
+                <!--Дата публикации-->
+                <td th:text="${vacancy.date}"></td>
+                <!--Ссылка на вакансию-->
+                <td>
+                    <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
+                       th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
-    <!--Город-->
-    <label>Город</label>
-    <label>
-        <select required name="cityId">
-            <option value="" disabled>Выберите город</option>
-            <option value="0" selected>Москва</option>
-            <option value="1">Санкт-Петербург</option>
-            <option value="2">Екатеринбург</option>
-            <option value="3">Новосибирск</option>
-            <option value="4">Казань</option>
-            <option value="5">Нижний Новгород</option>
-            <option value="6">Ульяновск</option>
-            <option value="7">Тольятти</option>
-            <option value="8">Астрахань</option>
-            <option value="9">Уфа</option>
-        </select>
-    </label>
-    <br><br>
-    <!--'Можно удаленно'-->
-    <label for="isRemoteAvailable">Можно удаленно</label>
-    <input id="isRemoteAvailable" type="checkbox" name="isRemoteAvailable">
-    <br><br>
+    <nav>
+        <ul class="pagination justify-content-center mt-5 mb-5">
 
-    <!--Отправка формы-->
-    <input type="submit" value="Найти">
-    <br> <br>
-</form>
+            <div th:if="${vacancies.hasPrevious()}">
+                <li class="page-item disabled">
+                    <form th:action="@{/}" method="get">
+                        <input type="hidden" name="page" th:value="${vacancies.previousPageable().pageNumber}"/>
+                        <input type="hidden" name="size" th:value="${vacancies.previousPageable().pageSize}"/>
+                        <input class="page-link" type="submit" value="Пред."/>
+                    </form>
+                </li>
+            </div>
 
-<table border="1">
-    <h2>Все вакансии</h2>
-    <thead>
-    <tr th:unless="${#lists.isEmpty(vacancies)}">
-        <td>Название</td>
-        <td>Зарплата</td>
-        <td>Требования</td>
-        <td>График работы</td>
-        <td>Компания</td>
-        <td>Описание</td>
-        <td>Дата публикации</td>
-        <td>Источник</td>
-        <!--        <td>Ссылка</td>-->
-    </tr>
-    <tr th:if="${#lists.isEmpty(vacancies)}" th:text="'Список вакансий пуст!'"></tr>
-    </thead>
-    <tbody>
-    <tr th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}">
-        <!--Название-->
-        <td>
-            <a th:href="${vacancy.source}" th:text="${vacancy.title}" target="_blank"></a>
-        </td>
-        <!--Зарплата-->
-        <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указана'"></td>
-        <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.salary}"></td>
-        <!--Требования-->
-        <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указаны'"></td>
-        <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.requirements}"></td>
-        <!--График работы-->
-        <td th:text="${vacancy.schedule}"></td>
-        <!--Компания-->
-        <td th:text="${vacancy.company}"></td>
-        <!--Описание-->
-        <td th:text="${#strings.abbreviate(vacancy.description, 50)}"></td>
-        <!--Дата публикации-->
-        <td th:text="${vacancy.date}"></td>
-        <!--Ссылка на вакансию-->
-        <td>
-            <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
-               th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<br>
-<!--Кнопка "Очистить"-->
-<form th:action="@{/clear}" th:method="post">
-    <input type="submit" value="Очистить">
-</form>
 
-<!--Пагинация-->
-<div>
-    <table>
-        <tbody>
-        <tr>
-            <td>
-                <!--Prev.-->
-                <span th:if="${vacancies.hasPrevious()}">
-                        <form th:action="@{/}" method="get">
-                            <input type="hidden" name="page" th:value="${vacancies.previousPageable().pageNumber}"/>
-                            <input type="hidden" name="size" th:value="${vacancies.previousPageable().pageSize}"/>
-                            <input type="submit" value="<-"/>
-                        </form>
-                    </span>
-            </td>
-            <td>
-                <!--Next-->
-                <span th:if="${vacancies.hasNext()}">
-                        <form th:action="@{/}" method="get">
-                            <input type="hidden" name="page" th:value="${vacancies.nextPageable().pageNumber}"/>
-                            <input type="hidden" name="size" th:value="${vacancies.nextPageable().pageSize}"/>
-                            <input type="submit" value="->"/>
-                        </form>
-                    </span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <br>
-</div>
-<a href="/">На главную</a>
+            <div th:if="${vacancies.hasNext()}">
+                <li class="page-item">
+                    <form th:action="@{/}" method="get">
+                        <input type="hidden" name="page" th:value="${vacancies.nextPageable().pageNumber}"/>
+                        <input type="hidden" name="size" th:value="${vacancies.nextPageable().pageSize}"/>
+                        <input class="page-link" type="submit" value="След."/>
+                    </form>
+                </li>
+            </div>
+
+
+        </ul>
+    </nav>
+
+    <!--Кнопка "Очистить"-->
+    <form class="mt-5" th:action="@{/clear}" th:method="post">
+        <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="alert()">
+    </form>
+    </div>
+<script>
+    function alert() {
+        confirm("Вы уверены, что хотите очистить список вакансий?")
+    }
+</script>
 </body>
 </html>
