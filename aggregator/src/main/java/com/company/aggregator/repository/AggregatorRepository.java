@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AggregatorRepository extends JpaRepository<Vacancy, Long> {
+    Vacancy findBySource(String source);
 }

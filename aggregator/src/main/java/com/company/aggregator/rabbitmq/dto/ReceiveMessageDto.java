@@ -23,6 +23,7 @@ public class ReceiveMessageDto implements Serializable {
     String source;
 
     public static Vacancy toVacancy(ReceiveMessageDto receiveMessageDto) {
+
         return Vacancy.builder()
                 .title(receiveMessageDto.getTitle())
                 .date(receiveMessageDto.getDate())

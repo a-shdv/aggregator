@@ -5,21 +5,93 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Job Hunter</title>
 </head>
 <body>
+<h2>Вакансия</h2>
 <form th:action="@{/}" th:method="post">
-    <input type="text" name="title" placeholder="Название вакансии">
+    <!--Название вакансии-->
+    <label for="title">Название вакансии</label>
+    <input id="title" type="text" name="title" required>
+    <br><br>
+
+    <!--Количество вакансий-->
+    <label for="amount">Количество вакансий</label>
+    <input id="amount" type="text" name="amount" required>
+    <br><br>
+
+    <!--Зарплата-->
+    <label for="salary">Заработная плата (от ...)</label>
+    <input id="salary" type="number" name="salary" min="0">
     <br> <br>
-    <input type="text" name="amount" placeholder="Количество вакансий">
+
+    <!--Заработная плата указана-->
+    <label for="onlyWithSalary"> Заработная плата указана</label>
+    <input id="onlyWithSalary" type="checkbox" name="onlyWithSalary">
     <br> <br>
-    <input type="submit" value="Отправить">
+
+    <!--Опыт работы-->
+    <label for="workExperience">Опыт работы</label>
+    <div id="workExperience">
+        <br>
+        <!--Не имеет значения-->
+        <input id="0" type="radio" name="experience" value="0" checked>
+        <label for="0">Не имеет значения</label>
+        <br><br>
+
+        <!--Нет опыта-->
+        <input id="1" type="radio" name="experience" value="1">
+        <label for="1">Нет опыта</label>
+        <br><br>
+
+        <!--От 1 года до 3 лет-->
+        <input id="2" type="radio" name="experience" value="2">
+        <label for="2">От 1 года до 3 лет</label>
+        <br><br>
+
+        <!--От 3 до 6 лет-->
+        <input id="3" type="radio" name="experience" value="3">
+        <label for="3">От 3 до 6 лет</label>
+        <br><br>
+
+        <!--Более 6 лет-->
+        <input id="4" type="radio" name="experience" value="4">
+        <label for="4">Более 6 лет</label>
+        <br><br>
+    </div>
+
+    <!--Город-->
+    <label>Город</label>
+    <label>
+        <select required name="cityId">
+            <option value="" disabled>Выберите город</option>
+            <option value="0" selected>Москва</option>
+            <option value="1">Санкт-Петербург</option>
+            <option value="2">Екатеринбург</option>
+            <option value="3">Новосибирск</option>
+            <option value="4">Казань</option>
+            <option value="5">Нижний Новгород</option>
+            <option value="6">Ульяновск</option>
+            <option value="7">Тольятти</option>
+            <option value="8">Астрахань</option>
+            <option value="9">Уфа</option>
+        </select>
+    </label>
+    <br><br>
+    <!--'Можно удаленно'-->
+    <label for="isRemoteAvailable">Можно удаленно</label>
+    <input id="isRemoteAvailable" type="checkbox" name="isRemoteAvailable">
+    <br><br>
+
+    <!--Отправка формы-->
+    <input type="submit" value="Найти">
     <br> <br>
 </form>
 
 <table border="1">
+    <h2>Все вакансии</h2>
     <thead>
-    <tr>
+    <tr th:unless="${#lists.isEmpty(vacancies)}">
         <td>Название</td>
         <td>Зарплата</td>
         <td>Требования</td>
@@ -27,25 +99,46 @@
         <td>Компания</td>
         <td>Описание</td>
         <td>Дата публикации</td>
+        <td>Источник</td>
         <!--        <td>Ссылка</td>-->
     </tr>
+    <tr th:if="${#lists.isEmpty(vacancies)}" th:text="'Список вакансий пуст!'"></tr>
     </thead>
     <tbody>
     <tr th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}">
+        <!--Название-->
         <td>
-            <a th:href="${vacancy.source}" th:text="${vacancy.title}"></a>
+            <a th:href="${vacancy.source}" th:text="${vacancy.title}" target="_blank"></a>
         </td>
-        <td th:text="${vacancy.salary}"></td>
-        <td th:text="${vacancy.requirements}"></td>
+        <!--Зарплата-->
+        <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указана'"></td>
+        <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.salary}"></td>
+        <!--Требования-->
+        <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указаны'"></td>
+        <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.requirements}"></td>
+        <!--График работы-->
         <td th:text="${vacancy.schedule}"></td>
+        <!--Компания-->
         <td th:text="${vacancy.company}"></td>
+        <!--Описание-->
         <td th:text="${#strings.abbreviate(vacancy.description, 50)}"></td>
+        <!--Дата публикации-->
         <td th:text="${vacancy.date}"></td>
-        <!--        <td th:text="${vacancy.source}"></td>-->
+        <!--Ссылка на вакансию-->
+        <td>
+            <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
+               th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
+        </td>
     </tr>
     </tbody>
 </table>
+<br>
+<!--Кнопка "Очистить"-->
+<form th:action="@{/clear}" th:method="post">
+    <input type="submit" value="Очистить">
+</form>
 
+<!--Пагинация-->
 <div>
     <table>
         <tbody>

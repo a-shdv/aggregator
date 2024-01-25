@@ -11,6 +11,7 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -20,10 +21,14 @@ public class HhParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
     private static final int vacanciesPerPage = 20;
 
-    public CompletableFuture<Void> findAllVacancies(String query, Integer amount) {
+    public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary,
+                                                    int experience, int cityId, boolean isRemoteAvailable) {
         return CompletableFuture.runAsync(() -> {
-            int page = 0;
-            String url = "https://hh.ru/search/vacancy" +
+            int currentPage = 0;
+            int previousPage;
+
+            String schedule = isRemoteAvailable ? "&schedule=remote" : "";
+            StringBuilder url = new StringBuilder("https://hh.ru/search/vacancy" +
                     "?hhtmFrom=main" +
                     "&hhtmFromLabel=vacancy_search_line" +
                     "&search_field=name" +
@@ -31,16 +36,20 @@ public class HhParserService {
                     "&search_field=description" +
                     "&enable_snippets=false" +
                     "&L_save_area=true" +
-                    "&area=1" + // Москва
+                    "&area=" + parseCityId(cityId) +
                     "&text=" + query +
-                    "&page=" + page +
-                    "&customDomain=1";
+                    "&page=" + currentPage +
+                    "&salary=" + salary +
+                    "&only_with_salary=" + onlyWithSalary +
+                    "&experience=" + parseExperience(experience) +
+                    "&schedule=fullDay" + schedule +
+                    "&customDomain=1");
 
             Document doc = null;
 
-            while (page < amount / vacanciesPerPage) {
+            while (currentPage < amount / vacanciesPerPage) {
                 try {
-                    doc = Jsoup.connect(url).get();
+                    doc = Jsoup.connect(url.toString()).get();
                 } catch (IOException e) {
                     log.error(e.getMessage());
                 }
@@ -51,11 +60,46 @@ public class HhParserService {
                         SendMessageDto sendMessageDto = parseWebPage(vacancyUrl);
                         rabbitMqSenderService.send(sendMessageDto);
                     }
-                    page++;
-                    url = "https://hh.ru/search/vacancy?hhtmFrom=main&hhtmFromLabel=vacancy_search_line&search_field=name&search_field=company_name&search_field=description&enable_snippets=false&L_save_area=true&area=1&text=" + query + "&page=" + page + "&customDomain=1";
+
+                    previousPage = currentPage;
+                    currentPage++;
+                    url.replace(
+                            url.indexOf("?page=" + previousPage),
+                            url.lastIndexOf("?page=" + previousPage),
+                            "?page=" + currentPage
+                    );
                 }
             }
         });
+    }
+
+    private int parseCityId(int cityId) {
+        int parsedCityId = 0;
+        switch (cityId) {
+            case 0 -> parsedCityId = 1; // Москва
+            case 1 -> parsedCityId = 2; // СПБ
+            case 2 -> parsedCityId = 3; // ЕКБ
+            case 3 -> parsedCityId = 4; // Новосибирск
+            case 4 -> parsedCityId = 88; // Казань
+            case 5 -> parsedCityId = 66; // Нижний Новгород
+            case 6 -> parsedCityId = 98; // Ульяновск
+            case 7 -> parsedCityId = 212; // Тольятти
+            case 8 -> parsedCityId = 15; // Астрахань
+            case 9 -> parsedCityId = 99; // Уфа
+        }
+        return parsedCityId;
+    }
+
+    private String parseExperience(int experience) {
+        String parsedExperience = "doesNotMatter";
+        switch (experience) {
+            case 0 -> parsedExperience = "doesNotMatter"; // 0 - не имеет значения
+            case 1 -> parsedExperience = "noExperience"; // 1 - нет опыта
+            case 2 -> parsedExperience = "between1And3"; // 2 - от 1 года до 3 лет
+            case 3 -> parsedExperience = "between3And6"; // 3 - от 3 до 6 лет
+            case 4 -> parsedExperience = "moreThan6";// 4 - более 6 лет
+        }
+        return parsedExperience;
     }
 
     private SendMessageDto parseWebPage(String url) {
@@ -79,24 +123,4 @@ public class HhParserService {
         }
         return null;
     }
-
-    /*    public void testHhNotAsync(String query) {
-        int page = 0;
-        final String url = "https://hh.ru/search/vacancy?text=" + query + "&area=98&hhtmFrom=main&hhtmFromLabel=vacancy_search_line&page=" + page;
-        Document doc = null;
-        try {
-            doc = Jsoup.connect(url).get();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-
-        if (doc != null) {
-            final Elements sections = doc.getElementsByClass("serp-item");
-            for (Element section : sections) {
-                String vacancyUrl = section.getElementsByClass("bloko-link").first().absUrl("href");
-                SendMessageDto sendMessageDto = parseWebPage(vacancyUrl);
-                rabbitMqSenderService.send(sendMessageDto);
-            }
-        }
-    }*/
 }
