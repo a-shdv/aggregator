@@ -21,7 +21,8 @@ public class HhParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
     private static final int vacanciesPerPage = 20;
 
-    public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary) {
+    public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary,
+                                                    int experience) {
         return CompletableFuture.runAsync(() -> {
             int currentPage = 0;
             int previousPage;
@@ -38,6 +39,7 @@ public class HhParserService {
                     "&page=" + currentPage +
                     "&salary=" + salary +
                     "&only_with_salary=" + onlyWithSalary +
+                    "&experience=" + parseExperience(experience) +
                     "&customDomain=1");
 
             Document doc = null;
@@ -66,6 +68,18 @@ public class HhParserService {
                 }
             }
         });
+    }
+
+    private String parseExperience(int experience) {
+        String parsedExperience = "doesNotMatter";
+        switch (experience) {
+            case 0 -> parsedExperience = "doesNotMatter"; // 0 - не имеет значения
+            case 1 -> parsedExperience = "noExperience"; // 1 - нет опыта
+            case 2 -> parsedExperience = "between1And3"; // 2 - от 1 года до 3 лет
+            case 3 -> parsedExperience = "between3And6"; // 3 - от 3 до 6 лет
+            case 4 -> parsedExperience = "moreThan6";// 4 - более 6 лет
+        }
+        return parsedExperience;
     }
 
     private SendMessageDto parseWebPage(String url) {

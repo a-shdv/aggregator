@@ -28,14 +28,16 @@ public class RabbitMqReceiverService {
                                 receiveMessageDto.getTitle(),
                                 receiveMessageDto.getAmount(),
                                 receiveMessageDto.getSalary(),
-                                receiveMessageDto.isOnlyWithSalary()
+                                receiveMessageDto.isOnlyWithSalary(),
+                                receiveMessageDto.getExperience()
                         ),
                 hhParserService
                         .findAllVacancies(
                                 receiveMessageDto.getTitle(),
                                 receiveMessageDto.getAmount(),
                                 receiveMessageDto.getSalary(),
-                                receiveMessageDto.isOnlyWithSalary()
+                                receiveMessageDto.isOnlyWithSalary(),
+                                receiveMessageDto.getExperience()
                         )
         );
     }

@@ -16,11 +16,14 @@ public class SendMessageDto implements Serializable {
     int amount;
     BigDecimal salary;
     boolean onlyWithSalary;
-    public SendMessageDto(String title, int amount, BigDecimal salary, boolean onlyWithSalary) {
+    int experience;
+
+    public SendMessageDto(String title, int amount, BigDecimal salary, boolean onlyWithSalary, int experience) {
         this.title = title;
         this.amount = amount / 2;
         this.salary = salary;
         this.onlyWithSalary = onlyWithSalary;
+        this.experience = experience;
     }
 
     @Override
@@ -30,6 +33,7 @@ public class SendMessageDto implements Serializable {
                 "amount='" + amount + '\'' +
                 "salary='" + salary + '\'' +
                 "onlyWithSalary='" + onlyWithSalary + '\'' +
+                "experience='" + experience + '\'' +
                 '}';
     }
 }

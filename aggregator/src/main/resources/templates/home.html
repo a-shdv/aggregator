@@ -5,19 +5,19 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Job Hunter</title>
 </head>
 <body>
 <h2>Вакансия</h2>
 <form th:action="@{/}" th:method="post">
     <!--Название вакансии-->
     <label for="title">Название вакансии</label>
-    <input id="title" type="text" name="title">
+    <input id="title" type="text" name="title" required>
     <br><br>
 
     <!--Количество вакансий-->
     <label for="amount">Количество вакансий</label>
-    <input id="amount" type="text" name="amount">
+    <input id="amount" type="text" name="amount" required>
     <br><br>
 
     <!--Зарплата-->
@@ -30,6 +30,35 @@
     <input id="onlyWithSalary" type="checkbox" name="onlyWithSalary">
     <br> <br>
 
+    <!--Опыт работы-->
+    <label for="workExperience">Опыт работы</label>
+    <div id="workExperience">
+        <br>
+        <!--Не имеет значения-->
+        <input id="0" type="radio" name="experience" value="0">
+        <label for="0">Не имеет значения</label>
+        <br><br>
+
+        <!--Нет опыта-->
+        <input id="1" type="radio" name="experience" value="1">
+        <label for="1">Нет опыта</label>
+        <br><br>
+
+        <!--От 1 года до 3 лет-->
+        <input id="2" type="radio" name="experience" value="2">
+        <label for="2">От 1 года до 3 лет</label>
+        <br><br>
+
+        <!--От 3 до 6 лет-->
+        <input id="3" type="radio" name="experience" value="3">
+        <label for="3">От 3 до 6 лет</label>
+        <br><br>
+
+        <!--Более 6 лет-->
+        <input id="4" type="radio" name="experience" value="4">
+        <label for="4">Более 6 лет</label>
+        <br><br>
+    </div>
     <!--Отправка формы-->
     <input type="submit" value="Найти">
     <br> <br>

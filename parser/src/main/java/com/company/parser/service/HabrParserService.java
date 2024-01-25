@@ -21,12 +21,19 @@ public class HabrParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
     private static final int vacanciesPerPage = 25;
 
-    public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean withSalary) {
+    public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean withSalary,
+                                                    int experience) {
         return CompletableFuture.runAsync(() -> {
             int previousPage;
             int currentPage = 1;
             StringBuilder url = new StringBuilder("https://career.habr.com/vacancies" +
-                    "?page=" + currentPage + "&q=" + query + "&salary=" + salary + "&with_salary="  + withSalary + "&type=all");
+                    "?page=" + currentPage + "&q=" + query + "&salary=" + salary + "&with_salary=" + withSalary +
+                    "&type=all");
+
+            int parsedExperience = parseExperience(experience);
+            if (parsedExperience != -1)  {
+                url.append("&qid=").append(parsedExperience);
+            }
 
             Document doc = null;
             while (currentPage <= amount / vacanciesPerPage) {
@@ -61,12 +68,24 @@ public class HabrParserService {
                             url.indexOf("?page=" + previousPage),
                             url.lastIndexOf("?page=" + previousPage),
                             "?page=" + currentPage
-                            );
+                    );
 
 //                    url = "https://career.habr.com/vacancies?page=" + currentPage + "&q=" + query + "&type=all" + "&salary=" + salary;
                 }
             }
         });
+    }
+
+    private int parseExperience(int experience) {
+        int parsedExperience = 0;
+        switch (experience) {
+            case 0 -> parsedExperience = -1; // 0 - не имеет значения
+            case 1 -> parsedExperience = 1; // 1 - нет опыта
+            case 2 -> parsedExperience = 3; // 2 - от 1 года до 3 лет
+            case 3 -> parsedExperience = 4; // 3 - от 3 до 6 лет
+            case 4 -> parsedExperience = 5;// 4 - более 6 лет
+        }
+        return parsedExperience;
     }
 
     private String parseWebPageDescription(String url) {
