@@ -21,12 +21,12 @@ public class HabrParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
     private static final int vacanciesPerPage = 25;
 
-    public CompletableFuture<Void> findAllVacancies(String query, Integer amount, BigDecimal salary) {
+    public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean withSalary) {
         return CompletableFuture.runAsync(() -> {
             int previousPage;
             int currentPage = 1;
             StringBuilder url = new StringBuilder("https://career.habr.com/vacancies" +
-                    "?page=" + currentPage + "&q=" + query + "&salary=" + salary + "&type=all");
+                    "?page=" + currentPage + "&q=" + query + "&salary=" + salary + "&with_salary="  + withSalary + "&type=all");
 
             Document doc = null;
             while (currentPage <= amount / vacanciesPerPage) {

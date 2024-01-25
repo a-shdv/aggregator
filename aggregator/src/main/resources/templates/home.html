@@ -10,12 +10,27 @@
 <body>
 <h2>Вакансия</h2>
 <form th:action="@{/}" th:method="post">
-    <input type="text" name="title" placeholder="Название вакансии">
+    <!--Название вакансии-->
+    <label for="title">Название вакансии</label>
+    <input id="title" type="text" name="title">
+    <br><br>
+
+    <!--Количество вакансий-->
+    <label for="amount">Количество вакансий</label>
+    <input id="amount" type="text" name="amount">
+    <br><br>
+
+    <!--Зарплата-->
+    <label for="salary">Заработная плата (от ...)</label>
+    <input id="salary" type="number" name="salary" min="0">
     <br> <br>
-    <input type="text" name="amount" placeholder="Количество вакансий">
+
+    <!--Заработная плата указана-->
+    <label for="onlyWithSalary"> Заработная плата указана</label>
+    <input id="onlyWithSalary" type="checkbox" name="onlyWithSalary">
     <br> <br>
-    <input type="number" name="salary" min="0" placeholder="Зарплата (от ...)">
-    <br> <br>
+
+    <!--Отправка формы-->
     <input type="submit" value="Найти">
     <br> <br>
 </form>

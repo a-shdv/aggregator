@@ -21,7 +21,7 @@ public class HhParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
     private static final int vacanciesPerPage = 20;
 
-    public CompletableFuture<Void> findAllVacancies(String query, Integer amount, BigDecimal salary) {
+    public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary) {
         return CompletableFuture.runAsync(() -> {
             int currentPage = 0;
             int previousPage;
@@ -37,6 +37,7 @@ public class HhParserService {
                     "&text=" + query +
                     "&page=" + currentPage +
                     "&salary=" + salary +
+                    "&only_with_salary=" + onlyWithSalary +
                     "&customDomain=1");
 
             Document doc = null;

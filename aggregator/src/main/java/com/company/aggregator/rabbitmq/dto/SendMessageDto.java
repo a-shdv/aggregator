@@ -13,13 +13,14 @@ import java.math.BigDecimal;
 @Builder
 public class SendMessageDto implements Serializable {
     String title;
-    Integer amount;
+    int amount;
     BigDecimal salary;
-
-    public SendMessageDto(String title, Integer amount, BigDecimal salary) {
+    boolean onlyWithSalary;
+    public SendMessageDto(String title, int amount, BigDecimal salary, boolean onlyWithSalary) {
         this.title = title;
         this.amount = amount / 2;
         this.salary = salary;
+        this.onlyWithSalary = onlyWithSalary;
     }
 
     @Override
@@ -28,6 +29,7 @@ public class SendMessageDto implements Serializable {
                 "title='" + title + '\'' +
                 "amount='" + amount + '\'' +
                 "salary='" + salary + '\'' +
+                "onlyWithSalary='" + onlyWithSalary + '\'' +
                 '}';
     }
 }
