@@ -45,21 +45,20 @@ public class HhParserService {
                     "&schedule=fullDay" + schedule +
                     "&customDomain=1");
 
-            Document doc = null;
+            Document doc = connectDocumentToUrl(url.toString());
 
             while (currentPage < amount / vacanciesPerPage) {
-                try {
-                    doc = Jsoup.connect(url.toString()).get();
-                } catch (IOException e) {
-                    log.error(e.getMessage());
-                }
                 if (doc != null) {
-                    final Elements elements = doc.getElementsByClass("vacancy-serp-content").first().getElementsByClass("serp-item");
-                    for (Element element : elements) {
+                    final Elements elements = doc
+                            .getElementsByClass("vacancy-serp-content").first()
+                            .getElementsByClass("serp-item");
+
+                    elements.forEach(element -> {
                         String vacancyUrl = element.getElementsByClass("bloko-link").first().absUrl("href");
                         SendMessageDto sendMessageDto = parseWebPage(vacancyUrl);
                         rabbitMqSenderService.send(sendMessageDto);
-                    }
+
+                    });
 
                     previousPage = currentPage;
                     currentPage++;
@@ -120,6 +119,15 @@ public class HhParserService {
                     .date(doc.getElementsByClass("vacancy-creation-time-redesigned").text())
                     .source(url)
                     .build();
+        }
+        return null;
+    }
+
+    private Document connectDocumentToUrl(String url) {
+        try {
+            return Jsoup.connect(url).get();
+        } catch (IOException e) {
+            log.error(e.getMessage());
         }
         return null;
     }
