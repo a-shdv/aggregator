@@ -115,7 +115,7 @@ public class HhParserService {
                     .title(doc.getElementsByClass("vacancy-title").first().getElementsByClass("bloko-header-section-1").text())
                     .salary(doc.getElementsByClass("vacancy-title").first().getElementsByTag("span").text())
                     .company(doc.getElementsByClass("vacancy-company-details").first().getElementsByClass("vacancy-company-name").text())
-                    .requirements(doc.getElementsByClass("bloko-tag-list").text())
+//                    .requirements(doc.getElementsByClass("bloko-tag-list").text())
                     .description(doc.getElementsByClass("vacancy-section").first().getElementsByAttribute("data-qa").first().text())
                     .schedule(doc.getElementsByClass("vacancy-description-list-item").text())
                     .date(doc.getElementsByClass("vacancy-creation-time-redesigned").text())

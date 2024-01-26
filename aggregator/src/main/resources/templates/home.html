@@ -127,7 +127,7 @@
             <tr>
                 <td class="table-dark">Название</td>
                 <td class="table-dark">Зарплата</td>
-                <td class="table-dark">Требования</td>
+<!--                <td class="table-dark">Требования</td>-->
                 <td class="table-dark">График работы</td>
                 <td class="table-dark">Компания</td>
                 <td class="table-dark">Описание</td>
@@ -147,8 +147,8 @@
                 <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указана'"></td>
                 <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.salary}"></td>
                 <!--Требования-->
-                <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указаны'"></td>
-                <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.requirements}"></td>
+<!--                <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указаны'"></td>-->
+<!--                <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.requirements}"></td>-->
                 <!--График работы-->
                 <td th:text="${vacancy.schedule}"></td>
                 <!--Компания-->
@@ -167,9 +167,9 @@
         </table>
     </div>
 
+    <!--Пагинация-->
     <nav>
         <ul class="pagination justify-content-center mt-5 mb-5">
-
             <div th:if="${vacancies.hasPrevious()}">
                 <li class="page-item disabled">
                     <form th:action="@{/}" method="get">

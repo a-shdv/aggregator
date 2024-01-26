@@ -16,7 +16,7 @@ public class SendMessageDto implements Serializable {
     String date;
     String salary;
     String company;
-    String requirements;
+//    String requirements;
     String description;
     String schedule;
     String source;
@@ -28,7 +28,7 @@ public class SendMessageDto implements Serializable {
                 ", \n\tdate='" + date + '\'' +
                 ", \n\tsalary='" + salary + '\'' +
                 ", \n\tcompany='" + company + '\'' +
-                ", \n\trequirements='" + requirements + '\'' +
+//                ", \n\trequirements='" + requirements + '\'' +
                 ", \n\tdescription='" + description + '\'' +
                 ", \n\tschedule='" + schedule + '\'' +
                 ", \n\tsource='" + source + "\'" + "\n" +

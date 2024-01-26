@@ -9,7 +9,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
 @Service
@@ -37,14 +36,18 @@ class SuperJobParserService(private val rabbitMqSenderService: RabbitMqSenderSer
             while (currentPage <= amount / elements.size) {
                 elements.forEach {
                     val source: String = it.getElementsByAttribute("href").first().absUrl("href")
-                    val title: String = it.getElementsByClass("vacancy-preview-card__title").first().text()
-                    // date
-                    val salaray: String = it.getElementsByClass("vacancy-preview-card__salary").first().text()
-                    val company: String = it.getElementsByClass("vacancy-preview-card__company-name").first().text()
-                    // req
-                    val description: String = it.getElementsByClass("vacancy-preview-card__short-description").first().text()
-                    val schedule: String = it.getElementsByClass("vacancy-preview-location__address-text").first().text()
-                    println()
+
+                    rabbitMqSenderService.send(
+                        SendMessageDto.builder()
+                            .title(it.getElementsByClass("vacancy-preview-card__title").first().text())
+                            .date(parseUpdatedDate(source).toString())
+                            .salary(it.getElementsByClass("vacancy-preview-card__salary").first().text())
+                            .company(it.getElementsByClass("vacancy-preview-card__company-name").first().text())
+                            .description(it.getElementsByClass("vacancy-preview-card__short-description").first().text())
+                            .schedule(it.getElementsByClass("vacancy-preview-location__address-text").first().text())
+                            .source(source)
+                            .build()
+                    )
                 }
 
 
@@ -54,17 +57,18 @@ class SuperJobParserService(private val rabbitMqSenderService: RabbitMqSenderSer
         }
     }
 
-    private fun parseVacancyWebPage(url: String): SendMessageDto {
+    private fun parseUpdatedDate(url: String): String? {
         var doc: Document? = null
         try {
-             doc = Jsoup.connect(url).get()
+            doc = Jsoup.connect(url).get()
         } catch (ex: IOException) {
             log.error(ex.message)
         }
 
         if (doc != null) {
-            return SendMessageDto()
+            return doc.getElementsByClass("vacancy-system-info__updated-date").text()
         }
+        return null
     }
 
     private fun connectDocumentToUrl(url: String): Document? {
