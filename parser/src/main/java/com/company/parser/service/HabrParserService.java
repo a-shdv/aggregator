@@ -19,10 +19,9 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class HabrParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
-    private static final int vacanciesPerPage = 25;
 
     public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary,
-                                                    int experience,int cityId, boolean isRemoteAvailable) {
+                                                    int experience, int cityId, boolean isRemoteAvailable) {
         return CompletableFuture.runAsync(() -> {
             int previousPage;
             int currentPage = 1;
@@ -31,36 +30,39 @@ public class HabrParserService {
                     "&city_id=" + parseCityId(cityId) + "&remote=" + isRemoteAvailable + "&type=all");
 
             int parsedExperience = parseExperience(experience);
-            if (parsedExperience != -1)  {
+            if (parsedExperience != -1) {
                 url.append("&qid=").append(parsedExperience);
             }
 
-            Document doc = null;
-            while (currentPage <= amount / vacanciesPerPage) {
-                try {
-                    doc = Jsoup.connect(url.toString()).get();
-                } catch (IOException e) {
-                    log.error(e.getMessage());
-                }
+            Document doc = connectDocumentToUrl(url.toString());
+            Elements elements = null;
+            if (doc != null) {
+                elements = doc
+                        .getElementsByClass("section-group section-group--gap-medium").last()
+                        .getElementsByClass("section-box");
+            }
 
-                if (doc != null) {
-                    Elements sections = doc.getElementsByClass("section-group section-group--gap-medium").last().getElementsByClass("section-box");
-                    for (Element section : sections) {
-                        String vacancyUrl = section.getElementsByClass("vacancy-card__title-link").first().absUrl("href");
+            if (elements != null) {
+                while (currentPage <= amount / elements.size()) {
+                    elements.forEach(element -> {
+                        String vacancyUrl = element
+                                .getElementsByClass("vacancy-card__title-link").first()
+                                .absUrl("href");
 
                         SendMessageDto sendMessageDto = SendMessageDto.builder()
-                                .title(section.getElementsByClass("vacancy-card__title").text())
-                                .date(section.getElementsByClass("vacancy-card__date").text())
-                                .salary(section.getElementsByClass("vacancy-card__salary").text())
-                                .company(section.getElementsByClass("vacancy-card__company-title").text())
-                                .requirements(section.getElementsByClass("vacancy-card__skills").first().text())
-                                .schedule(section.getElementsByClass("vacancy-card__meta").text())
+                                .title(element.getElementsByClass("vacancy-card__title").text())
+                                .date(element.getElementsByClass("vacancy-card__date").text())
+                                .salary(element.getElementsByClass("vacancy-card__salary").text())
+                                .company(element.getElementsByClass("vacancy-card__company-title").text())
+                                .requirements(element.getElementsByClass("vacancy-card__skills").first().text())
+                                .schedule(element.getElementsByClass("vacancy-card__meta").text())
                                 .description(parseWebPageDescription(vacancyUrl))
                                 .source(vacancyUrl)
                                 .build();
 
                         rabbitMqSenderService.send(sendMessageDto);
-                    }
+                    });
+
                     previousPage = currentPage;
                     currentPage++;
 
@@ -69,8 +71,6 @@ public class HabrParserService {
                             url.lastIndexOf("?page=" + previousPage),
                             "?page=" + currentPage
                     );
-
-//                    url = "https://career.habr.com/vacancies?page=" + currentPage + "&q=" + query + "&type=all" + "&salary=" + salary;
                 }
             }
         });
@@ -114,6 +114,15 @@ public class HabrParserService {
         }
         if (doc != null) {
             return doc.select("html body.vacancies_show_page div.page-container div.page-container__main div.page-width.page-width--responsive div.content-wrapper div.content-wrapper__main.content-wrapper__main--left section").get(1).text();
+        }
+        return null;
+    }
+
+    private Document connectDocumentToUrl(String url) {
+        try {
+            return Jsoup.connect(url).get();
+        } catch (IOException e) {
+            log.error(e.getMessage());
         }
         return null;
     }

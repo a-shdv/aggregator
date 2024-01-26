@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +16,8 @@ import java.util.concurrent.CompletableFuture;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class HhParserService {
+public class HhRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
-    private static final int vacanciesPerPage = 20;
 
     public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary,
                                                     int experience, int cityId, boolean isRemoteAvailable) {
@@ -45,21 +43,22 @@ public class HhParserService {
                     "&schedule=fullDay" + schedule +
                     "&customDomain=1");
 
-            Document doc = null;
+            Document doc = connectDocumentToUrl(url.toString());
+            Elements elements = null;
+            if (doc != null) {
+                elements = doc
+                        .getElementsByClass("vacancy-serp-content").first()
+                        .getElementsByClass("serp-item");
+            }
 
-            while (currentPage < amount / vacanciesPerPage) {
-                try {
-                    doc = Jsoup.connect(url.toString()).get();
-                } catch (IOException e) {
-                    log.error(e.getMessage());
-                }
-                if (doc != null) {
-                    final Elements elements = doc.getElementsByClass("vacancy-serp-content").first().getElementsByClass("serp-item");
-                    for (Element element : elements) {
+            if (elements != null) {
+                while (currentPage < amount / elements.size()) {
+                    elements.forEach(element -> {
                         String vacancyUrl = element.getElementsByClass("bloko-link").first().absUrl("href");
-                        SendMessageDto sendMessageDto = parseWebPage(vacancyUrl);
+                        SendMessageDto sendMessageDto = parseVacancyWebPage(vacancyUrl);
                         rabbitMqSenderService.send(sendMessageDto);
-                    }
+
+                    });
 
                     previousPage = currentPage;
                     currentPage++;
@@ -69,6 +68,8 @@ public class HhParserService {
                             "?page=" + currentPage
                     );
                 }
+            } else {
+                log.error("Could not parse elements");
             }
         });
     }
@@ -102,7 +103,7 @@ public class HhParserService {
         return parsedExperience;
     }
 
-    private SendMessageDto parseWebPage(String url) {
+    private SendMessageDto parseVacancyWebPage(String url) {
         Document doc = null;
         try {
             doc = Jsoup.connect(url).get();
@@ -120,6 +121,15 @@ public class HhParserService {
                     .date(doc.getElementsByClass("vacancy-creation-time-redesigned").text())
                     .source(url)
                     .build();
+        }
+        return null;
+    }
+
+    private Document connectDocumentToUrl(String url) {
+        try {
+            return Jsoup.connect(url).get();
+        } catch (IOException e) {
+            log.error(e.getMessage());
         }
         return null;
     }

@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class SendMessageDto implements Serializable {
     String title;
@@ -20,6 +18,20 @@ public class SendMessageDto implements Serializable {
     String description;
     String schedule;
     String source;
+
+    public SendMessageDto() {
+    }
+
+    public SendMessageDto(String title, String date, String salary, String company, String requirements, String description, String schedule, String source) {
+        this.title = title;
+        this.date = date;
+        this.salary = salary;
+        this.company = company;
+        this.requirements = requirements;
+        this.description = description;
+        this.schedule = schedule;
+        this.source = source;
+    }
 
     @Override
     public String toString() {
