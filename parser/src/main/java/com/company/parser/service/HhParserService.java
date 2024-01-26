@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,6 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class HhParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
-    private static final int vacanciesPerPage = 20;
 
     public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary,
                                                     int experience, int cityId, boolean isRemoteAvailable) {
@@ -46,16 +44,18 @@ public class HhParserService {
                     "&customDomain=1");
 
             Document doc = connectDocumentToUrl(url.toString());
+            Elements elements = null;
+            if (doc != null) {
+                elements = doc
+                        .getElementsByClass("vacancy-serp-content").first()
+                        .getElementsByClass("serp-item");
+            }
 
-            while (currentPage < amount / vacanciesPerPage) {
-                if (doc != null) {
-                    final Elements elements = doc
-                            .getElementsByClass("vacancy-serp-content").first()
-                            .getElementsByClass("serp-item");
-
+            if (elements != null) {
+                while (currentPage < amount / elements.size()) {
                     elements.forEach(element -> {
                         String vacancyUrl = element.getElementsByClass("bloko-link").first().absUrl("href");
-                        SendMessageDto sendMessageDto = parseWebPage(vacancyUrl);
+                        SendMessageDto sendMessageDto = parseVacancyWebPage(vacancyUrl);
                         rabbitMqSenderService.send(sendMessageDto);
 
                     });
@@ -68,6 +68,8 @@ public class HhParserService {
                             "?page=" + currentPage
                     );
                 }
+            } else {
+                log.error("Could not parse elements");
             }
         });
     }
@@ -101,7 +103,7 @@ public class HhParserService {
         return parsedExperience;
     }
 
-    private SendMessageDto parseWebPage(String url) {
+    private SendMessageDto parseVacancyWebPage(String url) {
         Document doc = null;
         try {
             doc = Jsoup.connect(url).get();

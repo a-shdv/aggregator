@@ -19,7 +19,6 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class HabrParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
-    private static final int vacanciesPerPage = 25;
 
     public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary,
                                                     int experience, int cityId, boolean isRemoteAvailable) {
@@ -36,12 +35,15 @@ public class HabrParserService {
             }
 
             Document doc = connectDocumentToUrl(url.toString());
-            while (currentPage <= amount / vacanciesPerPage) {
-                if (doc != null) {
-                    final Elements elements = doc
-                            .getElementsByClass("section-group section-group--gap-medium").last()
-                            .getElementsByClass("section-box");
+            Elements elements = null;
+            if (doc != null) {
+                elements = doc
+                        .getElementsByClass("section-group section-group--gap-medium").last()
+                        .getElementsByClass("section-box");
+            }
 
+            if (elements != null) {
+                while (currentPage <= amount / elements.size()) {
                     elements.forEach(element -> {
                         String vacancyUrl = element
                                 .getElementsByClass("vacancy-card__title-link").first()
