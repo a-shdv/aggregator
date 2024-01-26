@@ -2,7 +2,8 @@ package com.company.parser.rabbitmq.service;
 
 import com.company.parser.rabbitmq.dto.ReceiveMessageDto;
 import com.company.parser.service.HabrParserService;
-import com.company.parser.service.HhParserService;
+import com.company.parser.service.HhRuParserService;
+import com.company.parser.service.RabotaRuParserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
@@ -17,7 +18,8 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class RabbitMqReceiverService {
     private final HabrParserService habrParserService;
-    private final HhParserService hhParserService;
+    private final HhRuParserService hhRuParserService;
+    private final RabotaRuParserService rabotaRuParserService;
 
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(ReceiveMessageDto receiveMessageDto) {
@@ -33,7 +35,17 @@ public class RabbitMqReceiverService {
                                 receiveMessageDto.getCityId(),
                                 receiveMessageDto.isRemoteAvailable()
                         ),
-                hhParserService
+                hhRuParserService
+                        .findAllVacancies(
+                                receiveMessageDto.getTitle(),
+                                receiveMessageDto.getAmount(),
+                                receiveMessageDto.getSalary(),
+                                receiveMessageDto.isOnlyWithSalary(),
+                                receiveMessageDto.getExperience(),
+                                receiveMessageDto.getCityId(),
+                                receiveMessageDto.isRemoteAvailable()
+                        ),
+                rabotaRuParserService
                         .findAllVacancies(
                                 receiveMessageDto.getTitle(),
                                 receiveMessageDto.getAmount(),

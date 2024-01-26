@@ -17,7 +17,7 @@ public class ReceiveMessageDto implements Serializable {
     String date;
     String salary;
     String company;
-//    String requirements;
+    String requirements;
     String description;
     String schedule;
     String source;
@@ -29,7 +29,7 @@ public class ReceiveMessageDto implements Serializable {
                 .date(receiveMessageDto.getDate())
                 .salary(receiveMessageDto.getSalary())
                 .company(receiveMessageDto.getCompany())
-//                .requirements(receiveMessageDto.getRequirements())
+                .requirements(receiveMessageDto.getRequirements())
                 .description(receiveMessageDto.getDescription())
                 .schedule(receiveMessageDto.getSchedule())
                 .source(receiveMessageDto.getSource())
@@ -43,7 +43,7 @@ public class ReceiveMessageDto implements Serializable {
                 ", \n\tdate='" + date + '\'' +
                 ", \n\tsalary='" + salary + '\'' +
                 ", \n\tcompany='" + company + '\'' +
-//                ", \n\trequirements='" + requirements + '\'' +
+                ", \n\trequirements='" + requirements + '\'' +
                 ", \n\tdescription='" + description + '\'' +
                 ", \n\tschedule='" + schedule + '\'' +
                 ", \n\tsource='" + source + "\'" + "\n" +

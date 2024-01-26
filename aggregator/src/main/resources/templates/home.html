@@ -26,19 +26,19 @@
             <!--Название вакансии-->
             <div class="form-group">
                 <label for="title">Название вакансии</label>
-                <input id="title" class="form-control" type="text" name="title" required>
+                <input id="title" class="form-control" type="text" name="title" placeholder="Программист" required>
             </div>
 
             <!--Количество вакансий-->
             <div class="form-group">
                 <label for="amount">Количество вакансий</label>
-                <input id="amount" class="form-control" type="text" name="amount" min="35" max="1000" required>
+                <input id="amount" class="form-control" type="text" name="amount" min="35" max="1000" placeholder="500" required>
             </div>
 
             <!--Зарплата-->
             <div class="form-group">
                 <label for="salary">Заработная плата (от ...)</label>
-                <input id="salary" class="form-control" type="number" name="salary" min="0">
+                <input id="salary" class="form-control" type="number" name="salary" min="0" value="0">
             </div>
 
             <!--Заработная плата указана-->
@@ -127,7 +127,7 @@
             <tr>
                 <td class="table-dark">Название</td>
                 <td class="table-dark">Зарплата</td>
-<!--                <td class="table-dark">Требования</td>-->
+                <td class="table-dark">Требования</td>
                 <td class="table-dark">График работы</td>
                 <td class="table-dark">Компания</td>
                 <td class="table-dark">Описание</td>
@@ -147,8 +147,8 @@
                 <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указана'"></td>
                 <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.salary}"></td>
                 <!--Требования-->
-<!--                <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указаны'"></td>-->
-<!--                <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.requirements}"></td>-->
+                <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указаны'"></td>
+                <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.requirements}"></td>
                 <!--График работы-->
                 <td th:text="${vacancy.schedule}"></td>
                 <!--Компания-->

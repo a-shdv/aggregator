@@ -54,7 +54,7 @@ public class HabrParserService {
                                 .date(element.getElementsByClass("vacancy-card__date").text())
                                 .salary(element.getElementsByClass("vacancy-card__salary").text())
                                 .company(element.getElementsByClass("vacancy-card__company-title").text())
-//                                .requirements(element.getElementsByClass("vacancy-card__skills").first().text())
+                                .requirements(element.getElementsByClass("vacancy-card__skills").first().text())
                                 .schedule(element.getElementsByClass("vacancy-card__meta").text())
                                 .description(parseWebPageDescription(vacancyUrl))
                                 .source(vacancyUrl)
