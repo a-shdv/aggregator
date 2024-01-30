@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -43,6 +45,9 @@ public class HabrParserService {
             }
 
             if (elements != null) {
+                final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
+                final int sendMessageDtoListMaxSize = 10;
+
                 while (currentPage <= amount / elements.size()) {
                     elements.forEach(element -> {
                         String vacancyUrl = element
@@ -60,17 +65,21 @@ public class HabrParserService {
                                 .source(vacancyUrl)
                                 .build();
 
-                        rabbitMqSenderService.send(sendMessageDto);
+                        sendMessageDtoList.add(sendMessageDto);
                     });
 
                     previousPage = currentPage;
                     currentPage++;
-
                     url.replace(
                             url.indexOf("?page=" + previousPage),
                             url.lastIndexOf("?page=" + previousPage),
                             "?page=" + currentPage
                     );
+
+                    if (sendMessageDtoList.size() > sendMessageDtoListMaxSize) {
+                        rabbitMqSenderService.send(sendMessageDtoList);
+                        sendMessageDtoList.clear();
+                    }
                 }
             }
         });

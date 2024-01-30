@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -34,6 +36,23 @@ public class ReceiveMessageDto implements Serializable {
                 .schedule(receiveMessageDto.getSchedule())
                 .source(receiveMessageDto.getSource())
                 .build();
+    }
+
+    public static List<Vacancy> toVacancyList(List<ReceiveMessageDto> receiveMessageDtoList) {
+        List<Vacancy> vacancies = new ArrayList<>();
+        receiveMessageDtoList.forEach(message -> {
+            vacancies.add(Vacancy.builder()
+                    .title(message.getTitle())
+                    .date(message.getDate())
+                    .salary(message.getSalary())
+                    .company(message.getCompany())
+                    .requirements(message.getRequirements())
+                    .description(message.getDescription())
+                    .schedule(message.getSchedule())
+                    .source(message.getSource())
+                    .build());
+        });
+        return vacancies;
     }
 
     @Override

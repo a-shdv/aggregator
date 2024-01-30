@@ -8,6 +8,8 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @EnableRabbit
@@ -18,8 +20,8 @@ public class RabbitMqSenderService {
 
     private final RabbitMqProperties rabbitProperties;
 
-    public void send(SendMessageDto sendMessageDto) {
-        rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), sendMessageDto);
-        log.info("SENT: {}", sendMessageDto);
+    public void send(List<SendMessageDto> sendMessageDtos) {
+        rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), sendMessageDtos);
+        log.info("SENT: {}", sendMessageDtos);
     }
 }

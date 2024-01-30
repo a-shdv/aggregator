@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -52,12 +54,14 @@ public class HhRuParserService {
             }
 
             if (elements != null) {
+                final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
+                final int sendMessageDtoListMaxSize = 10;
+
                 while (currentPage < amount / elements.size()) {
                     elements.forEach(element -> {
                         String vacancyUrl = element.getElementsByClass("bloko-link").first().absUrl("href");
                         SendMessageDto sendMessageDto = parseVacancyWebPage(vacancyUrl);
-                        rabbitMqSenderService.send(sendMessageDto);
-
+                        sendMessageDtoList.add(sendMessageDto);
                     });
 
                     previousPage = currentPage;
@@ -67,6 +71,11 @@ public class HhRuParserService {
                             url.lastIndexOf("?page=" + previousPage),
                             "?page=" + currentPage
                     );
+
+                    if (sendMessageDtoList.size() > sendMessageDtoListMaxSize) {
+                        rabbitMqSenderService.send(sendMessageDtoList);
+                        sendMessageDtoList.clear();
+                    }
                 }
             } else {
                 log.error("Could not parse elements");
