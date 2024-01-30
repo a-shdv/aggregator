@@ -81,6 +81,11 @@ public class HabrParserService {
                         sendMessageDtoList.clear();
                     }
                 }
+                // Отправка оставшихся сообщений, если в списке осталось < sendMessageDtoListMaxSize сообщений после парсинга
+                if (!sendMessageDtoList.isEmpty()) {
+                    rabbitMqSenderService.send(sendMessageDtoList);
+                    sendMessageDtoList.clear();
+                }
             }
         });
     }

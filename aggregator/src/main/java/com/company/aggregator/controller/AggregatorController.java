@@ -33,7 +33,7 @@ public class AggregatorController {
                           @RequestParam(required = false, defaultValue = "10") int size,
                           Model model) {
         CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findAll(PageRequest.of(page, size));
-        model.addAttribute("vacancies", vacancies.join());
+        model.addAttribute("vacancies", vacancies);
         return "home";
     }
 

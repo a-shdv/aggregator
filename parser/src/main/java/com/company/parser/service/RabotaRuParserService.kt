@@ -91,6 +91,12 @@ class RabotaRuParserService(private val rabbitMqSenderService: RabbitMqSenderSer
                         sendMessageDtoList.clear()
                     }
                 }
+
+                // Отправка оставшихся сообщений, если в списке осталось < sendMessageDtoListMaxSize сообщений после парсинга
+                if (sendMessageDtoList.isNotEmpty()) {
+                    rabbitMqSenderService.send(sendMessageDtoList)
+                    sendMessageDtoList.clear()
+                }
             } else {
                 log.error("Could not parse elements")
             }
