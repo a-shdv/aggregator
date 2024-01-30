@@ -54,7 +54,7 @@ public class AggregatorController {
 
     @PostMapping("/clear")
     public String deleteAllVacancies() {
-        aggregatorService.deleteAllVacancies().join();
+        aggregatorService.deleteAllVacancies();
         return "redirect:/";
     }
 }

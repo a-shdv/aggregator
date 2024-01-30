@@ -40,7 +40,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
                     if (vacancy != null) {
                         log.info("Vacancy already exists: {}", vacancy.getSource());
                     } else {
-                        aggregatorService.save(receiveMessageDto).join();
+                        aggregatorService.save(receiveMessageDto);
                     }
                 });
     }
