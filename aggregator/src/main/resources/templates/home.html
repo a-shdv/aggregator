@@ -21,7 +21,7 @@
 <!--Вакансия-->
 <div class="container">
     <div class="row justify-content-center">
-        <form th:action="@{/}" th:method="post" class="col-lg-4 mt-5">
+        <form th:action="@{/}" th:method="post" class="col-lg-4 mt-5" onsubmit="checkAmount()">
             <h2>Вакансия</h2>
             <!--Название вакансии-->
             <div class="form-group">
@@ -31,7 +31,7 @@
 
             <!--Количество вакансий-->
             <div class="form-group">
-                <label for="amount">Количество вакансий</label>
+                <label for="amount">Количество вакансий (min=35, max=1000)</label>
                 <input id="amount" class="form-control" type="text" name="amount" min="35" max="1000" placeholder="500" required>
             </div>
 
@@ -197,12 +197,19 @@
 
     <!--Кнопка "Очистить"-->
     <form class="mt-5" th:action="@{/clear}" th:method="post">
-        <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="alert()">
+        <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
     </form>
     </div>
 <script>
-    function alert() {
+    function clearVacancies() {
         confirm("Вы уверены, что хотите очистить список вакансий?")
+    }
+
+    function checkAmount() {
+        let amount = document.getElementById("amount").value
+        if (amount < 35 || amount > 1000) {
+            alert("Количество вакансий не должно быть меньше 35 и больше 1000!")
+        }
     }
 </script>
 </body>

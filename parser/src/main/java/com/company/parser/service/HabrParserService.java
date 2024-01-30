@@ -46,7 +46,6 @@ public class HabrParserService {
 
             if (elements != null) {
                 final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
-                final int sendMessageDtoListMaxSize = 10;
 
                 while (currentPage <= amount / elements.size()) {
                     elements.forEach(element -> {
@@ -76,12 +75,12 @@ public class HabrParserService {
                             "?page=" + currentPage
                     );
 
-                    if (sendMessageDtoList.size() > sendMessageDtoListMaxSize) {
+                    if (sendMessageDtoList.size() == elements.size()) {
                         rabbitMqSenderService.send(sendMessageDtoList);
                         sendMessageDtoList.clear();
                     }
                 }
-                // Отправка оставшихся сообщений, если в списке осталось < sendMessageDtoListMaxSize сообщений после парсинга
+                // Отправка оставшихся сообщений, если в списке осталось < elements.size() сообщений после парсинга
                 if (!sendMessageDtoList.isEmpty()) {
                     rabbitMqSenderService.send(sendMessageDtoList);
                     sendMessageDtoList.clear();

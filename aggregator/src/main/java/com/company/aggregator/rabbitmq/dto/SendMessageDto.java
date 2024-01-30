@@ -22,7 +22,7 @@ public class SendMessageDto implements Serializable {
 
     public SendMessageDto(String title, int amount, BigDecimal salary, boolean onlyWithSalary, int experience, int cityId, boolean isRemoteAvailable) {
         this.title = title;
-        this.amount = amount / 2;
+        this.amount = amount / 3;
         this.salary = salary;
         this.onlyWithSalary = onlyWithSalary;
         this.experience = experience;

@@ -28,7 +28,8 @@ class RabotaRuParserService(private val rabbitMqSenderService: RabbitMqSenderSer
                 "https://www.rabota.ru/vacancy/" +
                         "?query=$query" +
                         "&min_salary=$salary" +
-                        "&experience_ids=${parseExperience(experience)}"
+                        "&experience_ids=${parseExperience(experience)}" +
+                        "&page=$currentPage"
             )
 
             val parsedCityId: String = parseCityId(cityId)
@@ -81,12 +82,12 @@ class RabotaRuParserService(private val rabbitMqSenderService: RabbitMqSenderSer
                     previousPage = currentPage;
                     currentPage++;
                     url.replace(
-                        url.indexOf("?page=$previousPage"),
-                        url.lastIndexOf("?page=$previousPage"),
-                        "?page=$currentPage"
+                        url.indexOf("&page=$previousPage"),
+                        url.lastIndexOf("&page=$previousPage"),
+                        "&page=$currentPage"
                     )
 
-                    if (sendMessageDtoList.size > sendMessageDtoListMaxSize) {
+                    if (sendMessageDtoList.size == elements.size) {
                         rabbitMqSenderService.send(sendMessageDtoList)
                         sendMessageDtoList.clear()
                     }
