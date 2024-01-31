@@ -21,8 +21,8 @@ import java.util.concurrent.CompletableFuture;
 public class HhRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
 
-    public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary,
-                                                    int experience, int cityId, boolean isRemoteAvailable) {
+    public CompletableFuture<Void> findVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary,
+                                                 int experience, int cityId, boolean isRemoteAvailable) {
         return CompletableFuture.runAsync(() -> {
             int currentPage = 0;
             int previousPage;

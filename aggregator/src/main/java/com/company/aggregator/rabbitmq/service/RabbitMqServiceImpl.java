@@ -12,7 +12,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
@@ -35,16 +34,11 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(List<ReceiveMessageDto> receiveMessageDtoList) {
         log.info("RECEIVED: {}", receiveMessageDtoList.toString());
-        aggregatorService.saveList(receiveMessageDtoList);
-//        aggregatorService
-//                .findBySource(receiveMessageDto.getSource())
-//                .thenAccept(vacancy -> {
-//                    if (vacancy != null) {
-//                        log.info("Vacancy already exists: {}", vacancy.getSource());
-//                    } else {
-//                        aggregatorService.save(receiveMessageDto);
-//                    }
-//                });
+        receiveMessageDtoList
+                .removeIf(receiveMessageDto -> aggregatorService.findBySource(receiveMessageDto.getSource()) != null);
+        if (!receiveMessageDtoList.isEmpty()) {
+            aggregatorService.saveMessageList(receiveMessageDtoList);
+        }
     }
 
     @Override

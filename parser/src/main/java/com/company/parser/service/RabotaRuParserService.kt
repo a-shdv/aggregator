@@ -17,7 +17,7 @@ class RabotaRuParserService(private val rabbitMqSenderService: RabbitMqSenderSer
         private val log = LoggerFactory.getLogger(RabotaRuParserService.javaClass)
     }
 
-    fun findAllVacancies(
+    fun findVacancies(
         query: String, amount: Int, salary: BigDecimal, onlyWithSalary: Boolean,
         experience: Int, cityId: Int, isRemoteAvailable: Boolean
     ): CompletableFuture<Void> {

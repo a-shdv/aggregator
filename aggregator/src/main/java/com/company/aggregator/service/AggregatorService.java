@@ -22,32 +22,31 @@ public class AggregatorService {
     }
 
     @Transactional
-    public CompletableFuture<Void> save(ReceiveMessageDto receiveMessageDto) {
+    public CompletableFuture<Void> saveMessage(ReceiveMessageDto receiveMessageDto) {
         return CompletableFuture.runAsync(() -> aggregatorRepository.save(ReceiveMessageDto.toVacancy(receiveMessageDto)));
     }
 
     @Transactional
-    public CompletableFuture<Void> saveList(List<ReceiveMessageDto> receiveMessageDtoList) {
+    public CompletableFuture<Void> saveMessageList(List<ReceiveMessageDto> receiveMessageDtoList) {
         return CompletableFuture.runAsync(() -> aggregatorRepository.saveAll(ReceiveMessageDto.toVacancyList(receiveMessageDtoList)));
     }
 
     @Transactional
-    public CompletableFuture<List<Vacancy>> findAll() {
+    public CompletableFuture<List<Vacancy>> findVacancies() {
         return CompletableFuture.supplyAsync(aggregatorRepository::findAll);
     }
 
     @Transactional
-    public CompletableFuture<Page<Vacancy>> findAll(PageRequest pageRequest) {
+    public CompletableFuture<Page<Vacancy>> findVacancies(PageRequest pageRequest) {
         return CompletableFuture.supplyAsync(() -> aggregatorRepository.findAll(pageRequest));
     }
 
     @Transactional
-    public CompletableFuture<Void> deleteAllVacancies() {
+    public CompletableFuture<Void> deleteVacancies() {
         return CompletableFuture.runAsync(aggregatorRepository::deleteAll);
     }
 
-    @Transactional
-    public CompletableFuture<Vacancy> findBySource(String source) {
-        return CompletableFuture.supplyAsync(() -> aggregatorRepository.findBySource(source));
+    public Vacancy findBySource(String source) {
+        return aggregatorRepository.findBySource(source);
     }
 }

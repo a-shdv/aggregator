@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @Controller
 @RequestMapping("/")
@@ -29,10 +28,10 @@ public class AggregatorController {
     private final RabbitMqService rabbitMqService;
 
     @GetMapping
-    public String findAll(@RequestParam(required = false, defaultValue = "0") int page,
-                          @RequestParam(required = false, defaultValue = "10") int size,
-                          Model model) {
-        CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findAll(PageRequest.of(page, size));
+    public String findVacancies(@RequestParam(required = false, defaultValue = "0") int page,
+                                @RequestParam(required = false, defaultValue = "10") int size,
+                                Model model) {
+        CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findVacancies(PageRequest.of(page, size));
         model.addAttribute("vacancies", vacancies.join());
         return "home";
     }
@@ -53,8 +52,8 @@ public class AggregatorController {
     }
 
     @PostMapping("/clear")
-    public String deleteAllVacancies() {
-        aggregatorService.deleteAllVacancies();
+    public String deleteVacancies() {
+        aggregatorService.deleteVacancies();
         return "redirect:/";
     }
 }
