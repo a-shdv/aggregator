@@ -34,7 +34,7 @@ public class AggregatorController {
     public String findVacancies(@AuthenticationPrincipal User user, @RequestParam(required = false, defaultValue = "0") int page,
                                 @RequestParam(required = false, defaultValue = "10") int size,
                                 Model model) {
-        CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findVacanciesAsync(PageRequest.of(page, size));
+        CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findVacanciesAsync(user, PageRequest.of(page, size));
         model.addAttribute("vacancies", vacancies.join());
         return "home";
     }

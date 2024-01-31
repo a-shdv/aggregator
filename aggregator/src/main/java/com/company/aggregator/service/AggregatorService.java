@@ -38,8 +38,8 @@ public class AggregatorService {
     }
 
     @Transactional
-    public CompletableFuture<Page<Vacancy>> findVacanciesAsync(PageRequest pageRequest) {
-        return CompletableFuture.supplyAsync(() -> aggregatorRepository.findAll(pageRequest));
+    public CompletableFuture<Page<Vacancy>> findVacanciesAsync(User user, PageRequest pageRequest) {
+        return CompletableFuture.supplyAsync(() -> aggregatorRepository.findByUser(user, pageRequest));
     }
 
     @Transactional

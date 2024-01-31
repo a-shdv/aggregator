@@ -100,7 +100,7 @@
 
 <!--Все вакансии-->
 <div class="row justify-content-center">
-    <div th:if="${#lists.isEmpty(vacancies)}" class="alert alert-warning col-6 mb-5 mt-5" role="alert">
+    <div th:if="${vacancies.isEmpty()}" class="alert alert-warning col-6 mb-5 mt-5" role="alert">
         Список вакансий пуст!
     </div>
 </div>
@@ -121,7 +121,6 @@
                 <td class="table-dark">Источник</td>
                 <!--        <td>Ссылка</td>-->
             </tr>
-            <tr th:if="${#lists.isEmpty(vacancies)}" th:text="'Список вакансий пуст!'"></tr>
             </thead>
             <tbody>
             <tr th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}">
