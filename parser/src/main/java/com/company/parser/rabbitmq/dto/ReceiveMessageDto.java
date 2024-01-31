@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,7 +13,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class ReceiveMessageDto implements Serializable {
-    User user;
+    String username;
     String title;
     int amount;
     BigDecimal salary;
@@ -26,6 +25,7 @@ public class ReceiveMessageDto implements Serializable {
     @Override
     public String toString() {
         return "ReceiveMessageDto {" +
+                "username='" + username + '\'' +
                 "title='" + title + '\'' +
                 "amount='" + amount + '\'' +
                 "salary='" + salary + '\'' +

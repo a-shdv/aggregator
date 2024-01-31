@@ -21,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 public class HabrParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
 
-    public CompletableFuture<Void> findVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary,
+    public CompletableFuture<Void> findVacancies(String username, String query, int amount, BigDecimal salary, boolean onlyWithSalary,
                                                  int experience, int cityId, boolean isRemoteAvailable) {
         return CompletableFuture.runAsync(() -> {
             int previousPage;
@@ -53,6 +53,7 @@ public class HabrParserService {
                                 .absUrl("href");
 
                         SendMessageDto sendMessageDto = SendMessageDto.builder()
+                                .username(username)
                                 .title(element.getElementsByClass("vacancy-card__title").text())
                                 .date(element.getElementsByClass("vacancy-card__date").text())
                                 .salary(element.getElementsByClass("vacancy-card__salary").text())

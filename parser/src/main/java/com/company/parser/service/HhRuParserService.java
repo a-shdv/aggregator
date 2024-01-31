@@ -21,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 public class HhRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
 
-    public CompletableFuture<Void> findVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary,
+    public CompletableFuture<Void> findVacancies(String username, String query, int amount, BigDecimal salary, boolean onlyWithSalary,
                                                  int experience, int cityId, boolean isRemoteAvailable) {
         return CompletableFuture.runAsync(() -> {
             int currentPage = 0;
@@ -59,7 +59,7 @@ public class HhRuParserService {
                 while (currentPage < amount / elements.size()) {
                     elements.forEach(element -> {
                         String vacancyUrl = element.getElementsByClass("bloko-link").first().absUrl("href");
-                        SendMessageDto sendMessageDto = parseVacancyWebPage(vacancyUrl);
+                        SendMessageDto sendMessageDto = parseVacancyWebPage(username, vacancyUrl);
                         sendMessageDtoList.add(sendMessageDto);
                     });
 
@@ -116,7 +116,7 @@ public class HhRuParserService {
         return parsedExperience;
     }
 
-    private SendMessageDto parseVacancyWebPage(String url) {
+    private SendMessageDto parseVacancyWebPage(String username, String url) {
         Document doc = null;
         try {
             doc = Jsoup.connect(url).get();
@@ -125,6 +125,7 @@ public class HhRuParserService {
         }
         if (doc != null) {
             return SendMessageDto.builder()
+                    .username(username)
                     .title(doc.getElementsByClass("vacancy-title").first().getElementsByClass("bloko-header-section-1").text())
                     .salary(doc.getElementsByClass("vacancy-title").first().getElementsByTag("span").text())
                     .company(doc.getElementsByClass("vacancy-company-details").first().getElementsByClass("vacancy-company-name").text())

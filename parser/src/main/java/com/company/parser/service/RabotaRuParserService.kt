@@ -18,7 +18,7 @@ class RabotaRuParserService(private val rabbitMqSenderService: RabbitMqSenderSer
     }
 
     fun findVacancies(
-        query: String, amount: Int, salary: BigDecimal, onlyWithSalary: Boolean,
+        username: String, query: String, amount: Int, salary: BigDecimal, onlyWithSalary: Boolean,
         experience: Int, cityId: Int, isRemoteAvailable: Boolean
     ): CompletableFuture<Void> {
         return CompletableFuture.runAsync {
@@ -66,6 +66,7 @@ class RabotaRuParserService(private val rabbitMqSenderService: RabbitMqSenderSer
                             it.getElementsByClass("vacancy-preview-location__address-text").first().text()
 
                         val message: SendMessageDto = SendMessageDto(
+                            username,
                             title,
                             date,
                             vacancySalary,

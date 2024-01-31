@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
@@ -30,7 +31,7 @@ public class AggregatorController {
     private final RabbitMqService rabbitMqService;
 
     @GetMapping
-    public String findVacancies(@RequestParam(required = false, defaultValue = "0") int page,
+    public String findVacancies(@AuthenticationPrincipal User user, @RequestParam(required = false, defaultValue = "0") int page,
                                 @RequestParam(required = false, defaultValue = "10") int size,
                                 Model model) {
         CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findVacanciesAsync(PageRequest.of(page, size));
@@ -39,9 +40,10 @@ public class AggregatorController {
     }
 
     @PostMapping
-    public String findVacanciesByTitle(String title, int amount, BigDecimal salary, boolean onlyWithSalary,
+    public String findVacanciesByTitle(@AuthenticationPrincipal User user, String title, int amount, BigDecimal salary, boolean onlyWithSalary,
                                        int experience, int cityId, boolean isRemoteAvailable) {
         rabbitMqService.send(SendMessageDto.builder()
+                .username(user.getUsername())
                 .title(title)
                 .amount(amount)
                 .salary(salary)

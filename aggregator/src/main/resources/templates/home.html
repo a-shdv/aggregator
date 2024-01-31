@@ -100,7 +100,7 @@
 
 <!--Все вакансии-->
 <div class="row justify-content-center">
-    <div th:if="${vacancies.isEmpty()}" class="alert alert-warning col-6 mb-5 mt-5" role="alert">
+    <div th:if="${#lists.isEmpty(vacancies)}" class="alert alert-warning col-6 mb-5 mt-5" role="alert">
         Список вакансий пуст!
     </div>
 </div>

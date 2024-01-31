@@ -24,9 +24,10 @@ public class AggregatorService {
     }
 
     @Transactional
-    public CompletableFuture<Void> saveMessageListAsync(List<ReceiveMessageDto> receiveMessageDtoList) {
+    public CompletableFuture<Void> saveMessageListAsync(List<ReceiveMessageDto> receiveMessageDtoList, User user) {
         return CompletableFuture.runAsync(() -> {
             List<Vacancy> vacancies = ReceiveMessageDto.toVacancyList(receiveMessageDtoList);
+            vacancies.forEach(vacancy -> vacancy.setUser(user));
             aggregatorRepository.saveAll(vacancies);
         });
     }

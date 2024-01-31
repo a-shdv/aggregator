@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 public class SendMessageDto implements Serializable {
+    String username;
     String title;
     int amount;
     BigDecimal salary;
@@ -20,7 +21,8 @@ public class SendMessageDto implements Serializable {
     int cityId;
     boolean isRemoteAvailable;
 
-    public SendMessageDto(String title, int amount, BigDecimal salary, boolean onlyWithSalary, int experience, int cityId, boolean isRemoteAvailable) {
+    public SendMessageDto(String username, String title, int amount, BigDecimal salary, boolean onlyWithSalary, int experience, int cityId, boolean isRemoteAvailable) {
+        this.username = username;
         this.title = title;
         this.amount = amount / 3;
         this.salary = salary;

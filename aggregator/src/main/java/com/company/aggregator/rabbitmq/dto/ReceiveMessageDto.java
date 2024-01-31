@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ReceiveMessageDto implements Serializable {
+    String username;
     String title;
     String date;
     String salary;

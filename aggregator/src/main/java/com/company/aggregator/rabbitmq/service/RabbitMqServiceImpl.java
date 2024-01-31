@@ -28,15 +28,17 @@ public class RabbitMqServiceImpl implements RabbitMqService {
 
     private final RabbitMqProperties rabbitProperties;
     private final AggregatorService aggregatorService;
+    private final UserService userService;
 
     @Override
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(List<ReceiveMessageDto> receiveMessageDtoList) {
+        User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername());
         log.info("RECEIVED: {}", receiveMessageDtoList.toString());
         receiveMessageDtoList
                 .removeIf(receiveMessageDto -> aggregatorService.findBySource(receiveMessageDto.getSource()) != null);
         if (!receiveMessageDtoList.isEmpty()) {
-            aggregatorService.saveMessageListAsync(receiveMessageDtoList);
+            aggregatorService.saveMessageListAsync(receiveMessageDtoList, user);
         }
     }
 
