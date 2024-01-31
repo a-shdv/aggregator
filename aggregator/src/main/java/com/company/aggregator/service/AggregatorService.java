@@ -3,12 +3,12 @@ package com.company.aggregator.service;
 import com.company.aggregator.model.Vacancy;
 import com.company.aggregator.rabbitmq.dto.ReceiveMessageDto;
 import com.company.aggregator.repository.AggregatorRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
