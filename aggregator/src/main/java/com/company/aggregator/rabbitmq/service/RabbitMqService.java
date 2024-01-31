@@ -1,6 +1,7 @@
 package com.company.aggregator.rabbitmq.service;
 
 
+import com.company.aggregator.model.User;
 import com.company.aggregator.rabbitmq.dto.ReceiveMessageDto;
 import com.company.aggregator.rabbitmq.dto.SendMessageDto;
 

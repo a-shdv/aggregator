@@ -1,5 +1,6 @@
 package com.company.aggregator.controller;
 
+import com.company.aggregator.model.User;
 import com.company.aggregator.model.Vacancy;
 import com.company.aggregator.rabbitmq.dto.SendMessageDto;
 import com.company.aggregator.rabbitmq.service.RabbitMqService;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 //import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +33,7 @@ public class AggregatorController {
     public String findVacancies(@RequestParam(required = false, defaultValue = "0") int page,
                                 @RequestParam(required = false, defaultValue = "10") int size,
                                 Model model) {
-        CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findVacancies(PageRequest.of(page, size));
+        CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findVacanciesAsync(PageRequest.of(page, size));
         model.addAttribute("vacancies", vacancies.join());
         return "home";
     }
@@ -53,7 +55,7 @@ public class AggregatorController {
 
     @PostMapping("/clear")
     public String deleteVacancies() {
-        aggregatorService.deleteVacancies();
+        aggregatorService.deleteVacanciesAsync();
         return "redirect:/";
     }
 }

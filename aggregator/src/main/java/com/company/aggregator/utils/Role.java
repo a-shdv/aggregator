@@ -1,7 +1,9 @@
 package com.company.aggregator.utils;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 
+@Getter
 public enum Role implements GrantedAuthority {
     USER(0),
     ADMIN(1);
@@ -12,12 +14,8 @@ public enum Role implements GrantedAuthority {
         this.code = code;
     }
 
-    public int getCode() {
-        return code;
-    }
-
     @Override
     public String getAuthority() {
-        return null;
+        return name();
     }
 }
