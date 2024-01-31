@@ -2,35 +2,50 @@
 <html lang="en">
 <div th:insert="~{/partials/head :: head}"></div>
 <body>
+<style>
+    .centered-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+</style>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
-<div class="container">
-    <div class="row justify-content-center">
-        <form>
-            <div class="form-row mb-3">
-                <!--Email-->
-                <div class="form-group col-md-6">
-                    <label for="email">Электронная почта</label>
-                    <input type="email" class="form-control" id="email" placeholder="test@gmail.com">
-                </div>
-                <!--Username-->
-                <div class="form-group col-md-6">
-                    <label for="username">Имя пользователя</label>
-                    <input type="text" class="form-control" id="username" placeholder="test">
-                </div>
-                <!--Password-->
-                <div class="form-group col-md-6">
-                    <label for="password">Пароль</label>
-                    <input type="password" class="form-control" id="password" placeholder="12345678">
-                </div>
-                <!--Confirm Password-->
-                <div class="form-group col-md-6">
-                    <label for="passwordConfirm">Подтвердите пароль</label>
-                    <input type="password" class="form-control" id="passwordConfirm" placeholder="12345678">
-                </div>
+<div class="centered-form">
+    <form>
+        <div class="form-row mb-3">
+            <!--Email-->
+            <div class="form-group col-lg-12">
+                <label for="email">Электронная почта</label>
+                <input type="email" class="form-control" id="email" placeholder="test@gmail.com">
             </div>
+        </div>
+        <div class="form-row mb-3">
+            <!--Username-->
+            <div class="form-group col-lg-12">
+                <label for="username">Имя пользователя</label>
+                <input type="text" class="form-control" id="username" placeholder="test">
+            </div>
+        </div>
+        <div class="form-row mb-3">
+            <!--Password-->
+            <div class="form-group col-lg-12">
+                <label for="password">Пароль</label>
+                <input type="password" class="form-control" id="password" placeholder="12345678">
+            </div>
+        </div>
+
+        <div class="form-row mb-3">
+            <!--Confirm Password-->
+            <div class="form-group col-lg-12">
+                <label for="passwordConfirm">Подтвердите пароль</label>
+                <input type="password" class="form-control" id="passwordConfirm" placeholder="12345678">
+            </div>
+        </div>
+        <div class="form-row mb-3">
             <button type="submit" class="btn btn-warning">Зарегистрироваться</button>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 </body>
 </html>
