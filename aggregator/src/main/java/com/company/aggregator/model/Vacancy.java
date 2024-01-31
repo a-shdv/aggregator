@@ -1,17 +1,15 @@
 package com.company.aggregator.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "vacancies")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Builder
 public class Vacancy {
     @Id
@@ -25,4 +23,7 @@ public class Vacancy {
     @Column(columnDefinition = "text") private String description;
     @Column(columnDefinition = "text") private String schedule;
     @Column(columnDefinition = "text") private String source;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 }

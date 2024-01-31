@@ -10,6 +10,7 @@ import java.io.Serializable;
 @Data
 @Builder
 public class SendMessageDto implements Serializable {
+    String username;
     String title;
     String date;
     String salary;
@@ -22,7 +23,8 @@ public class SendMessageDto implements Serializable {
     public SendMessageDto() {
     }
 
-    public SendMessageDto(String title, String date, String salary, String company, String requirements, String description, String schedule, String source) {
+    public SendMessageDto(String username, String title, String date, String salary, String company, String requirements, String description, String schedule, String source) {
+        this.username = username;
         this.title = title;
         this.date = date;
         this.salary = salary;
@@ -36,6 +38,7 @@ public class SendMessageDto implements Serializable {
     @Override
     public String toString() {
         return "\nSendMessageDto {" +
+                "\n\tusername='" + username + '\'' +
                 "\n\ttitle='" + title + '\'' +
                 ", \n\tdate='" + date + '\'' +
                 ", \n\tsalary='" + salary + '\'' +

@@ -1,5 +1,6 @@
 package com.company.aggregator.controller;
 
+import com.company.aggregator.model.User;
 import com.company.aggregator.model.Vacancy;
 import com.company.aggregator.rabbitmq.dto.SendMessageDto;
 import com.company.aggregator.rabbitmq.service.RabbitMqService;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 //import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @Controller
 @RequestMapping("/")
@@ -29,18 +31,19 @@ public class AggregatorController {
     private final RabbitMqService rabbitMqService;
 
     @GetMapping
-    public String findAll(@RequestParam(required = false, defaultValue = "0") int page,
-                          @RequestParam(required = false, defaultValue = "10") int size,
-                          Model model) {
-        CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findAll(PageRequest.of(page, size));
+    public String findVacancies(@AuthenticationPrincipal User user, @RequestParam(required = false, defaultValue = "0") int page,
+                                @RequestParam(required = false, defaultValue = "10") int size,
+                                Model model) {
+        CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findVacanciesAsync(user, PageRequest.of(page, size));
         model.addAttribute("vacancies", vacancies.join());
         return "home";
     }
 
     @PostMapping
-    public String findVacanciesByTitle(String title, int amount, BigDecimal salary, boolean onlyWithSalary,
+    public String findVacanciesByTitle(@AuthenticationPrincipal User user, String title, int amount, BigDecimal salary, boolean onlyWithSalary,
                                        int experience, int cityId, boolean isRemoteAvailable) {
         rabbitMqService.send(SendMessageDto.builder()
+                .username(user.getUsername())
                 .title(title)
                 .amount(amount)
                 .salary(salary)
@@ -53,8 +56,8 @@ public class AggregatorController {
     }
 
     @PostMapping("/clear")
-    public String deleteAllVacancies() {
-        aggregatorService.deleteAllVacancies().join();
+    public String deleteVacancies() {
+        aggregatorService.deleteVacanciesAsync();
         return "redirect:/";
     }
 }

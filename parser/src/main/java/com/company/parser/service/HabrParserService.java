@@ -6,12 +6,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -20,8 +21,8 @@ import java.util.concurrent.CompletableFuture;
 public class HabrParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
 
-    public CompletableFuture<Void> findAllVacancies(String query, int amount, BigDecimal salary, boolean onlyWithSalary,
-                                                    int experience, int cityId, boolean isRemoteAvailable) {
+    public CompletableFuture<Void> findVacancies(String username, String query, int amount, BigDecimal salary, boolean onlyWithSalary,
+                                                 int experience, int cityId, boolean isRemoteAvailable) {
         return CompletableFuture.runAsync(() -> {
             int previousPage;
             int currentPage = 1;
@@ -43,6 +44,8 @@ public class HabrParserService {
             }
 
             if (elements != null) {
+                final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
+
                 while (currentPage <= amount / elements.size()) {
                     elements.forEach(element -> {
                         String vacancyUrl = element
@@ -50,6 +53,7 @@ public class HabrParserService {
                                 .absUrl("href");
 
                         SendMessageDto sendMessageDto = SendMessageDto.builder()
+                                .username(username)
                                 .title(element.getElementsByClass("vacancy-card__title").text())
                                 .date(element.getElementsByClass("vacancy-card__date").text())
                                 .salary(element.getElementsByClass("vacancy-card__salary").text())
@@ -60,17 +64,26 @@ public class HabrParserService {
                                 .source(vacancyUrl)
                                 .build();
 
-                        rabbitMqSenderService.send(sendMessageDto);
+                        sendMessageDtoList.add(sendMessageDto);
                     });
 
                     previousPage = currentPage;
                     currentPage++;
-
                     url.replace(
                             url.indexOf("?page=" + previousPage),
                             url.lastIndexOf("?page=" + previousPage),
                             "?page=" + currentPage
                     );
+
+                    if (sendMessageDtoList.size() == elements.size()) {
+                        rabbitMqSenderService.send(sendMessageDtoList);
+                        sendMessageDtoList.clear();
+                    }
+                }
+                // Отправка оставшихся сообщений, если в списке осталось < elements.size() сообщений после парсинга
+                if (!sendMessageDtoList.isEmpty()) {
+                    rabbitMqSenderService.send(sendMessageDtoList);
+                    sendMessageDtoList.clear();
                 }
             }
         });

@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class ReceiveMessageDto implements Serializable {
+    String username;
     String title;
     int amount;
     BigDecimal salary;
@@ -24,6 +25,7 @@ public class ReceiveMessageDto implements Serializable {
     @Override
     public String toString() {
         return "ReceiveMessageDto {" +
+                "username='" + username + '\'' +
                 "title='" + title + '\'' +
                 "amount='" + amount + '\'' +
                 "salary='" + salary + '\'' +

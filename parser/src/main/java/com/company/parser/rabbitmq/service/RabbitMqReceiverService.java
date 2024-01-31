@@ -26,7 +26,8 @@ public class RabbitMqReceiverService {
         log.info("RECEIVED: {}", receiveMessageDto.toString());
         CompletableFuture.allOf(
                 habrParserService
-                        .findAllVacancies(
+                        .findVacancies(
+                                receiveMessageDto.getUsername(),
                                 receiveMessageDto.getTitle(),
                                 receiveMessageDto.getAmount(),
                                 receiveMessageDto.getSalary(),
@@ -36,7 +37,8 @@ public class RabbitMqReceiverService {
                                 receiveMessageDto.isRemoteAvailable()
                         ),
                 hhRuParserService
-                        .findAllVacancies(
+                        .findVacancies(
+                                receiveMessageDto.getUsername(),
                                 receiveMessageDto.getTitle(),
                                 receiveMessageDto.getAmount(),
                                 receiveMessageDto.getSalary(),
@@ -46,7 +48,8 @@ public class RabbitMqReceiverService {
                                 receiveMessageDto.isRemoteAvailable()
                         ),
                 rabotaRuParserService
-                        .findAllVacancies(
+                        .findVacancies(
+                                receiveMessageDto.getUsername(),
                                 receiveMessageDto.getTitle(),
                                 receiveMessageDto.getAmount(),
                                 receiveMessageDto.getSalary(),
