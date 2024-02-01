@@ -1,17 +1,26 @@
 package com.company.aggregator.controller;
 
+import com.company.aggregator.dto.FavouriteDto;
 import com.company.aggregator.dto.SignUpDto;
 import com.company.aggregator.exception.UserAlreadyExistsException;
+import com.company.aggregator.model.Favourite;
+import com.company.aggregator.model.User;
+import com.company.aggregator.service.FavouriteService;
 import com.company.aggregator.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
@@ -19,6 +28,7 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class UserController {
     private final UserService userService;
+    private final FavouriteService favouriteService;
 
     @GetMapping("/sign-in")
     public String signIn(Model model) {
@@ -64,5 +74,24 @@ public class UserController {
         });
     }
 
+    @GetMapping("/favourites")
+    public CompletableFuture<String> findFavourites(@AuthenticationPrincipal User user,
+                                                    @RequestParam(required = false, defaultValue = "0") int page,
+                                                    @RequestParam(required = false, defaultValue = "10") int size,
+                                                    Model model) {
+        return CompletableFuture.supplyAsync(() -> {
+            CompletableFuture<Page<Favourite>> favourites = favouriteService.findFavouritesAsync(user, PageRequest.of(page, size));
+            model.addAttribute("favourites", favourites.join());
+            return "users/favourites";
+        });
+    }
 
+    @PostMapping("/favourites")
+    public CompletableFuture<String> addToFavourites(@AuthenticationPrincipal User user,
+                                                     @ModelAttribute("favouriteDto") FavouriteDto favouriteDto) {
+        return CompletableFuture.supplyAsync(() -> {
+            favouriteService.addToFavouritesAsync(user, FavouriteDto.toFavourite(favouriteDto));
+            return "redirect:/";
+        });
+    }
 }

@@ -12,7 +12,8 @@ import java.util.*;
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 @Builder
 public class User implements UserDetails {
     @Id
@@ -32,6 +33,11 @@ public class User implements UserDetails {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<Vacancy> vacancies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<Favourite> favourites = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

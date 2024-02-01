@@ -31,7 +31,8 @@ public class AggregatorController {
     private final RabbitMqService rabbitMqService;
 
     @GetMapping
-    public String findVacancies(@AuthenticationPrincipal User user, @RequestParam(required = false, defaultValue = "0") int page,
+    public String findVacancies(@AuthenticationPrincipal User user,
+                                @RequestParam(required = false, defaultValue = "0") int page,
                                 @RequestParam(required = false, defaultValue = "10") int size,
                                 Model model) {
         CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findVacanciesAsync(user, PageRequest.of(page, size));

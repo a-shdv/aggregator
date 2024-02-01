@@ -18,7 +18,8 @@
             <!--Количество вакансий-->
             <div class="form-group">
                 <label for="amount">Количество вакансий (min=35, max=1000)</label>
-                <input id="amount" class="form-control" type="text" name="amount" min="35" max="1000" placeholder="500" required>
+                <input id="amount" class="form-control" type="text" name="amount" min="35" max="1000" placeholder="500"
+                       required>
             </div>
 
             <!--Зарплата-->
@@ -150,9 +151,15 @@
                 </td>
                 <!--Кнопка "Добавить в избранное"-->
                 <td>
-                    <button class="btn btn-sm btn-warning">
-                        <a th:href="@{/}" style="text-decoration: none; color: black">Добавить в избранное</a>
-                    </button>
+                    <form th:action="@{/favourites}" th:method="post" th:object="${favouriteDto}">
+                        <input type="hidden" name="title" th:value="${vacancy.title}">
+                        <input type="hidden" name="date" th:value="${vacancy.date}">
+                        <input type="hidden" name="company" th:value="${vacancy.company}">
+                        <input type="hidden" name="schedule" th:value="${vacancy.schedule}">
+                        <input type="hidden" name="source" th:value="${vacancy.source}">
+
+                        <button type="submit" class="btn btn-sm btn-warning">Добавить в избранное</button>
+                    </form>
                 </td>
             </tr>
             </tbody>
@@ -162,6 +169,7 @@
     <!--Пагинация-->
     <nav>
         <ul class="pagination justify-content-center mt-5 mb-5">
+            <!--Пред-->
             <div th:if="${vacancies.hasPrevious()}">
                 <li class="page-item disabled">
                     <form th:action="@{/}" method="get">
@@ -172,7 +180,7 @@
                 </li>
             </div>
 
-
+            <!--След-->
             <div th:if="${vacancies.hasNext()}">
                 <li class="page-item">
                     <form th:action="@{/}" method="get">
@@ -182,8 +190,6 @@
                     </form>
                 </li>
             </div>
-
-
         </ul>
     </nav>
 
