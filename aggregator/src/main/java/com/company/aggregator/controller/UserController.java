@@ -27,7 +27,6 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class UserController {
     private final UserService userService;
-    private final FavouriteService favouriteService;
 
     @GetMapping("/sign-in")
     public String signIn(Model model) {
@@ -70,35 +69,6 @@ public class UserController {
                 redirectAttributes.addFlashAttribute("error", e.getMessage());
                 return "redirect:/sign-up";
             }
-        });
-    }
-
-    @GetMapping("/favourites")
-    public CompletableFuture<String> findFavourites(@AuthenticationPrincipal User user,
-                                                    @RequestParam(required = false, defaultValue = "0") int page,
-                                                    @RequestParam(required = false, defaultValue = "5") int size,
-                                                    Model model) {
-        return CompletableFuture.supplyAsync(() -> {
-            CompletableFuture<Page<Favourite>> favourites = favouriteService.findFavouritesAsync(user, PageRequest.of(page, size));
-            model.addAttribute("favourites", favourites.join());
-            return "users/favourites";
-        });
-    }
-
-    @PostMapping("/favourites")
-    public CompletableFuture<String> addToFavourites(@AuthenticationPrincipal User user,
-                                                     @ModelAttribute("favouriteDto") FavouriteDto favouriteDto) {
-        return CompletableFuture.supplyAsync(() -> {
-            favouriteService.addToFavouritesAsync(user, FavouriteDto.toFavourite(favouriteDto));
-            return "redirect:/";
-        });
-    }
-
-    @PostMapping("/favourites/clear")
-    public CompletableFuture<String> deleteFavourites(@AuthenticationPrincipal User user) {
-        return CompletableFuture.supplyAsync(() -> {
-            favouriteService.deleteFavourites(user);
-            return "redirect:/favourites";
         });
     }
 }

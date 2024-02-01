@@ -42,4 +42,9 @@ public class FavouriteService {
         });
     }
 
+    @Transactional
+    public CompletableFuture<Favourite> findBySourceAsync(String source) {
+        return CompletableFuture.supplyAsync(() -> favouriteRepository.findBySource(source));
+    }
+
 }

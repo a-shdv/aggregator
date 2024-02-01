@@ -35,6 +35,14 @@ public class AggregatorController {
                                 @RequestParam(required = false, defaultValue = "0") int page,
                                 @RequestParam(required = false, defaultValue = "10") int size,
                                 Model model) {
+        String success = (String) model.getAttribute("success");
+        String error = (String) model.getAttribute("error");
+        if (error != null) {
+            model.addAttribute("error", error);
+        }
+        if (success != null) {
+            model.addAttribute("success", success);
+        }
         CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findVacanciesAsync(user, PageRequest.of(page, size));
         model.addAttribute("vacancies", vacancies.join());
         return "home";
