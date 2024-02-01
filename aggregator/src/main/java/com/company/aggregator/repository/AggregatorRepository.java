@@ -14,4 +14,6 @@ public interface AggregatorRepository extends JpaRepository<Vacancy, Long> {
     Vacancy findBySource(String source);
 
     Page<Vacancy> findByUser(User user, PageRequest pageRequest);
+
+    List<Vacancy> findByUser(User user);
 }

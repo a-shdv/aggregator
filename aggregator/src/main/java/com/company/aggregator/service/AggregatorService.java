@@ -4,6 +4,7 @@ import com.company.aggregator.model.User;
 import com.company.aggregator.model.Vacancy;
 import com.company.aggregator.rabbitmq.dto.ReceiveMessageDto;
 import com.company.aggregator.repository.AggregatorRepository;
+import com.company.aggregator.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class AggregatorService {
     private final AggregatorRepository aggregatorRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public CompletableFuture<Void> saveMessage(ReceiveMessageDto receiveMessageDto) {
@@ -43,8 +45,13 @@ public class AggregatorService {
     }
 
     @Transactional
-    public CompletableFuture<Void> deleteVacanciesAsync() {
-        return CompletableFuture.runAsync(aggregatorRepository::deleteAll);
+    public CompletableFuture<Void> deleteVacanciesByUserAsync(User user) {
+        return CompletableFuture.runAsync(() -> {
+            List<Vacancy> vacancies = aggregatorRepository.findByUser(user);
+            vacancies.clear();
+            user.setVacancies(vacancies);
+            userRepository.save(user);
+        });
     }
 
     public Vacancy findBySource(String source) {
