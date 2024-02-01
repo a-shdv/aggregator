@@ -44,7 +44,45 @@
             </tbody>
         </table>
     </div>
+
+    <!--Пагинация-->
+    <nav>
+        <ul class="pagination justify-content-center mt-5 mb-5">
+            <!--Пред-->
+            <div th:if="${favourites.hasPrevious()}">
+                <li class="page-item disabled">
+                    <form th:action="@{/favourites}" method="get">
+                        <input type="hidden" name="page" th:value="${favourites.previousPageable().pageNumber}"/>
+                        <input type="hidden" name="size" th:value="${favourites.previousPageable().pageSize}"/>
+                        <input class="page-link" type="submit" value="Пред."/>
+                    </form>
+                </li>
+            </div>
+
+            <!--След-->
+            <div th:if="${favourites.hasNext()}">
+                <li class="page-item">
+                    <form th:action="@{/favourites}" method="get">
+                        <input type="hidden" name="page" th:value="${favourites.nextPageable().pageNumber}"/>
+                        <input type="hidden" name="size" th:value="${favourites.nextPageable().pageSize}"/>
+                        <input class="page-link" type="submit" value="След."/>
+                    </form>
+                </li>
+            </div>
+        </ul>
+    </nav>
+
+    <!--Кнопка "Очистить"-->
+    <form class="mt-5" th:action="@{/favourites/clear}" th:method="post">
+        <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearFavourites()">
+    </form>
 </div>
+
+<script>
+    function clearFavourites() {
+        confirm("Вы уверены, что хотите очистить список избранных вакансий?")
+    }
+</script>
 
 </body>
 </html>

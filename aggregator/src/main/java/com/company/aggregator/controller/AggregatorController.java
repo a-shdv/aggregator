@@ -57,8 +57,10 @@ public class AggregatorController {
     }
 
     @PostMapping("/clear")
-    public String deleteVacancies(@AuthenticationPrincipal User user) {
-        aggregatorService.deleteVacanciesByUserAsync(user);
-        return "redirect:/";
+    public CompletableFuture<String> deleteVacancies(@AuthenticationPrincipal User user) {
+        return CompletableFuture.supplyAsync(() -> {
+            aggregatorService.deleteVacanciesByUserAsync(user);
+            return "redirect:/";
+        });
     }
 }

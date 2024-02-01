@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
@@ -77,7 +76,7 @@ public class UserController {
     @GetMapping("/favourites")
     public CompletableFuture<String> findFavourites(@AuthenticationPrincipal User user,
                                                     @RequestParam(required = false, defaultValue = "0") int page,
-                                                    @RequestParam(required = false, defaultValue = "10") int size,
+                                                    @RequestParam(required = false, defaultValue = "5") int size,
                                                     Model model) {
         return CompletableFuture.supplyAsync(() -> {
             CompletableFuture<Page<Favourite>> favourites = favouriteService.findFavouritesAsync(user, PageRequest.of(page, size));
@@ -92,6 +91,14 @@ public class UserController {
         return CompletableFuture.supplyAsync(() -> {
             favouriteService.addToFavouritesAsync(user, FavouriteDto.toFavourite(favouriteDto));
             return "redirect:/";
+        });
+    }
+
+    @PostMapping("/favourites/clear")
+    public CompletableFuture<String> deleteFavourites(@AuthenticationPrincipal User user) {
+        return CompletableFuture.supplyAsync(() -> {
+            favouriteService.deleteFavourites(user);
+            return "redirect:/favourites";
         });
     }
 }
