@@ -119,6 +119,7 @@
                 <td class="table-dark">Описание</td>
                 <td class="table-dark">Дата публикации</td>
                 <td class="table-dark">Источник</td>
+                <td class="table-dark"></td>
                 <!--        <td>Ссылка</td>-->
             </tr>
             </thead>
@@ -146,6 +147,12 @@
                 <td>
                     <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
                        th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
+                </td>
+                <!--Кнопка "Добавить в избранное"-->
+                <td>
+                    <button class="btn btn-sm btn-warning">
+                        <a th:href="@{/}" style="text-decoration: none; color: black">Добавить в избранное</a>
+                    </button>
                 </td>
             </tr>
             </tbody>
@@ -184,7 +191,7 @@
     <form class="mt-5" th:action="@{/clear}" th:method="post">
         <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
     </form>
-    </div>
+</div>
 <script>
     function clearVacancies() {
         confirm("Вы уверены, что хотите очистить список вакансий?")
