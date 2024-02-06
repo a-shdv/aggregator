@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,32 +20,32 @@ public class FavouriteService {
     private final FavouriteRepository favouriteRepository;
     private final UserRepository userRepository;
 
+    @Async
     @Transactional
     public CompletableFuture<Page<Favourite>> findFavouritesAsync(User user, PageRequest pageRequest) {
-        return CompletableFuture.supplyAsync(() -> favouriteRepository.findByUser(user, pageRequest));
+        return CompletableFuture.completedFuture(favouriteRepository.findByUser(user, pageRequest));
     }
 
+    @Async
     @Transactional
-    public CompletableFuture<Void> addToFavouritesAsync(User user, Favourite favourite) {
-        return CompletableFuture.runAsync(() -> {
-            favourite.setUser(user);
-            favouriteRepository.save(favourite);
-        });
+    public void addToFavouritesAsync(User user, Favourite favourite) {
+        favourite.setUser(user);
+        favouriteRepository.save(favourite);
     }
 
+    @Async
     @Transactional
-    public CompletableFuture<Void> deleteFavourites(User user) {
-        return CompletableFuture.runAsync(() -> {
-            List<Favourite> favourites = favouriteRepository.findByUser(user);
-            favourites.clear();
-            user.setFavourites(favourites);
-            userRepository.save(user);
-        });
+    public void deleteFavourites(User user) {
+        List<Favourite> favourites = favouriteRepository.findByUser(user);
+        favourites.clear();
+        user.setFavourites(favourites);
+        userRepository.save(user);
     }
 
+    @Async
     @Transactional
     public CompletableFuture<Favourite> findBySourceAsync(String source) {
-        return CompletableFuture.supplyAsync(() -> favouriteRepository.findBySource(source));
+        return CompletableFuture.completedFuture(favouriteRepository.findBySource(source));
     }
 
 }

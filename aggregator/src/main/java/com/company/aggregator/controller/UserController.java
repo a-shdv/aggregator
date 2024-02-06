@@ -55,20 +55,19 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public CompletableFuture<String> signUp(@ModelAttribute("signUpDto") SignUpDto dto, RedirectAttributes redirectAttributes) {
-        return userService.findUserByUsernameAsync(dto.getUsername()).thenApply(foundUser -> {
-            try {
-                if (foundUser != null) {
-                    throw new UserAlreadyExistsException("Пользователь уже существует: " + dto.getUsername());
-                }
-                userService.saveUserAsync(SignUpDto.toUser(dto));
-                redirectAttributes.addFlashAttribute("success", "Пользователь успешно создан: " + dto.getUsername());
-                return "redirect:/sign-in";
-            } catch (UserAlreadyExistsException e) {
-                log.info(e.getMessage());
-                redirectAttributes.addFlashAttribute("error", e.getMessage());
-                return "redirect:/sign-up";
+    public String signUp(@ModelAttribute("signUpDto") SignUpDto dto, RedirectAttributes redirectAttributes) {
+        try {
+            CompletableFuture<User> user = userService.findUserByUsernameAsync(dto.getUsername());
+            if (user.join() != null) {
+                throw new UserAlreadyExistsException("Пользователь уже существует: " + dto.getUsername());
             }
-        });
+            userService.saveUserAsync(SignUpDto.toUser(dto));
+            redirectAttributes.addFlashAttribute("success", "Пользователь успешно создан: " + dto.getUsername());
+            return "redirect:/sign-in";
+        } catch (UserAlreadyExistsException ex) {
+            log.info(ex.getMessage());
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+            return "redirect:/sign-up";
+        }
     }
 }
