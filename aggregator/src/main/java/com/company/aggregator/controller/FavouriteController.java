@@ -2,6 +2,7 @@ package com.company.aggregator.controller;
 
 import com.company.aggregator.dto.FavouriteDto;
 import com.company.aggregator.exception.FavouriteAlreadyExistsException;
+import com.company.aggregator.exception.FavouritesIsEmptyException;
 import com.company.aggregator.model.Favourite;
 import com.company.aggregator.model.User;
 import com.company.aggregator.service.EmailSenderService;
@@ -63,13 +64,18 @@ public class FavouriteController {
         return "redirect:/favourites";
     }
 
-    @PostMapping("")
+    @PostMapping("/generate-pdf")
     public String generatePdf(@AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
         String message;
-        favouriteService.generatePdf(favouriteService.findByUser(user).join());
-        message = "Pdf успешно сгенерирован!";
+        try {
+            List<Favourite> favourites = favouriteService.findByUser(user).join();
+            favouriteService.generatePdf(favourites);
+            message = "Pdf успешно сгенерирован!";
+        } catch (FavouritesIsEmptyException e) {
+            message = e.getMessage();
+        }
         redirectAttributes.addFlashAttribute("success", message);
-        return "";
+        return "redirect:/favourites";
     }
 
     @PostMapping("/send-email")

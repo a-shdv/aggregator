@@ -1,5 +1,6 @@
 package com.company.aggregator.service;
 
+import com.company.aggregator.exception.FavouritesIsEmptyException;
 import com.company.aggregator.model.Favourite;
 import com.company.aggregator.model.User;
 import com.company.aggregator.repository.FavouriteRepository;
@@ -10,6 +11,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
@@ -22,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FavouriteService {
     private final FavouriteRepository favouriteRepository;
     private final UserRepository userRepository;
@@ -56,8 +59,12 @@ public class FavouriteService {
 
     @Async
     @Transactional
-    public CompletableFuture<List<Favourite>> findByUser(User user) {
-        return CompletableFuture.completedFuture(favouriteRepository.findByUser(user));
+    public CompletableFuture<List<Favourite>> findByUser(User user) throws FavouritesIsEmptyException {
+        CompletableFuture<List<Favourite>> favourites = CompletableFuture.completedFuture(favouriteRepository.findByUser(user));
+        if (favourites.join().isEmpty()) {
+            throw new FavouritesIsEmptyException("Список избранных вакансий пуст!");
+        }
+        return favourites;
     }
 
     @Async
@@ -77,37 +84,35 @@ public class FavouriteService {
             fHeader.setStyle(Font.BOLD);
             fHeader.setSize(12);
 
-            p.add("Timetable");
-            table.addCell(new PdfPCell(new Phrase("Day Of Week", fHeader)));
-            table.addCell(new PdfPCell(new Phrase("Classroom", fHeader)));
-            table.addCell(new PdfPCell(new Phrase("Subject", fHeader)));
-            table.addCell(new PdfPCell(new Phrase("Teacher", fHeader)));
-            table.addCell(new PdfPCell(new Phrase("Time", fHeader)));
+            p.add("Favourites");
+            table.addCell(new PdfPCell(new Phrase("Title", fHeader)));
+            table.addCell(new PdfPCell(new Phrase("Date", fHeader)));
+            table.addCell(new PdfPCell(new Phrase("Company", fHeader)));
+            table.addCell(new PdfPCell(new Phrase("Schedule", fHeader)));
+            table.addCell(new PdfPCell(new Phrase("Source", fHeader)));
 
             fBody.setStyle(Font.NORMAL);
             fBody.setSize(10);
 
-            for (Favourite timetable : favourites) {
-//                Teacher teacher = timetable.getTeacher();
-//                DayOfWeek dayOfWeek = timetable.getDayOfWeek();
-//                Classroom classroom = timetable.getClassroom();
-//                Subject subject = timetable.getSubject();
-//                TimeOfClass timeOfClass = timetable.getTimeOfClass();
-//
-//                table.addCell(new PdfPCell(new Phrase(localizeDayOfWeek(dayOfWeek), fBody))); // DayOfWeek
-//                table.addCell(new PdfPCell(new Phrase(classroom.getClassroomNo().toString(), fBody))); // Classroom
-//                table.addCell(new PdfPCell(new Phrase(subject.getTitle().toString(), fBody))); // Subject
-//                table.addCell(new PdfPCell(new Phrase(teacher.getLastName() + " " +
-//                        teacher.getFirstName().substring(0, 1) + "." +
-//                        teacher.getPatronymicName().substring(0, 1) + ".", fBody))); // Teacher
-//                table.addCell(new PdfPCell(new Phrase(localizeTimeOfClass(timeOfClass), fBody))); // TimeOfClass
+            for (Favourite fav : favourites) {
+                String title = fav.getTitle();
+                String date = fav.getDate();
+                String company = fav.getCompany();
+                String schedule = fav.getSchedule();
+                String source = fav.getSource();
+
+                table.addCell(new PdfPCell(new Phrase(title, fBody)));
+                table.addCell(new PdfPCell(new Phrase(date, fBody)));
+                table.addCell(new PdfPCell(new Phrase(company, fBody)));
+                table.addCell(new PdfPCell(new Phrase(schedule, fBody)));
+                table.addCell(new PdfPCell(new Phrase(source, fBody)));
             }
 
             document.add(p);
             document.add(table);
             document.close();
         } catch (DocumentException | IOException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
 
     }
