@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
@@ -60,6 +61,15 @@ public class FavouriteController {
     public String deleteFavourites(@AuthenticationPrincipal User user) {
         favouriteService.deleteFavourites(user);
         return "redirect:/favourites";
+    }
+
+    @PostMapping("")
+    public String generatePdf(@AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
+        String message;
+        favouriteService.generatePdf(favouriteService.findByUser(user).join());
+        message = "Pdf успешно сгенерирован!";
+        redirectAttributes.addFlashAttribute("success", message);
+        return "";
     }
 
     @PostMapping("/send-email")
