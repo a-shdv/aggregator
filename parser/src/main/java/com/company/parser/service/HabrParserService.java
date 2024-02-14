@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,72 +22,71 @@ import java.util.concurrent.CompletableFuture;
 public class HabrParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
 
-    public CompletableFuture<Void> findVacancies(String username, String query, int amount, BigDecimal salary, boolean onlyWithSalary,
-                                                 int experience, int cityId, boolean isRemoteAvailable) {
-        return CompletableFuture.runAsync(() -> {
-            int previousPage;
-            int currentPage = 1;
-            StringBuilder url = new StringBuilder("https://career.habr.com/vacancies" +
-                    "?page=" + currentPage + "&q=" + query + "&salary=" + salary + "&with_salary=" + onlyWithSalary +
-                    "&city_id=" + parseCityId(cityId) + "&remote=" + isRemoteAvailable + "&type=all");
+    @Async
+    public void findVacancies(String username, String query, int amount, BigDecimal salary, boolean onlyWithSalary,
+                              int experience, int cityId, boolean isRemoteAvailable) {
+        int previousPage;
+        int currentPage = 1;
+        StringBuilder url = new StringBuilder("https://career.habr.com/vacancies" +
+                "?page=" + currentPage + "&q=" + query + "&salary=" + salary + "&with_salary=" + onlyWithSalary +
+                "&city_id=" + parseCityId(cityId) + "&remote=" + isRemoteAvailable + "&type=all");
 
-            int parsedExperience = parseExperience(experience);
-            if (parsedExperience != -1) {
-                url.append("&qid=").append(parsedExperience);
-            }
+        int parsedExperience = parseExperience(experience);
+        if (parsedExperience != -1) {
+            url.append("&qid=").append(parsedExperience);
+        }
 
-            Document doc = connectDocumentToUrl(url.toString());
-            Elements elements = null;
-            if (doc != null) {
-                elements = doc
-                        .getElementsByClass("section-group section-group--gap-medium").last()
-                        .getElementsByClass("section-box");
-            }
+        Document doc = connectDocumentToUrl(url.toString());
+        Elements elements = null;
+        if (doc != null) {
+            elements = doc
+                    .getElementsByClass("section-group section-group--gap-medium").last()
+                    .getElementsByClass("section-box");
+        }
 
-            if (elements != null) {
-                final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
+        if (elements != null) {
+            final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
-                while (currentPage <= amount / elements.size()) {
-                    elements.forEach(element -> {
-                        String vacancyUrl = element
-                                .getElementsByClass("vacancy-card__title-link").first()
-                                .absUrl("href");
+            while (currentPage <= amount / elements.size()) {
+                elements.forEach(element -> {
+                    String vacancyUrl = element
+                            .getElementsByClass("vacancy-card__title-link").first()
+                            .absUrl("href");
 
-                        SendMessageDto sendMessageDto = SendMessageDto.builder()
-                                .username(username)
-                                .title(element.getElementsByClass("vacancy-card__title").text())
-                                .date(element.getElementsByClass("vacancy-card__date").text())
-                                .salary(element.getElementsByClass("vacancy-card__salary").text())
-                                .company(element.getElementsByClass("vacancy-card__company-title").text())
-                                .requirements(element.getElementsByClass("vacancy-card__skills").first().text())
-                                .schedule(element.getElementsByClass("vacancy-card__meta").text())
-                                .description(parseWebPageDescription(vacancyUrl))
-                                .source(vacancyUrl)
-                                .build();
+                    SendMessageDto sendMessageDto = SendMessageDto.builder()
+                            .username(username)
+                            .title(element.getElementsByClass("vacancy-card__title").text())
+                            .date(element.getElementsByClass("vacancy-card__date").text())
+                            .salary(element.getElementsByClass("vacancy-card__salary").text())
+                            .company(element.getElementsByClass("vacancy-card__company-title").text())
+                            .requirements(element.getElementsByClass("vacancy-card__skills").first().text())
+                            .schedule(element.getElementsByClass("vacancy-card__meta").text())
+                            .description(parseWebPageDescription(vacancyUrl))
+                            .source(vacancyUrl)
+                            .build();
 
-                        sendMessageDtoList.add(sendMessageDto);
-                    });
+                    sendMessageDtoList.add(sendMessageDto);
+                });
 
-                    previousPage = currentPage;
-                    currentPage++;
-                    url.replace(
-                            url.indexOf("?page=" + previousPage),
-                            url.lastIndexOf("?page=" + previousPage),
-                            "?page=" + currentPage
-                    );
+                previousPage = currentPage;
+                currentPage++;
+                url.replace(
+                        url.indexOf("?page=" + previousPage),
+                        url.lastIndexOf("?page=" + previousPage),
+                        "?page=" + currentPage
+                );
 
-                    if (sendMessageDtoList.size() == elements.size()) {
-                        rabbitMqSenderService.send(sendMessageDtoList);
-                        sendMessageDtoList.clear();
-                    }
-                }
-                // Отправка оставшихся сообщений, если в списке осталось < elements.size() сообщений после парсинга
-                if (!sendMessageDtoList.isEmpty()) {
+                if (sendMessageDtoList.size() == elements.size()) {
                     rabbitMqSenderService.send(sendMessageDtoList);
                     sendMessageDtoList.clear();
                 }
             }
-        });
+            // Отправка оставшихся сообщений, если в списке осталось < elements.size() сообщений после парсинга
+            if (!sendMessageDtoList.isEmpty()) {
+                rabbitMqSenderService.send(sendMessageDtoList);
+                sendMessageDtoList.clear();
+            }
+        }
     }
 
     private int parseCityId(int cityId) {

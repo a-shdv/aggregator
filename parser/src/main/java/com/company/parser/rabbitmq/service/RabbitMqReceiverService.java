@@ -24,40 +24,40 @@ public class RabbitMqReceiverService {
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(ReceiveMessageDto receiveMessageDto) {
         log.info("RECEIVED: {}", receiveMessageDto.toString());
-        CompletableFuture.allOf(
-                habrParserService
-                        .findVacancies(
-                                receiveMessageDto.getUsername(),
-                                receiveMessageDto.getTitle(),
-                                receiveMessageDto.getAmount(),
-                                receiveMessageDto.getSalary(),
-                                receiveMessageDto.isOnlyWithSalary(),
-                                receiveMessageDto.getExperience(),
-                                receiveMessageDto.getCityId(),
-                                receiveMessageDto.isRemoteAvailable()
-                        ),
-                hhRuParserService
-                        .findVacancies(
-                                receiveMessageDto.getUsername(),
-                                receiveMessageDto.getTitle(),
-                                receiveMessageDto.getAmount(),
-                                receiveMessageDto.getSalary(),
-                                receiveMessageDto.isOnlyWithSalary(),
-                                receiveMessageDto.getExperience(),
-                                receiveMessageDto.getCityId(),
-                                receiveMessageDto.isRemoteAvailable()
-                        ),
-                rabotaRuParserService
-                        .findVacancies(
-                                receiveMessageDto.getUsername(),
-                                receiveMessageDto.getTitle(),
-                                receiveMessageDto.getAmount(),
-                                receiveMessageDto.getSalary(),
-                                receiveMessageDto.isOnlyWithSalary(),
-                                receiveMessageDto.getExperience(),
-                                receiveMessageDto.getCityId(),
-                                receiveMessageDto.isRemoteAvailable()
-                        )
-        );
+
+        habrParserService
+                .findVacancies(
+                        receiveMessageDto.getUsername(),
+                        receiveMessageDto.getTitle(),
+                        receiveMessageDto.getAmount(),
+                        receiveMessageDto.getSalary(),
+                        receiveMessageDto.isOnlyWithSalary(),
+                        receiveMessageDto.getExperience(),
+                        receiveMessageDto.getCityId(),
+                        receiveMessageDto.isRemoteAvailable()
+                );
+
+        hhRuParserService
+                .findVacancies(
+                        receiveMessageDto.getUsername(),
+                        receiveMessageDto.getTitle(),
+                        receiveMessageDto.getAmount(),
+                        receiveMessageDto.getSalary(),
+                        receiveMessageDto.isOnlyWithSalary(),
+                        receiveMessageDto.getExperience(),
+                        receiveMessageDto.getCityId(),
+                        receiveMessageDto.isRemoteAvailable()
+                );
+        rabotaRuParserService
+                .findVacancies(
+                        receiveMessageDto.getUsername(),
+                        receiveMessageDto.getTitle(),
+                        receiveMessageDto.getAmount(),
+                        receiveMessageDto.getSalary(),
+                        receiveMessageDto.isOnlyWithSalary(),
+                        receiveMessageDto.getExperience(),
+                        receiveMessageDto.getCityId(),
+                        receiveMessageDto.isRemoteAvailable()
+                );
     }
 }

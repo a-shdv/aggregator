@@ -7,6 +7,7 @@ import com.company.aggregator.repository.UserRepository;
 import com.company.aggregator.utils.Role;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,23 +25,23 @@ public class UserService implements UserDetailsService {
     private final FavouriteRepository favouriteRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Async
     @Transactional
-    public CompletableFuture<Void> saveUserAsync(User user) {
-        return CompletableFuture.runAsync(() -> {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles(Collections.singleton(Role.USER));
-            userRepository.save(user);
-        });
+    public void saveUserAsync(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Collections.singleton(Role.USER));
+        userRepository.save(user);
+    }
+
+    @Async
+    @Transactional
+    public CompletableFuture<User> findUserByUsernameAsync(String username) {
+        return CompletableFuture.completedFuture((User) loadUserByUsername(username));
     }
 
     @Transactional
     public User findUserByUsername(String username) {
         return (User) loadUserByUsername(username);
-    }
-
-    @Transactional
-    public CompletableFuture<User> findUserByUsernameAsync(String username) {
-        return CompletableFuture.supplyAsync(() -> (User) loadUserByUsername(username));
     }
 
     @Override

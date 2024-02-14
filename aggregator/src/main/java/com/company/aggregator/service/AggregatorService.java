@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,38 +21,42 @@ public class AggregatorService {
     private final AggregatorRepository aggregatorRepository;
     private final UserRepository userRepository;
 
+    @Async
     @Transactional
-    public CompletableFuture<Void> saveMessage(ReceiveMessageDto receiveMessageDto) {
-        return CompletableFuture.runAsync(() -> aggregatorRepository.save(ReceiveMessageDto.toVacancy(receiveMessageDto)));
+    public void saveMessage(ReceiveMessageDto receiveMessageDto) {
+        aggregatorRepository.save(ReceiveMessageDto.toVacancy(receiveMessageDto));
     }
 
+
+    @Async
     @Transactional
-    public CompletableFuture<Void> saveMessageListAsync(List<ReceiveMessageDto> receiveMessageDtoList, User user) {
-        return CompletableFuture.runAsync(() -> {
-            List<Vacancy> vacancies = ReceiveMessageDto.toVacancyList(receiveMessageDtoList);
-            vacancies.forEach(vacancy -> vacancy.setUser(user));
-            aggregatorRepository.saveAll(vacancies);
-        });
+    public void saveMessageListAsync(List<ReceiveMessageDto> receiveMessageDtoList, User user) {
+        List<Vacancy> vacancies = ReceiveMessageDto.toVacancyList(receiveMessageDtoList);
+        vacancies.forEach(vacancy -> vacancy.setUser(user));
+        aggregatorRepository.saveAll(vacancies);
     }
 
+
+    @Async
     @Transactional
     public CompletableFuture<List<Vacancy>> findVacanciesAsync() {
-        return CompletableFuture.supplyAsync(aggregatorRepository::findAll);
+        return CompletableFuture.completedFuture(aggregatorRepository.findAll());
     }
 
+
+    @Async
     @Transactional
     public CompletableFuture<Page<Vacancy>> findVacanciesAsync(User user, PageRequest pageRequest) {
-        return CompletableFuture.supplyAsync(() -> aggregatorRepository.findByUser(user, pageRequest));
+        return CompletableFuture.completedFuture(aggregatorRepository.findByUser(user, pageRequest));
     }
 
+    @Async
     @Transactional
-    public CompletableFuture<Void> deleteVacanciesByUserAsync(User user) {
-        return CompletableFuture.runAsync(() -> {
-            List<Vacancy> vacancies = aggregatorRepository.findByUser(user);
-            vacancies.clear();
-            user.setVacancies(vacancies);
-            userRepository.save(user);
-        });
+    public void deleteVacanciesByUserAsync(User user) {
+        List<Vacancy> vacancies = aggregatorRepository.findByUser(user);
+        vacancies.clear();
+        user.setVacancies(vacancies);
+        userRepository.save(user);
     }
 
     public Vacancy findBySource(String source) {

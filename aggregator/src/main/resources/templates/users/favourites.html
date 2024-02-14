@@ -44,6 +44,13 @@
             </tbody>
         </table>
     </div>
+    <div class="row mb-2">
+        <div>
+            <form th:action="@{/favourites/generate-pdf}" th:method="post">
+                <button class="btn btn-md btn-warning" type="submit" th:text="'Сформировать PDF'"></button>
+            </form>
+        </div>
+    </div>
 
     <!--Пагинация-->
     <nav>

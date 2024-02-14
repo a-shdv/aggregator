@@ -6,103 +6,104 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import org.slf4j.LoggerFactory
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.io.IOException
 import java.math.BigDecimal
 import java.util.concurrent.CompletableFuture
 
 @Service
-class RabotaRuParserService(private val rabbitMqSenderService: RabbitMqSenderService) {
+open class RabotaRuParserService(private val rabbitMqSenderService: RabbitMqSenderService) {
     companion object {
         private val log = LoggerFactory.getLogger(RabotaRuParserService.javaClass)
     }
 
-    fun findVacancies(
+    @Async
+    open fun findVacancies(
         username: String, query: String, amount: Int, salary: BigDecimal, onlyWithSalary: Boolean,
         experience: Int, cityId: Int, isRemoteAvailable: Boolean
-    ): CompletableFuture<Void> {
-        return CompletableFuture.runAsync {
-            var previousPage: Int
-            var currentPage: Int = 1
-            val url: StringBuilder = StringBuilder(
-                "https://www.rabota.ru/vacancy/" +
-                        "?query=$query" +
-                        "&min_salary=$salary" +
-                        "&experience_ids=${parseExperience(experience)}" +
-                        "&page=$currentPage"
-            )
+    ) {
+        var previousPage: Int
+        var currentPage: Int = 1
+        val url: StringBuilder = StringBuilder(
+            "https://www.rabota.ru/vacancy/" +
+                    "?query=$query" +
+                    "&min_salary=$salary" +
+                    "&experience_ids=${parseExperience(experience)}" +
+                    "&page=$currentPage"
+        )
 
-            val parsedCityId: String = parseCityId(cityId)
-            if (parsedCityId.isNotEmpty()) {
-                url.replace(0, 30, "https://$parsedCityId.rabota.ru/vacancy/")
-            }
+        val parsedCityId: String = parseCityId(cityId)
+        if (parsedCityId.isNotEmpty()) {
+            url.replace(0, 30, "https://$parsedCityId.rabota.ru/vacancy/")
+        }
 
-            if (isRemoteAvailable) {
-                url.append("&schedule_ids=6")
-            }
+        if (isRemoteAvailable) {
+            url.append("&schedule_ids=6")
+        }
 
-            val doc: Document? = connectDocumentToUrl(url.toString())
-            var elements: Elements? = null
-            if (doc != null) {
-                elements = doc.getElementsByClass("r-serp__item r-serp__item_vacancy")
-            }
+        val doc: Document? = connectDocumentToUrl(url.toString())
+        var elements: Elements? = null
+        if (doc != null) {
+            elements = doc.getElementsByClass("r-serp__item r-serp__item_vacancy")
+        }
 
-            if (elements != null) {
-                val sendMessageDtoList: ArrayList<SendMessageDto> = arrayListOf()
-                val sendMessageDtoListMaxSize = 10
+        if (elements != null) {
+            val sendMessageDtoList: ArrayList<SendMessageDto> = arrayListOf()
+            val sendMessageDtoListMaxSize = 10
 
-                while (currentPage <= amount / elements.size) {
-                    elements.forEach {
-                        val source: String = it.getElementsByAttribute("href").first().absUrl("href")
+            while (currentPage <= amount / elements.size) {
+                elements.forEach {
+                    val source: String = it.getElementsByAttribute("href").first().absUrl("href")
 
-                        val title: String = it.getElementsByClass("vacancy-preview-card__title").first().text()
-                        val date: String = parseUpdatedDate(source).toString()
-                        val vacancySalary: String = it.getElementsByClass("vacancy-preview-card__salary").first().text()
-                        val requirements: String = "Нет поддержки ключевых слов для rabota.ru."
-                        val company: String = it.getElementsByClass("vacancy-preview-card__company-name").first().text()
-                        val description: String =
-                            it.getElementsByClass("vacancy-preview-card__short-description").first().text()
-                        val schedule: String =
-                            it.getElementsByClass("vacancy-preview-location__address-text").first().text()
+                    val title: String = it.getElementsByClass("vacancy-preview-card__title").first().text()
+                    val date: String = parseUpdatedDate(source).toString()
+                    val vacancySalary: String = it.getElementsByClass("vacancy-preview-card__salary").first().text()
+                    val requirements: String = "Нет поддержки ключевых слов для rabota.ru."
+                    val company: String = it.getElementsByClass("vacancy-preview-card__company-name").first().text()
+                    val description: String =
+                        it.getElementsByClass("vacancy-preview-card__short-description").first().text()
+                    val schedule: String =
+                        it.getElementsByClass("vacancy-preview-location__address-text").first().text()
 
-                        val message: SendMessageDto = SendMessageDto(
-                            username,
-                            title,
-                            date,
-                            vacancySalary,
-                            company,
-                            requirements,
-                            description,
-                            schedule,
-                            source
-                        )
-                        sendMessageDtoList.add(message)
-                    }
-
-
-                    previousPage = currentPage;
-                    currentPage++;
-                    url.replace(
-                        url.indexOf("&page=$previousPage"),
-                        url.lastIndexOf("&page=$previousPage"),
-                        "&page=$currentPage"
+                    val message: SendMessageDto = SendMessageDto(
+                        username,
+                        title,
+                        date,
+                        vacancySalary,
+                        company,
+                        requirements,
+                        description,
+                        schedule,
+                        source
                     )
-
-                    if (sendMessageDtoList.size == elements.size) {
-                        rabbitMqSenderService.send(sendMessageDtoList)
-                        sendMessageDtoList.clear()
-                    }
+                    sendMessageDtoList.add(message)
                 }
 
-                // Отправка оставшихся сообщений, если в списке осталось < sendMessageDtoListMaxSize сообщений после парсинга
-                if (sendMessageDtoList.isNotEmpty()) {
+
+                previousPage = currentPage;
+                currentPage++;
+                url.replace(
+                    url.indexOf("&page=$previousPage"),
+                    url.lastIndexOf("&page=$previousPage"),
+                    "&page=$currentPage"
+                )
+
+                if (sendMessageDtoList.size == elements.size) {
                     rabbitMqSenderService.send(sendMessageDtoList)
                     sendMessageDtoList.clear()
                 }
-            } else {
-                log.error("Could not parse elements")
             }
+
+            // Отправка оставшихся сообщений, если в списке осталось < sendMessageDtoListMaxSize сообщений после парсинга
+            if (sendMessageDtoList.isNotEmpty()) {
+                rabbitMqSenderService.send(sendMessageDtoList)
+                sendMessageDtoList.clear()
+            }
+        } else {
+            log.error("Could not parse elements")
         }
+
     }
 
     private fun parseExperience(experience: Int): String {

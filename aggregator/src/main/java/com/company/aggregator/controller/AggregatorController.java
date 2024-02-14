@@ -48,6 +48,7 @@ public class AggregatorController {
         return "home";
     }
 
+
     @PostMapping
     public String findVacanciesByTitle(@AuthenticationPrincipal User user, String title, int amount, BigDecimal salary, boolean onlyWithSalary,
                                        int experience, int cityId, boolean isRemoteAvailable) {
@@ -64,11 +65,10 @@ public class AggregatorController {
         return "redirect:/";
     }
 
+
     @PostMapping("/clear")
-    public CompletableFuture<String> deleteVacancies(@AuthenticationPrincipal User user) {
-        return CompletableFuture.supplyAsync(() -> {
-            aggregatorService.deleteVacanciesByUserAsync(user);
-            return "redirect:/";
-        });
+    public String deleteVacancies(@AuthenticationPrincipal User user) {
+        aggregatorService.deleteVacanciesByUserAsync(user);
+        return "redirect:/";
     }
 }
