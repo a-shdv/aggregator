@@ -47,7 +47,7 @@ public class EmailSenderService {
         messageHelper.setSubject(subject);
         messageHelper.setText(message);
         FileSystemResource file = new FileSystemResource(ResourceUtils.getFile(attachment));
-        messageHelper.addAttachment("/Users/a-shdv/Desktop/report.pdf", file);
+        messageHelper.addAttachment(attachment, file);
         emailSender.send(mimeMessage);
     }
 }

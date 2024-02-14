@@ -7,6 +7,7 @@ import com.company.aggregator.model.Favourite;
 import com.company.aggregator.model.User;
 import com.company.aggregator.service.EmailSenderService;
 import com.company.aggregator.service.FavouriteService;
+import com.company.aggregator.service.PdfGeneratorService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
@@ -29,6 +31,7 @@ import java.util.concurrent.CompletableFuture;
 public class FavouriteController {
     private final FavouriteService favouriteService;
     private final EmailSenderService emailSenderService;
+    private final PdfGeneratorService pdfGeneratorService;
 
     @GetMapping
     public String findFavourites(@AuthenticationPrincipal User user,
@@ -67,26 +70,15 @@ public class FavouriteController {
     @PostMapping("/generate-pdf")
     public String generatePdf(@AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
         String message;
+        String pdfPath = System.getProperty("user.home") + "/Downloads/report-" + UUID.randomUUID() + ".pdf";
         try {
             List<Favourite> favourites = favouriteService.findByUser(user).join();
-            favouriteService.generatePdf(favourites);
-            message = "Pdf успешно сгенерирован!";
-        } catch (FavouritesIsEmptyException e) {
+            pdfGeneratorService.generatePdf(favourites, pdfPath);
+            emailSenderService.sendEmailWithAttachment(user.getEmail(), "Избранные вакансии", "", pdfPath);
+            message = "Pdf успешно сгенерирован и отправлен на почту!";
+        } catch (MessagingException | FileNotFoundException | FavouritesIsEmptyException e) {
             message = e.getMessage();
         }
-        redirectAttributes.addFlashAttribute("success", message);
-        return "redirect:/favourites";
-    }
-
-    @PostMapping("/send-email")
-    public String sendEmail(@AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
-        String message;
-        try {
-            emailSenderService.sendEmailWithAttachment(user.getEmail(), "Favourites", "", EmailSenderService.attachment);
-        } catch (MessagingException | FileNotFoundException e) {
-            log.error(e.getMessage());
-        }
-        message = "Список избранных вакансий успешно отправлен!";
         redirectAttributes.addFlashAttribute("success", message);
         return "redirect:/favourites";
     }
