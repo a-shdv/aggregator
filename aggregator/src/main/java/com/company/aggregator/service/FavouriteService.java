@@ -6,6 +6,7 @@ import com.company.aggregator.model.User;
 import com.company.aggregator.repository.FavouriteRepository;
 import com.company.aggregator.repository.UserRepository;
 import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -71,25 +73,28 @@ public class FavouriteService {
     public void generatePdf(List<Favourite> favourites) {
         Document document = new Document();
         try {
-            PdfWriter.getInstance(document, new FileOutputStream(EmailSenderService.attachment));
+            PdfWriter.getInstance(document, new FileOutputStream(System.getProperty("user.home") + "/Downloads/report-"
+                    + UUID.randomUUID() + ".pdf"));
             PdfPTable table = new PdfPTable(5);
             Paragraph p = new Paragraph();
-            Font fHeader = new Font();
-            Font fBody = new Font();
+
+            Font fHeader = new Font(BaseFont.createFont("fonts/Arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 24, Font.NORMAL, BaseColor.BLACK);
+            Font fBody = new Font(BaseFont.createFont("fonts/Arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 16, Font.NORMAL, BaseColor.BLACK);
 
             document.open();
 
             p.setAlignment(Element.ALIGN_CENTER);
             p.setSpacingAfter(15);
+
             fHeader.setStyle(Font.BOLD);
             fHeader.setSize(12);
 
-            p.add("Favourites");
-            table.addCell(new PdfPCell(new Phrase("Title", fHeader)));
-            table.addCell(new PdfPCell(new Phrase("Date", fHeader)));
-            table.addCell(new PdfPCell(new Phrase("Company", fHeader)));
-            table.addCell(new PdfPCell(new Phrase("Schedule", fHeader)));
-            table.addCell(new PdfPCell(new Phrase("Source", fHeader)));
+            p.add("Избранные вакансии");
+            table.addCell(new PdfPCell(new Phrase("Название", fHeader)));
+            table.addCell(new PdfPCell(new Phrase("Дата публикации", fHeader)));
+            table.addCell(new PdfPCell(new Phrase("Компания", fHeader)));
+            table.addCell(new PdfPCell(new Phrase("График работы", fHeader)));
+            table.addCell(new PdfPCell(new Phrase("Источник", fHeader)));
 
             fBody.setStyle(Font.NORMAL);
             fBody.setSize(10);
@@ -101,11 +106,11 @@ public class FavouriteService {
                 String schedule = fav.getSchedule();
                 String source = fav.getSource();
 
-                table.addCell(new PdfPCell(new Phrase(title, fBody)));
-                table.addCell(new PdfPCell(new Phrase(date, fBody)));
-                table.addCell(new PdfPCell(new Phrase(company, fBody)));
-                table.addCell(new PdfPCell(new Phrase(schedule, fBody)));
-                table.addCell(new PdfPCell(new Phrase(source, fBody)));
+                table.addCell(new PdfPCell(new Phrase(cutText(title), fBody)));
+                table.addCell(new PdfPCell(new Phrase(cutText(date), fBody)));
+                table.addCell(new PdfPCell(new Phrase(cutText(company), fBody)));
+                table.addCell(new PdfPCell(new Phrase(cutText(schedule), fBody)));
+                table.addCell(new PdfPCell(new Phrase(cutText(source), fBody)));
             }
 
             document.add(p);
@@ -115,6 +120,13 @@ public class FavouriteService {
             log.error(e.getMessage());
         }
 
+    }
+
+    private String cutText(String text) {
+        if (text.length() > 45) {
+            return String.format("%s...", text.substring(0, 45));
+        }
+        return text;
     }
 
 }
