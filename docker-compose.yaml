@@ -1,0 +1,55 @@
+version: '3.8'
+services:
+  aggregator-service:
+    #    image: kybernetique/aggregator-api:latest
+    build:
+      context: ./aggregator
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-service/aggregator_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+    depends_on:
+      - postgres-service
+    networks:
+      backend:
+        aliases:
+          - "aggregator"
+
+
+  parser-service:
+    #    image: kybernetique/parser-api:latest
+    build:
+      context: ./parser
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-service/aggregator_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+    depends_on:
+      - postgres-service
+    networks:
+      backend:
+        aliases:
+          - "parser"
+
+  postgres-service:
+    image: postgres:14.1
+    container_name: postgres-db
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: "aggregator_db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    networks:
+      backend:
+        aliases:
+          - "postgres"
