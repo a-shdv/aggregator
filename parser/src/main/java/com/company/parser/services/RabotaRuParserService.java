@@ -21,7 +21,7 @@ import java.util.List;
 public class RabotaRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
 
-    @Async
+    @Async("jobExecutor")
     public void findVacancies(String username, String query, Integer amount, BigDecimal salary, Boolean onlyWithSalary,
                               Integer experience, Integer cityId, Boolean isRemoteAvailable) {
         int prevPage;

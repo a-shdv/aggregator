@@ -38,6 +38,14 @@ public class FavouriteController {
                                  @RequestParam(required = false, defaultValue = "0") int page,
                                  @RequestParam(required = false, defaultValue = "5") int size,
                                  Model model) {
+        String success = (String) model.getAttribute("success");
+        String error = (String) model.getAttribute("error");
+        if (error != null) {
+            model.addAttribute("error", error);
+        }
+        if (success != null) {
+            model.addAttribute("success", success);
+        }
         CompletableFuture<Page<Favourite>> favourites = favouriteService.findFavouritesAsync(user, PageRequest.of(page, size));
         model.addAttribute("favourites", favourites.join());
         return "users/favourites";
@@ -74,7 +82,8 @@ public class FavouriteController {
         try {
             List<Favourite> favourites = favouriteService.findByUser(user).join();
             pdfGeneratorService.generatePdf(favourites, pdfPath);
-            emailSenderService.sendEmailWithAttachment(user.getEmail(), "Избранные вакансии", "", pdfPath);
+//            emailSenderService.sendEmailWithAttachment(user.getEmail(), "Избранные вакансии", "", pdfPath);
+            emailSenderService.sendEmailWithAttachment("shadaev2001@icloud.com", "Избранные вакансии", "", pdfPath);
             message = "Pdf успешно сгенерирован и отправлен на почту!";
         } catch (MessagingException | FileNotFoundException | FavouritesIsEmptyException e) {
             message = e.getMessage();

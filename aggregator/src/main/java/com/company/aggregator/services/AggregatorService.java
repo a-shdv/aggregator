@@ -21,14 +21,14 @@ public class AggregatorService {
     private final AggregatorRepository aggregatorRepository;
     private final UserRepository userRepository;
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public void saveMessage(ReceiveMessageDto receiveMessageDto) {
         aggregatorRepository.save(ReceiveMessageDto.toVacancy(receiveMessageDto));
     }
 
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public void saveMessageListAsync(List<ReceiveMessageDto> receiveMessageDtoList, User user) {
         List<Vacancy> vacancies = ReceiveMessageDto.toVacancyList(receiveMessageDtoList);
@@ -37,20 +37,20 @@ public class AggregatorService {
     }
 
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public CompletableFuture<List<Vacancy>> findVacanciesAsync() {
         return CompletableFuture.completedFuture(aggregatorRepository.findAll());
     }
 
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public CompletableFuture<Page<Vacancy>> findVacanciesAsync(User user, PageRequest pageRequest) {
         return CompletableFuture.completedFuture(aggregatorRepository.findByUser(user, pageRequest));
     }
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public void deleteVacanciesByUserAsync(User user) {
         List<Vacancy> vacancies = aggregatorRepository.findByUser(user);
