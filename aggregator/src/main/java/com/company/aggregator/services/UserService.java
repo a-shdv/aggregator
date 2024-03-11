@@ -49,24 +49,15 @@ public class UserService implements UserDetailsService {
 
     @Async
     @Transactional
-    public void changeUsername(User user, ChangeUsernameDto changeUsernameDto) throws UserAlreadyExistsException {
+    public void changeUsername(User user, ChangeUsernameDto changeUsernameDto) {
         String updatedUsername = changeUsernameDto.getUsername();
-        if (loadUserByUsername(updatedUsername) != null) {
-            throw new UserAlreadyExistsException("User with username " + changeUsernameDto.getUsername() + " already exists!");
-        }
         user.setUsername(updatedUsername);
         userRepository.save(user);
     }
 
     @Async
     @Transactional
-    public void changePassword(User user, ChangePasswordDto changePasswordDto) throws PasswordsDoNotMatchException, OldPasswordIsWrongException {
-        if (!passwordEncoder.matches(changePasswordDto.oldPassword(), user.getPassword())) {
-            throw new OldPasswordIsWrongException("Wrong old password!");
-        }
-        if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmNewPassword())) {
-            throw new PasswordsDoNotMatchException("Passwords do not match!");
-        }
+    public void changePassword(User user, ChangePasswordDto changePasswordDto) {
         user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
         userRepository.save(user);
     }

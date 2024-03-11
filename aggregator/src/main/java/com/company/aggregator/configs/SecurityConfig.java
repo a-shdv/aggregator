@@ -18,12 +18,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(requests ->
-                        requests
+                                requests
 //                                .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/sign-in")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/sign-up")).permitAll()
+                                        .requestMatchers(new AntPathRequestMatcher("/sign-in")).permitAll()
+                                        .requestMatchers(new AntPathRequestMatcher("/sign-up")).permitAll()
 //                                .requestMatchers(new AntPathRequestMatcher("/change-password")).permitAll()
-                                .anyRequest().authenticated()
+                                        .anyRequest().authenticated()
                 ).formLogin(form ->
                         form
                                 .loginPage("/sign-in")

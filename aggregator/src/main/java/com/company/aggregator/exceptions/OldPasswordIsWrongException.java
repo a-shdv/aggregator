@@ -1,6 +1,6 @@
 package com.company.aggregator.exceptions;
 
-public class OldPasswordIsWrongException extends Exception{
+public class OldPasswordIsWrongException extends Exception {
     public OldPasswordIsWrongException() {
     }
 

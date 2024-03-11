@@ -13,13 +13,13 @@
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 <div class="centered-form">
     <form th:action="@{/change-username}" th:method="post" th:object="${changeUsernameDto}">
-        <!--        <div th:if="${error}" th:text="${error}" style="color: red"></div>-->
-        <!--        <div th:if="${success}" th:text="${success}" style="color: green"></div>-->
+                <div th:if="${error}" th:text="${error}" style="color: red"></div>
+                <div th:if="${success}" th:text="${success}" style="color: green"></div>
         <!--Change username-->
         <div class="form-row mb-3">
             <div class="form-group col-lg-12">
                 <label for="username">Новое имя пользователя</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="yourNewUsername">
+                <input type="text" class="form-control" id="username" name="username" placeholder="yourNewUsername" required>
             </div>
         </div>
 

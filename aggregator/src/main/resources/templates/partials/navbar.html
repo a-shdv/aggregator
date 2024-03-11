@@ -19,10 +19,21 @@
                 <div sec:authorize="isAuthenticated()">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Личный кабинет</a>
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                               aria-expanded="false">Личный кабинет</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" th:href="@{/change-username}" style="text-decoration: none">Сменить имя пользователя</a></li>
-                                <li><a class="dropdown-item" th:href="@{/change-password}" style="text-decoration: none">Сменить пароль</a></li>
+                                <li><a class="dropdown-item" th:href="@{/account-info}"
+                                       style="text-decoration: none">Профиль</a></li>
+                                <li><a class="dropdown-item" th:href="@{/change-username}"
+                                       style="text-decoration: none">Сменить имя пользователя</a></li>
+                                <li><a class="dropdown-item" th:href="@{/change-password}"
+                                       style="text-decoration: none">Сменить пароль</a></li>
+                                <li>
+                                    <form class="dropdown-item navbar-text pe-3" th:action="@{/logout}" th:method="post">
+                                        <input type="submit" value="Выйти"
+                                               style="background: none;	border: none;"/>
+                                    </form>
+                                </li>
                             </ul>
                         </li>
                     </ul>
@@ -30,10 +41,7 @@
 
                 <!--Выйти-->
                 <div sec:authorize="isAuthenticated()">
-                    <form th:action="@{/logout}" th:method="post">
-                        <input class="navbar-text pe-3" type="submit" value="Выйти"
-                               style="background: none;	border: none;"/>
-                    </form>
+
                 </div>
 
                 <div sec:authorize="!isAuthenticated()">

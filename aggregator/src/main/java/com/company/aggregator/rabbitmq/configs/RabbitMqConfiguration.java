@@ -6,8 +6,8 @@ import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class RabbitMqConfiguration {
 
     private final RabbitMqProperties rabbitMqProperties;
-    private Map<String, Object> rabbitArgs = new HashMap<>(){{
+    private Map<String, Object> rabbitArgs = new HashMap<>() {{
         put("x-message-ttl", 60000L);
     }};
 
@@ -86,7 +86,7 @@ public class RabbitMqConfiguration {
     }
 
     @Bean
-    public MessageConverter converter(){
+    public MessageConverter converter() {
         return new Jackson2JsonMessageConverter();
     }
 

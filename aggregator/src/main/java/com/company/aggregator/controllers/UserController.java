@@ -11,6 +11,7 @@ import com.company.aggregator.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class UserController {
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/sign-in")
     public String signIn(Model model) {
@@ -69,32 +71,67 @@ public class UserController {
         }
     }
 
+    @GetMapping("/account-info")
+    public String accountInfo(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("user", user);
+        return "users/account-info";
+    }
+
     @GetMapping("/change-username")
-    public String changeUsername() {
+    public String changeUsername(Model model) {
+        String success = (String) model.getAttribute("success");
+        String error = (String) model.getAttribute("error");
+        if (error != null) {
+            model.addAttribute("error", error);
+        }
+        if (success != null) {
+            model.addAttribute("success", success);
+        }
         return "users/change-username";
     }
 
     @PostMapping("/change-username")
-    public String changeUsername(@AuthenticationPrincipal User user, @ModelAttribute ChangeUsernameDto changeUsernameDto) {
+    public String changeUsername(@AuthenticationPrincipal User user, @ModelAttribute ChangeUsernameDto changeUsernameDto, RedirectAttributes redirectAttributes) {
         try {
+            if (userService.findUserByUsernameAsync(changeUsernameDto.getUsername()).join() != null) {
+                throw new UserAlreadyExistsException("User with username " + changeUsernameDto.getUsername() + " already exists!");
+            }
             userService.changeUsername(user, changeUsernameDto);
+            redirectAttributes.addFlashAttribute("success", "Username has been changed successfully!");
         } catch (UserAlreadyExistsException e) {
             log.error(e.getMessage());
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/change-username";
     }
 
     @GetMapping("/change-password")
-    public String changePassword() {
+    public String changePassword(Model model) {
+        String success = (String) model.getAttribute("success");
+        String error = (String) model.getAttribute("error");
+        if (error != null) {
+            model.addAttribute("error", error);
+        }
+        if (success != null) {
+            model.addAttribute("success", success);
+        }
         return "users/change-password";
     }
 
     @PostMapping("/change-password")
-    public String changePassword(@AuthenticationPrincipal User user, @ModelAttribute ChangePasswordDto changePasswordDto) {
+    public String changePassword(@AuthenticationPrincipal User user, @ModelAttribute ChangePasswordDto changePasswordDto, RedirectAttributes redirectAttributes) {
         try {
+            if (!passwordEncoder.matches(changePasswordDto.oldPassword(), user.getPassword())) {
+                throw new OldPasswordIsWrongException("Wrong old password!");
+            }
+            if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmNewPassword())) {
+                throw new PasswordsDoNotMatchException("Passwords do not match!");
+            }
             userService.changePassword(user, changePasswordDto);
+            redirectAttributes.addFlashAttribute("success", "Password has been changed successfully!");
         } catch (OldPasswordIsWrongException | PasswordsDoNotMatchException e) {
             log.error(e.getMessage());
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/change-password";
     }

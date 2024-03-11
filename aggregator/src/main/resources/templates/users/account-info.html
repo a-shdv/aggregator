@@ -1,13 +1,36 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
+<div th:insert="~{/partials/head :: head}"></div>
 <body>
+<style>
+    .centered-text {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+</style>
+<div th:insert="~{/partials/navbar :: navbar}"></div>
+<div class="centered-text" th:object="${user}">
+    <table>
+        <tbody>
+        <tr>
+            <td>
+                <span style="font-weight: bold">Имя пользователя: </span>
+                <span th:text="*{username}"></span> (<a
+                    th:href="@{/change-username}">Изменить</a>)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-weight: bold">Электронный адрес</span>
+                <span th:text="*{email}"></span> <br>
+            </td>
+        </tr>
+        </tbody>
 
+    </table>
+</div>
+<div th:insert="~{/partials/footer :: footer}"></div>
 </body>
 </html>
