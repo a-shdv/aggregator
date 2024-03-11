@@ -108,11 +108,11 @@ public class HabrParserService {
     private int parseExperience(int experience) {
         int parsedExperience = 0;
         switch (experience) {
-            case 0 -> parsedExperience = -1; // 0 - не имеет значения
+            case 0 -> parsedExperience = -1; // -1 - не имеет значения
             case 1 -> parsedExperience = 1; // 1 - нет опыта
-            case 2 -> parsedExperience = 3; // 2 - от 1 года до 3 лет
-            case 3 -> parsedExperience = 4; // 3 - от 3 до 6 лет
-            case 4 -> parsedExperience = 5;// 4 - более 6 лет
+            case 2 -> parsedExperience = 3; // 3 - от 1 года до 3 лет
+            case 3 -> parsedExperience = 4; // 4 - от 3 до 6 лет
+            case 4 -> parsedExperience = 5;// 5 - более 6 лет
         }
         return parsedExperience;
     }
