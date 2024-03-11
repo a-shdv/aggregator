@@ -2,9 +2,17 @@
 <html lang="en">
 <div th:insert="~{/partials/head :: head}"></div>
 <body>
+<style>
+    .centered-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+</style>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 
-<div class="row justify-content-center">
+<div class="centered-form">
     <div th:if="${favourites.isEmpty()}" class="alert alert-warning col-6 mb-5 mt-5" role="alert">
         Список избранных вакансий пуст!
     </div>

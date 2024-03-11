@@ -1,4 +1,16 @@
 <div th:fragment="navbar" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <style>
+        .navbar-nav .dropdown-menu .dropdown-item:hover,
+        .navbar-nav .dropdown-menu .dropdown-item:active {
+            color: #212529;
+            background-color: #ffc107;
+        }
+
+        .navbar-nav .dropdown-menu .dropdown-item:focus {
+            color: #424649;
+            background-color: #ffca2c;
+        }
+    </style>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">JobHunter</a>
@@ -30,8 +42,8 @@
                                        style="text-decoration: none">Профиль</a></li>
 
                                 <!--Сменить имя пользователя-->
-                                <li><a class="dropdown-item" th:href="@{/change-username}"
-                                       style="text-decoration: none">Сменить имя пользователя</a></li>
+<!--                                <li><a class="dropdown-item" th:href="@{/change-username}"-->
+<!--                                       style="text-decoration: none">Сменить имя пользователя</a></li>-->
 
                                 <!--Сменить пароль-->
                                 <li><a class="dropdown-item" th:href="@{/change-password}"

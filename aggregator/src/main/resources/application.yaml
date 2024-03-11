@@ -6,6 +6,7 @@ constants:
     email: admin@jobhunter.com
     login: admin
     password:  admin
+  heartbeat-url: http://localhost:8081/heartbeat
 
 rabbitmq:
   services:

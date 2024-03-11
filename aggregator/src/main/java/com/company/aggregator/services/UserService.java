@@ -82,13 +82,13 @@ public class UserService implements UserDetailsService {
         return (User) loadUserByUsername(username);
     }
 
-    @Async
-    @Transactional
-    public void changeUsername(User user, ChangeUsernameDto changeUsernameDto) {
-        String updatedUsername = changeUsernameDto.getUsername();
-        user.setUsername(updatedUsername);
-        userRepository.save(user);
-    }
+//    @Async
+//    @Transactional
+//    public void changeUsername(User user, ChangeUsernameDto changeUsernameDto) {
+//        String updatedUsername = changeUsernameDto.getUsername();
+//        user.setUsername(updatedUsername);
+//        userRepository.save(user);
+//    }
 
     @Async
     @Transactional

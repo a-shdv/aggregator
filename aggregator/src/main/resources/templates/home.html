@@ -2,204 +2,225 @@
 <html lang="en">
 <div th:insert="~{/partials/head :: head}"></div>
 <body>
+<style>
+    .centered-text {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+</style>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 
-<!--Вакансия-->
-<div class="container mt-5">
+<div th:if="${isParserAvailable == true}">
+
+
+    <!--Вакансия-->
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <form th:action="@{/}" th:method="post" class="col-lg-4" onsubmit="checkAmount()">
+                <h2>Вакансия</h2>
+                <!--Название вакансии-->
+                <div class="form-group">
+                    <label for="title">Название вакансии</label>
+                    <input id="title" class="form-control" type="text" name="title" placeholder="Программист" required>
+                </div>
+
+                <!--Количество вакансий-->
+                <div class="form-group">
+                    <label for="amount">Количество вакансий (min=35, max=1000)</label>
+                    <input id="amount" class="form-control" type="text" name="amount" min="35" max="1000"
+                           placeholder="500"
+                           required>
+                </div>
+
+                <!--Зарплата-->
+                <div class="form-group">
+                    <label for="salary">Заработная плата (от ...)</label>
+                    <input id="salary" class="form-control" type="number" name="salary" min="0" value="0">
+                </div>
+
+                <!--Заработная плата указана-->
+                <div class="form-group">
+                    <div class="form-check">
+                        <label class="form-check-label" for="onlyWithSalary"> Заработная плата указана</label>
+                        <input id="onlyWithSalary" class="form-check-input" type="checkbox" name="onlyWithSalary">
+                        <br><br>
+                    </div>
+                </div>
+
+                <!--Опыт работы-->
+                <div class="form-group">
+                    <label class="form-check-label" for="workExperience">Опыт работы</label>
+                    <div id="workExperience" class="form-check">
+                        <!--Не имеет значения-->
+                        <input id="0" class="form-check-input" type="radio" name="experience" value="0" checked>
+                        <label class="form-check-label" for="0">Не имеет значения</label>
+                        <br>
+                        <!--Нет опыта-->
+                        <input id="1" class="form-check-input" type="radio" name="experience" value="1">
+                        <label class="form-check-label" for="1">Нет опыта</label>
+                        <br>
+                        <!--От 1 года до 3 лет-->
+                        <input id="2" class="form-check-input" type="radio" name="experience" value="2">
+                        <label class="form-check-label" for="2">От 1 года до 3 лет</label>
+                        <br>
+                        <!--От 3 до 6 лет-->
+                        <input id="3" class="form-check-input" type="radio" name="experience" value="3">
+                        <label class="form-check-label" for="3">От 3 до 6 лет</label>
+                        <br>
+                        <!--Более 6 лет-->
+                        <input id="4" class="form-check-input" type="radio" name="experience" value="4">
+                        <label class="form-check-label" for="4">Более 6 лет</label>
+                        <br> <br>
+                    </div>
+                </div>
+
+                <!--Город-->
+                <div class="form-group">
+                    <label>Город</label>
+                    <label>
+                        <select required name="cityId">
+                            <option value="" disabled>Выберите город</option>
+                            <option value="0" selected>Москва</option>
+                            <option value="1">Санкт-Петербург</option>
+                            <option value="2">Екатеринбург</option>
+                            <option value="3">Новосибирск</option>
+                            <option value="4">Казань</option>
+                            <option value="5">Нижний Новгород</option>
+                            <option value="6">Ульяновск</option>
+                            <option value="7">Тольятти</option>
+                            <option value="8">Астрахань</option>
+                            <option value="9">Уфа</option>
+                        </select>
+                    </label>
+                    <br><br>
+                </div>
+                <div class="form-group">
+                    <!--'Можно удаленно'-->
+                    <div class="form-check">
+                        <label for="isRemoteAvailable" class="form-check-label">Только удаленно</label>
+                        <input id="isRemoteAvailable" class="form-check-input" type="checkbox" name="isRemoteAvailable">
+                        <br><br>
+                    </div>
+                </div>
+                <!--Отправка формы-->
+                <input type="submit" value="Найти">
+                <br> <br>
+            </form>
+        </div>
+    </div>
+
+    <!--Все вакансии-->
     <div class="row justify-content-center">
-        <form th:action="@{/}" th:method="post" class="col-lg-4" onsubmit="checkAmount()">
-            <h2>Вакансия</h2>
-            <!--Название вакансии-->
-            <div class="form-group">
-                <label for="title">Название вакансии</label>
-                <input id="title" class="form-control" type="text" name="title" placeholder="Программист" required>
-            </div>
+        <div th:if="${vacancies.isEmpty()}" class="alert alert-warning col-6 mb-5 mt-5" role="alert">
+            Список вакансий пуст!
+        </div>
+    </div>
 
-            <!--Количество вакансий-->
-            <div class="form-group">
-                <label for="amount">Количество вакансий (min=35, max=1000)</label>
-                <input id="amount" class="form-control" type="text" name="amount" min="35" max="1000" placeholder="500"
-                       required>
-            </div>
+    <div class="container" th:if="${!vacancies.isEmpty()}">
+        <div class="row justify-content-center mt-9 col-lg-12">
+            <table class="table table-hover">
+                <h2>Все вакансии</h2>
+                <div th:if="${error}" th:text="${error}" style="color: red"></div>
+                <div th:if="${success}" th:text="${success}" style="color: green"></div>
+                <thead>
+                <tr>
+                    <td class="table-dark">Название</td>
+                    <td class="table-dark">Зарплата</td>
+                    <td class="table-dark">Требования</td>
+                    <td class="table-dark">График работы</td>
+                    <td class="table-dark">Компания</td>
+                    <td class="table-dark">Описание</td>
+                    <td class="table-dark">Дата публикации</td>
+                    <td class="table-dark">Источник</td>
+                    <td class="table-dark"></td>
+                    <!--        <td>Ссылка</td>-->
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}">
+                    <!--Название-->
+                    <td>
+                        <a th:href="${vacancy.source}" th:text="${vacancy.title}" target="_blank"></a>
+                    </td>
+                    <!--Зарплата-->
+                    <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указана'"></td>
+                    <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.salary}"></td>
+                    <!--Требования-->
+                    <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указаны'"></td>
+                    <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.requirements}"></td>
+                    <!--График работы-->
+                    <td th:text="${vacancy.schedule}"></td>
+                    <!--Компания-->
+                    <td th:text="${vacancy.company}"></td>
+                    <!--Описание-->
+                    <td th:text="${#strings.abbreviate(vacancy.description, 50)}"></td>
+                    <!--Дата публикации-->
+                    <td th:text="${vacancy.date}"></td>
+                    <!--Ссылка на вакансию-->
+                    <td>
+                        <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
+                           th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
+                    </td>
+                    <!--Кнопка "Добавить в избранное"-->
+                    <td>
+                        <form th:action="@{/favourites}" th:method="post" th:object="${favouriteDto}">
+                            <input type="hidden" name="title" th:value="${vacancy.title}">
+                            <input type="hidden" name="date" th:value="${vacancy.date}">
+                            <input type="hidden" name="company" th:value="${vacancy.company}">
+                            <input type="hidden" name="schedule" th:value="${vacancy.schedule}">
+                            <input type="hidden" name="source" th:value="${vacancy.source}">
 
-            <!--Зарплата-->
-            <div class="form-group">
-                <label for="salary">Заработная плата (от ...)</label>
-                <input id="salary" class="form-control" type="number" name="salary" min="0" value="0">
-            </div>
+                            <button type="submit" class="btn btn-sm btn-warning">Добавить в избранное</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-            <!--Заработная плата указана-->
-            <div class="form-group">
-                <div class="form-check">
-                    <label class="form-check-label" for="onlyWithSalary"> Заработная плата указана</label>
-                    <input id="onlyWithSalary" class="form-check-input" type="checkbox" name="onlyWithSalary">
-                    <br><br>
+        <!--Пагинация-->
+        <nav>
+            <ul class="pagination justify-content-center mt-5 mb-5">
+                <!--Пред-->
+                <div th:if="${vacancies.hasPrevious()}">
+                    <li class="page-item disabled">
+                        <form th:action="@{/}" method="get">
+                            <input type="hidden" name="page" th:value="${vacancies.previousPageable().pageNumber}"/>
+                            <input type="hidden" name="size" th:value="${vacancies.previousPageable().pageSize}"/>
+                            <input class="page-link" type="submit" value="Пред."/>
+                        </form>
+                    </li>
                 </div>
-            </div>
 
-            <!--Опыт работы-->
-            <div class="form-group">
-                <label class="form-check-label" for="workExperience">Опыт работы</label>
-                <div id="workExperience" class="form-check">
-                    <!--Не имеет значения-->
-                    <input id="0" class="form-check-input" type="radio" name="experience" value="0" checked>
-                    <label class="form-check-label" for="0">Не имеет значения</label>
-                    <br>
-                    <!--Нет опыта-->
-                    <input id="1" class="form-check-input" type="radio" name="experience" value="1">
-                    <label class="form-check-label" for="1">Нет опыта</label>
-                    <br>
-                    <!--От 1 года до 3 лет-->
-                    <input id="2" class="form-check-input" type="radio" name="experience" value="2">
-                    <label class="form-check-label" for="2">От 1 года до 3 лет</label>
-                    <br>
-                    <!--От 3 до 6 лет-->
-                    <input id="3" class="form-check-input" type="radio" name="experience" value="3">
-                    <label class="form-check-label" for="3">От 3 до 6 лет</label>
-                    <br>
-                    <!--Более 6 лет-->
-                    <input id="4" class="form-check-input" type="radio" name="experience" value="4">
-                    <label class="form-check-label" for="4">Более 6 лет</label>
-                    <br> <br>
+                <!--След-->
+                <div th:if="${vacancies.hasNext()}">
+                    <li class="page-item">
+                        <form th:action="@{/}" method="get">
+                            <input type="hidden" name="page" th:value="${vacancies.nextPageable().pageNumber}"/>
+                            <input type="hidden" name="size" th:value="${vacancies.nextPageable().pageSize}"/>
+                            <input class="page-link" type="submit" value="След."/>
+                        </form>
+                    </li>
                 </div>
-            </div>
+            </ul>
+        </nav>
 
-            <!--Город-->
-            <div class="form-group">
-                <label>Город</label>
-                <label>
-                    <select required name="cityId">
-                        <option value="" disabled>Выберите город</option>
-                        <option value="0" selected>Москва</option>
-                        <option value="1">Санкт-Петербург</option>
-                        <option value="2">Екатеринбург</option>
-                        <option value="3">Новосибирск</option>
-                        <option value="4">Казань</option>
-                        <option value="5">Нижний Новгород</option>
-                        <option value="6">Ульяновск</option>
-                        <option value="7">Тольятти</option>
-                        <option value="8">Астрахань</option>
-                        <option value="9">Уфа</option>
-                    </select>
-                </label>
-                <br><br>
-            </div>
-            <div class="form-group">
-                <!--'Можно удаленно'-->
-                <div class="form-check">
-                    <label for="isRemoteAvailable" class="form-check-label">Можно удаленно</label>
-                    <input id="isRemoteAvailable" class="form-check-input" type="checkbox" name="isRemoteAvailable">
-                    <br><br>
-                </div>
-            </div>
-            <!--Отправка формы-->
-            <input type="submit" value="Найти">
-            <br> <br>
+        <!--Кнопка "Очистить"-->
+        <form class="mt-5" th:action="@{/clear}" th:method="post">
+            <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
         </form>
     </div>
+
 </div>
 
-<!--Все вакансии-->
-<div class="row justify-content-center">
-    <div th:if="${vacancies.isEmpty()}" class="alert alert-warning col-6 mb-5 mt-5" role="alert">
-        Список вакансий пуст!
+<div class="centered-text" th:if="${isParserAvailable == false}">
+    <div class="alert alert-danger col-6 mb-5 mt-5" role="alert">
+        Извините, в данный момент сервис недоступен!
     </div>
 </div>
 
-<div class="container" th:if="${!vacancies.isEmpty()}">
-    <div class="row justify-content-center mt-9 col-lg-12">
-        <table class="table table-hover">
-            <h2>Все вакансии</h2>
-            <div th:if="${error}" th:text="${error}" style="color: red"></div>
-            <div th:if="${success}" th:text="${success}" style="color: green"></div>
-            <thead>
-            <tr>
-                <td class="table-dark">Название</td>
-                <td class="table-dark">Зарплата</td>
-                <td class="table-dark">Требования</td>
-                <td class="table-dark">График работы</td>
-                <td class="table-dark">Компания</td>
-                <td class="table-dark">Описание</td>
-                <td class="table-dark">Дата публикации</td>
-                <td class="table-dark">Источник</td>
-                <td class="table-dark"></td>
-                <!--        <td>Ссылка</td>-->
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}">
-                <!--Название-->
-                <td>
-                    <a th:href="${vacancy.source}" th:text="${vacancy.title}" target="_blank"></a>
-                </td>
-                <!--Зарплата-->
-                <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указана'"></td>
-                <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.salary}"></td>
-                <!--Требования-->
-                <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указаны'"></td>
-                <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.requirements}"></td>
-                <!--График работы-->
-                <td th:text="${vacancy.schedule}"></td>
-                <!--Компания-->
-                <td th:text="${vacancy.company}"></td>
-                <!--Описание-->
-                <td th:text="${#strings.abbreviate(vacancy.description, 50)}"></td>
-                <!--Дата публикации-->
-                <td th:text="${vacancy.date}"></td>
-                <!--Ссылка на вакансию-->
-                <td>
-                    <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
-                       th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
-                </td>
-                <!--Кнопка "Добавить в избранное"-->
-                <td>
-                    <form th:action="@{/favourites}" th:method="post" th:object="${favouriteDto}">
-                        <input type="hidden" name="title" th:value="${vacancy.title}">
-                        <input type="hidden" name="date" th:value="${vacancy.date}">
-                        <input type="hidden" name="company" th:value="${vacancy.company}">
-                        <input type="hidden" name="schedule" th:value="${vacancy.schedule}">
-                        <input type="hidden" name="source" th:value="${vacancy.source}">
-
-                        <button type="submit" class="btn btn-sm btn-warning">Добавить в избранное</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!--Пагинация-->
-    <nav>
-        <ul class="pagination justify-content-center mt-5 mb-5">
-            <!--Пред-->
-            <div th:if="${vacancies.hasPrevious()}">
-                <li class="page-item disabled">
-                    <form th:action="@{/}" method="get">
-                        <input type="hidden" name="page" th:value="${vacancies.previousPageable().pageNumber}"/>
-                        <input type="hidden" name="size" th:value="${vacancies.previousPageable().pageSize}"/>
-                        <input class="page-link" type="submit" value="Пред."/>
-                    </form>
-                </li>
-            </div>
-
-            <!--След-->
-            <div th:if="${vacancies.hasNext()}">
-                <li class="page-item">
-                    <form th:action="@{/}" method="get">
-                        <input type="hidden" name="page" th:value="${vacancies.nextPageable().pageNumber}"/>
-                        <input type="hidden" name="size" th:value="${vacancies.nextPageable().pageSize}"/>
-                        <input class="page-link" type="submit" value="След."/>
-                    </form>
-                </li>
-            </div>
-        </ul>
-    </nav>
-
-    <!--Кнопка "Очистить"-->
-    <form class="mt-5" th:action="@{/clear}" th:method="post">
-        <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
-    </form>
-</div>
 <div th:insert="~{/partials/footer :: footer}"></div>
 <script>
     function clearVacancies() {

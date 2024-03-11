@@ -77,33 +77,33 @@ public class UserController {
         return "users/account-info";
     }
 
-    @GetMapping("/change-username")
-    public String changeUsername(Model model) {
-        String success = (String) model.getAttribute("success");
-        String error = (String) model.getAttribute("error");
-        if (error != null) {
-            model.addAttribute("error", error);
-        }
-        if (success != null) {
-            model.addAttribute("success", success);
-        }
-        return "users/change-username";
-    }
+//    @GetMapping("/change-username")
+//    public String changeUsername(Model model) {
+//        String success = (String) model.getAttribute("success");
+//        String error = (String) model.getAttribute("error");
+//        if (error != null) {
+//            model.addAttribute("error", error);
+//        }
+//        if (success != null) {
+//            model.addAttribute("success", success);
+//        }
+//        return "users/change-username";
+//    }
 
-    @PostMapping("/change-username")
-    public String changeUsername(@AuthenticationPrincipal User user, @ModelAttribute ChangeUsernameDto changeUsernameDto, RedirectAttributes redirectAttributes) {
-        try {
-            if (userService.findUserByUsernameAsync(changeUsernameDto.getUsername()).join() != null) {
-                throw new UserAlreadyExistsException("User with username '" + changeUsernameDto.getUsername() + "' already exists!");
-            }
-            userService.changeUsername(user, changeUsernameDto);
-            redirectAttributes.addFlashAttribute("success", "Username has been changed successfully!");
-        } catch (UserAlreadyExistsException e) {
-            log.error(e.getMessage());
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
-        return "redirect:/change-username";
-    }
+//    @PostMapping("/change-username")
+//    public String changeUsername(@AuthenticationPrincipal User user, @ModelAttribute ChangeUsernameDto changeUsernameDto, RedirectAttributes redirectAttributes) {
+//        try {
+//            if (userService.findUserByUsernameAsync(changeUsernameDto.getUsername()).join() != null) {
+//                throw new UserAlreadyExistsException("User with username '" + changeUsernameDto.getUsername() + "' already exists!");
+//            }
+//            userService.changeUsername(user, changeUsernameDto);
+//            redirectAttributes.addFlashAttribute("success", "Username has been changed successfully!");
+//        } catch (UserAlreadyExistsException e) {
+//            log.error(e.getMessage());
+//            redirectAttributes.addFlashAttribute("error", e.getMessage());
+//        }
+//        return "redirect:/change-username";
+//    }
 
     @GetMapping("/change-password")
     public String changePassword(Model model) {

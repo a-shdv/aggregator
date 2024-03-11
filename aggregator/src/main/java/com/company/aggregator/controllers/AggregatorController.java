@@ -7,8 +7,10 @@ import com.company.aggregator.rabbitmq.services.RabbitMqService;
 import com.company.aggregator.services.AggregatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
@@ -27,6 +31,22 @@ import java.util.concurrent.CompletableFuture;
 public class AggregatorController {
     private final AggregatorService aggregatorService;
     private final RabbitMqService rabbitMqService;
+    private final RestTemplate restTemplate;
+
+    @Value("${constants.heartbeat-url}")
+    private String heartbeatUrl;
+
+    private boolean isParserAvailable;
+
+    @Scheduled(initialDelay = 2_000, fixedDelay = 10_000)
+    public void sendHeartBeat() {
+        try {
+            restTemplate.getForEntity(heartbeatUrl, String.class).getStatusCode().is2xxSuccessful();
+            isParserAvailable = true;
+        } catch (ResourceAccessException ex) {
+            isParserAvailable = false;
+        }
+    }
 
     @GetMapping
     public String findVacancies(@AuthenticationPrincipal User user,
@@ -43,13 +63,14 @@ public class AggregatorController {
         }
         CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findVacanciesAsync(user, PageRequest.of(page, size));
         model.addAttribute("vacancies", vacancies.join());
+        model.addAttribute("isParserAvailable", isParserAvailable);
         return "home";
     }
 
 
     @PostMapping
-    public String findVacanciesByTitle(@AuthenticationPrincipal User user, String title, int amount, BigDecimal salary, boolean onlyWithSalary,
-                                       int experience, int cityId, boolean isRemoteAvailable) {
+    public String findVacancies(@AuthenticationPrincipal User user, String title, int amount, BigDecimal salary, boolean onlyWithSalary,
+                                int experience, int cityId, boolean isRemoteAvailable) {
         rabbitMqService.send(SendMessageDto.builder()
                 .username(user.getUsername())
                 .title(title)
