@@ -94,7 +94,7 @@ public class UserController {
     public String changeUsername(@AuthenticationPrincipal User user, @ModelAttribute ChangeUsernameDto changeUsernameDto, RedirectAttributes redirectAttributes) {
         try {
             if (userService.findUserByUsernameAsync(changeUsernameDto.getUsername()).join() != null) {
-                throw new UserAlreadyExistsException("User with username " + changeUsernameDto.getUsername() + " already exists!");
+                throw new UserAlreadyExistsException("User with username '" + changeUsernameDto.getUsername() + "' already exists!");
             }
             userService.changeUsername(user, changeUsernameDto);
             redirectAttributes.addFlashAttribute("success", "Username has been changed successfully!");

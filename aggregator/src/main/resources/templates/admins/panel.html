@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<div th:insert="~{/partials/head :: head}"></div>
+<body>
+<div th:insert="~{/partials/navbar :: navbar}"></div>
+<style>
+    .centered-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+</style>
+<div class="centered-form">
+    <div class="col"></div>
+    <div class="col">
+        <table class="table">
+            <tr th:if="${#lists.isEmpty(users)}">
+                <div class="alert alert-warning" role="alert">
+                    Список пользователей пуст!
+                </div>
+            </tr>
+            <thead class="thead-dark">
+            <tr th:if="${!#lists.isEmpty(users)}">
+                <th scope="col">#</th>
+                <th scope="col">Электронная почта</th>
+                <th scope="col">Имя пользователя</th>
+                <th scope="col">Статус</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${!#lists.isEmpty(users)}" th:each="user : ${users}" th:object="${user}">
+                <th scope="row" th:text="*{id}"></th>
+                <td th:text="*{email}"></td>
+                <td th:text="*{username}"></td>
+                <td>
+                    <th:block th:switch="*{isAccountNonLocked()}">
+                        <div th:case="true" th:text="'Активен'" style="color: green"></div>
+                        <div th:case="false" th:text="'Заблокирован'" style="color: red"></div>
+                    </th:block>
+                </td>
+                <!--Разблокировать-->
+                <td>
+                    <form th:action="@{/admin/unblock}"  th:method="post" th:object="${userLockStatusDto}">
+                        <input type="hidden" name="id" th:value="${user.id}">
+                        <input type="hidden" name="email" th:value="${user.getEmail()}">
+                        <input type="hidden" name="username" th:value="${user.getUsername()}">
+                        <input class="btn btn-success btn-sm" type="submit" value="Разблокировать">
+                    </form>
+                </td>
+                <!--Заблокировать-->
+                <td>
+                    <form th:action="@{/admin/block}" th:method="post" th:object="${userLockStatusDto}">
+                        <input type="hidden" name="id" th:value="${user.id}">
+                        <input type="hidden" name="email" th:value="${user.getEmail()}">
+                        <input type="hidden" name="username" th:value="${user.getUsername()}">
+                        <input class="btn btn-sm btn-danger" type="submit" value="Заблокировать">
+                    </form>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col"></div>
+</div>
+
+<div th:insert="~{/partials/footer :: footer}"></div>
+</body>
+</html>

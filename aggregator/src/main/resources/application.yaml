@@ -1,6 +1,12 @@
 server:
   port: 8080
 
+constants:
+  admin:
+    email: admin@jobhunter.com
+    login: admin
+    password:  admin
+
 rabbitmq:
   services:
     - host: localhost # 192.168.25.1

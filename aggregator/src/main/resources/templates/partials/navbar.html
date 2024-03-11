@@ -15,26 +15,45 @@
                         <a class="nav-link active" aria-current="page" th:href="@{/favourites}">Избранное</a>
                     </li>
                 </ul>
+
                 <!--Личный кабинет-->
                 <div sec:authorize="isAuthenticated()">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
                                aria-expanded="false">Личный кабинет</a>
+
                             <ul class="dropdown-menu">
+                                <!--Профиль-->
                                 <li><a class="dropdown-item" th:href="@{/account-info}"
                                        style="text-decoration: none">Профиль</a></li>
+
+                                <!--Сменить имя пользователя-->
                                 <li><a class="dropdown-item" th:href="@{/change-username}"
                                        style="text-decoration: none">Сменить имя пользователя</a></li>
+
+                                <!--Сменить пароль-->
                                 <li><a class="dropdown-item" th:href="@{/change-password}"
                                        style="text-decoration: none">Сменить пароль</a></li>
+
+                                <!--Панель администратора-->
+                                <div sec:authorize="hasAuthority('ADMIN')">
+                                    <li><a class="dropdown-item" th:href="@{/admin}"
+                                           style="text-decoration: none; color: dimgrey">Панель администратора</a></li>
+                                </div>
+
+                                <!--Выйти-->
                                 <li>
-                                    <form class="dropdown-item navbar-text pe-3" th:action="@{/logout}" th:method="post">
+                                    <form class="dropdown-item navbar-text pe-3" th:action="@{/logout}"
+                                          th:method="post">
                                         <input type="submit" value="Выйти"
                                                style="background: none;	border: none;"/>
                                     </form>
                                 </li>
+
                             </ul>
+
                         </li>
                     </ul>
                 </div>

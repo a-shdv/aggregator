@@ -22,6 +22,7 @@ public class User implements UserDetails {
     private String email;
     private String username;
     private String password;
+    private boolean isAccountNonLocked;
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles",
@@ -39,6 +40,7 @@ public class User implements UserDetails {
             orphanRemoval = true)
     private List<Favourite> favourites = new ArrayList<>();
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
@@ -51,7 +53,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isAccountNonLocked;
     }
 
     @Override

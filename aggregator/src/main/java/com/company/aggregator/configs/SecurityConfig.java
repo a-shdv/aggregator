@@ -1,5 +1,6 @@
 package com.company.aggregator.configs;
 
+import com.company.aggregator.enums.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,10 +20,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(requests ->
                                 requests
-//                                .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                                         .requestMatchers(new AntPathRequestMatcher("/sign-in")).permitAll()
                                         .requestMatchers(new AntPathRequestMatcher("/sign-up")).permitAll()
-//                                .requestMatchers(new AntPathRequestMatcher("/change-password")).permitAll()
+                                        .requestMatchers(new AntPathRequestMatcher("/admin")).hasAuthority(Role.ADMIN.getAuthority())
                                         .anyRequest().authenticated()
                 ).formLogin(form ->
                         form

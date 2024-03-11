@@ -14,6 +14,7 @@
 <div class="centered-text" th:object="${user}">
     <table>
         <tbody>
+        <!--Имя пользователя-->
         <tr>
             <td>
                 <span style="font-weight: bold">Имя пользователя: </span>
@@ -21,10 +22,18 @@
                     th:href="@{/change-username}">Изменить</a>)
             </td>
         </tr>
+        <!--Электронный адрес-->
         <tr>
             <td>
-                <span style="font-weight: bold">Электронный адрес</span>
+                <span style="font-weight: bold">Электронный адрес: </span>
                 <span th:text="*{email}"></span> <br>
+            </td>
+        </tr>
+        <!--Роль-->
+        <tr>
+            <td>
+                <span style="font-weight: bold">Роль: </span>
+                <span th:text="*{roles.stream().findFirst().get()}"></span> <br>
             </td>
         </tr>
         </tbody>
