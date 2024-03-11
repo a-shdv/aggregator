@@ -2,11 +2,13 @@ package com.company.aggregator.services;
 
 import com.company.aggregator.dtos.ChangePasswordDto;
 import com.company.aggregator.dtos.ChangeUsernameDto;
+import com.company.aggregator.enums.Role;
+import com.company.aggregator.exceptions.OldPasswordIsWrongException;
+import com.company.aggregator.exceptions.PasswordsDoNotMatchException;
 import com.company.aggregator.exceptions.UserAlreadyExistsException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.repositories.FavouriteRepository;
 import com.company.aggregator.repositories.UserRepository;
-import com.company.aggregator.enums.Role;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
@@ -58,10 +60,15 @@ public class UserService implements UserDetailsService {
 
     @Async
     @Transactional
-    public void changePassword(User user, ChangePasswordDto changePasswordDto) {
-        if (passwordEncoder.matches(changePasswordDto.oldPassword(), user.getPassword())) {
-
+    public void changePassword(User user, ChangePasswordDto changePasswordDto) throws PasswordsDoNotMatchException, OldPasswordIsWrongException {
+        if (!passwordEncoder.matches(changePasswordDto.oldPassword(), user.getPassword())) {
+            throw new OldPasswordIsWrongException("Wrong old password!");
         }
+        if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmNewPassword())) {
+            throw new PasswordsDoNotMatchException("Passwords do not match!");
+        }
+        user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+        userRepository.save(user);
     }
 
     @Override

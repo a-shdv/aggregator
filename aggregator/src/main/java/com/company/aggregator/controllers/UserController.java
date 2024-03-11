@@ -3,6 +3,8 @@ package com.company.aggregator.controllers;
 import com.company.aggregator.dtos.ChangePasswordDto;
 import com.company.aggregator.dtos.ChangeUsernameDto;
 import com.company.aggregator.dtos.SignUpDto;
+import com.company.aggregator.exceptions.OldPasswordIsWrongException;
+import com.company.aggregator.exceptions.PasswordsDoNotMatchException;
 import com.company.aggregator.exceptions.UserAlreadyExistsException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.services.UserService;
@@ -89,6 +91,11 @@ public class UserController {
 
     @PostMapping("/change-password")
     public String changePassword(@AuthenticationPrincipal User user, @ModelAttribute ChangePasswordDto changePasswordDto) {
+        try {
+            userService.changePassword(user, changePasswordDto);
+        } catch (OldPasswordIsWrongException | PasswordsDoNotMatchException e) {
+            log.error(e.getMessage());
+        }
         return "redirect:/change-password";
     }
 }
