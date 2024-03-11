@@ -15,6 +15,20 @@
                         <a class="nav-link active" aria-current="page" th:href="@{/favourites}">Избранное</a>
                     </li>
                 </ul>
+                <!--Личный кабинет-->
+                <div sec:authorize="isAuthenticated()">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Личный кабинет</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" th:href="@{/change-username}" style="text-decoration: none">Сменить имя пользователя</a></li>
+                                <li><a class="dropdown-item" th:href="@{/change-password}" style="text-decoration: none">Сменить пароль</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <!--Выйти-->
                 <div sec:authorize="isAuthenticated()">
                     <form th:action="@{/logout}" th:method="post">
                         <input class="navbar-text pe-3" type="submit" value="Выйти"

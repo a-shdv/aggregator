@@ -1,5 +1,8 @@
 package com.company.aggregator.services;
 
+import com.company.aggregator.dtos.ChangePasswordDto;
+import com.company.aggregator.dtos.ChangeUsernameDto;
+import com.company.aggregator.exceptions.UserAlreadyExistsException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.repositories.FavouriteRepository;
 import com.company.aggregator.repositories.UserRepository;
@@ -40,6 +43,25 @@ public class UserService implements UserDetailsService {
     @Transactional
     public User findUserByUsername(String username) {
         return (User) loadUserByUsername(username);
+    }
+
+    @Async
+    @Transactional
+    public void changeUsername(User user, ChangeUsernameDto changeUsernameDto) throws UserAlreadyExistsException {
+        String updatedUsername = changeUsernameDto.getUsername();
+        if (loadUserByUsername(updatedUsername) != null) {
+            throw new UserAlreadyExistsException("User with username " + changeUsernameDto.getUsername() + " already exists!");
+        }
+        user.setUsername(updatedUsername);
+        userRepository.save(user);
+    }
+
+    @Async
+    @Transactional
+    public void changePassword(User user, ChangePasswordDto changePasswordDto) {
+        if (passwordEncoder.matches(changePasswordDto.oldPassword(), user.getPassword())) {
+
+        }
     }
 
     @Override

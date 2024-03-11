@@ -13,7 +13,7 @@
 
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 <div class="centered-form">
-    <form th:action="@{/sign-in}" th:method="post">
+    <form th:action="@{/sign-in}" th:method="post" th:model>
         <div th:if="${error}" th:text="${error}" style="color: red"></div>
         <div th:if="${success}" th:text="${success}" style="color: green"></div>
         <div class="form-row mb-3">
@@ -36,5 +36,6 @@
         </div>
     </form>
 </div>
+<div th:insert="~{/partials/footer :: footer}"></div>
 </body>
 </html>

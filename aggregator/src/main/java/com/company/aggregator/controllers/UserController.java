@@ -1,11 +1,14 @@
 package com.company.aggregator.controllers;
 
+import com.company.aggregator.dtos.ChangePasswordDto;
+import com.company.aggregator.dtos.ChangeUsernameDto;
 import com.company.aggregator.dtos.SignUpDto;
 import com.company.aggregator.exceptions.UserAlreadyExistsException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,5 +65,30 @@ public class UserController {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
             return "redirect:/sign-up";
         }
+    }
+
+    @GetMapping("/change-username")
+    public String changeUsername() {
+        return "users/change-username";
+    }
+
+    @PostMapping("/change-username")
+    public String changeUsername(@AuthenticationPrincipal User user, @ModelAttribute ChangeUsernameDto changeUsernameDto) {
+        try {
+            userService.changeUsername(user, changeUsernameDto);
+        } catch (UserAlreadyExistsException e) {
+            log.error(e.getMessage());
+        }
+        return "redirect:/change-username";
+    }
+
+    @GetMapping("/change-password")
+    public String changePassword() {
+        return "users/change-password";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@AuthenticationPrincipal User user, @ModelAttribute ChangePasswordDto changePasswordDto) {
+        return "redirect:/change-password";
     }
 }

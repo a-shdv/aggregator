@@ -200,6 +200,7 @@
         <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
     </form>
 </div>
+<div th:insert="~{/partials/footer :: footer}"></div>
 <script>
     function clearVacancies() {
         confirm("Вы уверены, что хотите очистить список вакансий?")
