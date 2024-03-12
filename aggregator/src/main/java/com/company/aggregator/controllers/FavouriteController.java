@@ -57,7 +57,7 @@ public class FavouriteController {
                                   RedirectAttributes redirectAttributes) {
         try {
             if (favouriteService.findBySourceAsync(favouriteDto.getSource()).join() != null) {
-                throw new FavouriteAlreadyExistsException("Favourite already exists: " + favouriteDto.getSource());
+                throw new FavouriteAlreadyExistsException("Вакансия уже существует в избранном" + favouriteDto.getSource());
             }
             favouriteService.addToFavouritesAsync(user, FavouriteDto.toFavourite(favouriteDto));
         } catch (FavouriteAlreadyExistsException e) {
@@ -65,7 +65,7 @@ public class FavouriteController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/";
         }
-        redirectAttributes.addFlashAttribute("success", "Favourite added successfully: " + favouriteDto.getSource());
+        redirectAttributes.addFlashAttribute("success", "Вакансия была добавлена в избранное" + favouriteDto.getSource());
         return "redirect:/";
     }
 

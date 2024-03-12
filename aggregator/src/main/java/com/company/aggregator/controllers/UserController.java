@@ -122,13 +122,13 @@ public class UserController {
     public String changePassword(@AuthenticationPrincipal User user, @ModelAttribute ChangePasswordDto changePasswordDto, RedirectAttributes redirectAttributes) {
         try {
             if (!passwordEncoder.matches(changePasswordDto.oldPassword(), user.getPassword())) {
-                throw new OldPasswordIsWrongException("Wrong old password!");
+                throw new OldPasswordIsWrongException("Старый пароль неверный!");
             }
             if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmNewPassword())) {
-                throw new PasswordsDoNotMatchException("Passwords do not match!");
+                throw new PasswordsDoNotMatchException("Пароли не совпадают!");
             }
             userService.changePassword(user, changePasswordDto);
-            redirectAttributes.addFlashAttribute("success", "Password has been changed successfully!");
+            redirectAttributes.addFlashAttribute("success", "Пароль был успешно изменен!");
         } catch (OldPasswordIsWrongException | PasswordsDoNotMatchException e) {
             log.error(e.getMessage());
             redirectAttributes.addFlashAttribute("error", e.getMessage());
