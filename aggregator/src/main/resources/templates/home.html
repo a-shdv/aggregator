@@ -121,7 +121,7 @@
                             <div class="card-header bg-dark text-center" style="height: 3rem;">
                                 <div class="row">
                                     <div class="col-10">
-                                        <a th:href="${vacancy.source}" style="text-decoration: none; color: white">
+                                        <a th:href="${vacancy.source}" style="text-decoration: none; color: white" target="_blank">
                                             <h5 class="card-title" th:text="${#strings.abbreviate(vacancy.title, 20)}"
                                                 style="width: auto"></h5>
                                         </a>
@@ -162,8 +162,11 @@
                             </div>
 
                             <!-- Подробнее кнопка -->
-                            <div class="d-flex justify-content-center">
-                                <a href="#" class="btn btn-warning mb-2" style="max-width: 10rem;">Подробнее</a>
+                            <div class="d-flex justify-content-between p-2">
+                                <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
+                                   th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
+
+                                <a th:href="@{/{id}(id=${vacancy.id})}" class="btn btn-warning mb-2" style="max-width: 10rem;">Подробнее</a>
                             </div>
                         </div>
                     </div>

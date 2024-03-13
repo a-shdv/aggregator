@@ -66,7 +66,7 @@ public class FavouriteController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/";
         }
-        redirectAttributes.addFlashAttribute("success", "Вакансия была добавлена в избранное" + favouriteDto.getSource());
+        redirectAttributes.addFlashAttribute("success", "Вакансия была добавлена в избранное " + favouriteDto.getSource());
         return "redirect:/";
     }
 
