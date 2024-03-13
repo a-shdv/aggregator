@@ -25,20 +25,20 @@ public class FavouriteService {
     private final FavouriteRepository favouriteRepository;
     private final UserRepository userRepository;
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public CompletableFuture<Page<Favourite>> findFavouritesAsync(User user, PageRequest pageRequest) {
         return CompletableFuture.completedFuture(favouriteRepository.findByUser(user, pageRequest));
     }
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public void addToFavouritesAsync(User user, Favourite favourite) {
         favourite.setUser(user);
         favouriteRepository.save(favourite);
     }
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public void deleteFavourites(User user) {
         List<Favourite> favourites = favouriteRepository.findByUser(user);
@@ -48,24 +48,27 @@ public class FavouriteService {
     }
 
     //TODO
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public void deleteFromFavourites(User user, Long id) throws FavouriteNotFoundException {
         Optional<Favourite> favourite = favouriteRepository.findById(id);
         if (favourite.isEmpty()) {
             throw new FavouriteNotFoundException("Вакансия не найдена!");
         }
-        favouriteRepository.delete(favourite.get());
+        List<Favourite> favourites = favouriteRepository.findByUser(user);
+        favourites.remove(favourite.get());
+        user.setFavourites(favourites);
         userRepository.save(user);
+        favouriteRepository.deleteById(id);
     }
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public CompletableFuture<Favourite> findBySourceAsync(String source) {
         return CompletableFuture.completedFuture(favouriteRepository.findBySource(source));
     }
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public CompletableFuture<List<Favourite>> findByUser(User user) throws FavouritesIsEmptyException {
         CompletableFuture<List<Favourite>> favourites = CompletableFuture.completedFuture(favouriteRepository.findByUser(user));
