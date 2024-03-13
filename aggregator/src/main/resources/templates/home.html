@@ -110,6 +110,8 @@
 
     <div class="container mt-5">
         <h2>Все вакансии</h2>
+        <div th:if="${error}" th:text="${error}" style="color: red"></div>
+        <div th:if="${success}" th:text="${success}" style="color: green"></div>
         <div class="row align-items-center vh-100">
             <div class="col-12 mx-auto">
                 <div class="row">
@@ -120,12 +122,24 @@
                                 <div class="row">
                                     <div class="col-10">
                                         <a th:href="${vacancy.source}" style="text-decoration: none; color: white">
-                                            <h5 class="card-title" th:text="${#strings.abbreviate(vacancy.title, 20)}" style="width: auto"></h5>
+                                            <h5 class="card-title" th:text="${#strings.abbreviate(vacancy.title, 20)}"
+                                                style="width: auto"></h5>
                                         </a>
                                     </div>
                                     <div class="col-2">
-                                        <img src="/images/star-light.png" alt="Star Image" style="max-width: 100%; max-height: 100%">
-<!--                                        <img src="file:///" alt="авыфаывавы" style="background-color: white; max-height: 100%; max-width: 100%;">-->
+                                        <form th:action="@{/favourites}" th:method="post" th:object="${favouriteDto}">
+                                            <input type="hidden" name="title" th:value="${vacancy.title}">
+                                            <input type="hidden" name="date" th:value="${vacancy.date}">
+                                            <input type="hidden" name="company" th:value="${vacancy.company}">
+                                            <input type="hidden" name="schedule" th:value="${vacancy.schedule}">
+                                            <input type="hidden" name="source" th:value="${vacancy.source}">
+
+                                            <button type="submit" style="background: none; border: none;">
+                                                <img id="starImage" src="/images/star-light.png" alt=""
+                                                     style="max-width: 100%; max-height: 100%"
+                                                     title="Добавить в избранное">
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -141,7 +155,7 @@
                             <div class="card-body" style="height: 9rem">
                                 <p class="card-text"
                                    th:text="${#strings.abbreviate(#strings.replace(vacancy.description, 'Описание вакансии О компании и команде ', ''), 70)}">
-                                   <!--th:text="${ #strings.abbreviate(vacancy.description, 110)}"--></p>
+                                    <!--th:text="${ #strings.abbreviate(vacancy.description, 110)}"--></p>
                             </div>
                             <!-- Подробнее кнопка -->
                             <div class="d-flex justify-content-center">

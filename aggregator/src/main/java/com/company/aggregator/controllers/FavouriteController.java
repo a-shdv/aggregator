@@ -57,7 +57,7 @@ public class FavouriteController {
                                   RedirectAttributes redirectAttributes) {
         try {
             if (favouriteService.findBySourceAsync(favouriteDto.getSource()).join() != null) {
-                throw new FavouriteAlreadyExistsException("Вакансия уже существует в избранном" + favouriteDto.getSource());
+                throw new FavouriteAlreadyExistsException("Вакансия уже существует в избранном " + favouriteDto.getSource());
             }
             favouriteService.addToFavouritesAsync(user, FavouriteDto.toFavourite(favouriteDto));
         } catch (FavouriteAlreadyExistsException e) {
