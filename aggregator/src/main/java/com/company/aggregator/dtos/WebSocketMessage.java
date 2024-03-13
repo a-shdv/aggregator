@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class WebSocketMessage {
+    String username;
     String title;
     BigDecimal salary;
     Boolean onlyWithSalary;

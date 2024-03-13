@@ -10,6 +10,7 @@
         <div class="row justify-content-center">
             <form id="vacancyForm" th:action="@{/}" th:method="post" class="col-lg-4">
                 <h2>Вакансия</h2>
+                <input id="username" type="hidden" th:value="${#authentication.principal.username}">
                 <!--Название вакансии-->
                 <div class="form-group">
                     <label for="title">Название вакансии</label>
@@ -245,6 +246,7 @@
             console.log('Connected: ' + frame);
             stompClient.subscribe('/topic/progressbar', onMessageReceived);
             let toSend = JSON.stringify({
+                username: document.querySelector("#username").value,
                 title: document.querySelector("#title").value,
                 salary: document.querySelector('#salary').value,
                 onlyWithSalary: document.querySelector('#onlyWithSalary').checked,

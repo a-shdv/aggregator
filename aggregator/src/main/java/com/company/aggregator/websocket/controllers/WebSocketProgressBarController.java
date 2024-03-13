@@ -36,19 +36,17 @@ public class WebSocketProgressBarController {
 //    }
 
     @MessageMapping("/receiveMessage")
-    public WebSocketProgressBarMessage receiveMessage(@AuthenticationPrincipal User user, @RequestBody WebSocketMessage object,/* Boolean isRemoteAvailable,*/
-                                                      @Payload WebSocketProgressBarMessage webSocketProgressBarMessage,
-                                                      SimpMessageHeaderAccessor headerAccessor) {
-        System.out.println(object);
-        //        rabbitMqService.send(SendMessageDto.builder()
-//                .username(user.getUsername())
-//                .title(title)
-//                .salary(new BigDecimal(salary))
-////                .onlyWithSalary(onlyWithSalary)
-//                .experience(experience)
-//                .cityId(cityId)
-////                .isRemoteAvailable(isRemoteAvailable)
-//                .build());
+    public WebSocketProgressBarMessage receiveMessage(@RequestBody WebSocketMessage msg,
+                                                      @Payload WebSocketProgressBarMessage webSocketProgressBarMessage) {
+        rabbitMqService.send(SendMessageDto.builder()
+                .username(msg.getUsername())
+                .title(msg.getTitle())
+                .salary(msg.getSalary())
+                .onlyWithSalary(msg.getOnlyWithSalary())
+                .experience(msg.getExperience())
+                .cityId(msg.getCityId())
+                .isRemoteAvailable(msg.getIsRemoteAvailable())
+                .build());
         return webSocketProgressBarMessage;
     }
 }

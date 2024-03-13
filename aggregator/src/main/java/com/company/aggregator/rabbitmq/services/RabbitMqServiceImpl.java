@@ -30,7 +30,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     private final RabbitMqProperties rabbitProperties;
     private final AggregatorService aggregatorService;
     private final UserService userService;
-    private SimpMessagingTemplate messagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
 
 
     @Override
@@ -44,8 +44,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
         if (!receiveMessageDtoList.isEmpty()) {
             aggregatorService.saveMessageListAsync(receiveMessageDtoList, user);
         }
-        messagingTemplate.convertAndSend("/topic/progressbar", receiveMessageDtoList.size());
-        System.out.println("test");
+//        messagingTemplate.convertAndSend("/topic/progressbar", receiveMessageDtoList.size());
     }
 
     @Override
