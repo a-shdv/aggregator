@@ -27,7 +27,7 @@
             <tbody>
             <div th:if="${error}" th:text="${error}" style="color: red"></div>
             <div th:if="${success}" th:text="${success}" style="color: green"></div>
-            <tr th:unless="${#lists.isEmpty(favourites)}" th:each="favourite : ${favourites}">
+            <tr th:unless="${#lists.isEmpty(favourites)}" th:each="favourite : ${favourites}" style=" border-bottom: transparent">
                 <!--Картинка-->
                 <td class="d-flex justify-content-center align-items-center">
                     <img th:src="${favourite.logo}" alt="Не удалось загрузить изображение"

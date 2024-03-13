@@ -49,7 +49,7 @@ public class FavouriteController {
         }
         CompletableFuture<Page<Favourite>> favourites = favouriteService.findFavouritesAsync(user, PageRequest.of(page, size)); // TODO вылетает
         model.addAttribute("favourites", favourites.join());
-        return "users/favourites";
+        return "vacancies/favourites";
     }
 
     @PostMapping
