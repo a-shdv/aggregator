@@ -139,9 +139,10 @@
                             </div>
 
 
+                            <!--Описание вакансии-->
                             <div class="card-body" style="height: 9rem">
                                 <p class="card-text"
-                                   th:text="${#strings.abbreviate(#strings.replace(vacancy.description, 'Описание вакансии О компании и команде ', ''), 110)}">
+                                   th:text="${#strings.abbreviate(#strings.replace(vacancy.description, 'Описание вакансии О компании и команде ', ''), 80)}">
                                    <!--th:text="${ #strings.abbreviate(vacancy.description, 110)}"--></p>
                             </div>
                             <a href="#" class="btn btn-warning">Подробнее</a>
