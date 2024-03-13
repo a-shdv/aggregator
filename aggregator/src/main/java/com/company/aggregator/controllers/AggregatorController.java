@@ -83,15 +83,15 @@ public class AggregatorController {
     @PostMapping
     public String findVacancies(@AuthenticationPrincipal User user, String title, BigDecimal salary, boolean onlyWithSalary,
                                 int experience, int cityId, boolean isRemoteAvailable) {
-        rabbitMqService.send(SendMessageDto.builder()
-                .username(user.getUsername())
-                .title(title)
-                .salary(salary)
-                .onlyWithSalary(onlyWithSalary)
-                .experience(experience)
-                .cityId(cityId)
-                .isRemoteAvailable(isRemoteAvailable)
-                .build());
+//        rabbitMqService.send(SendMessageDto.builder()
+//                .username(user.getUsername())
+//                .title(title)
+//                .salary(salary)
+//                .onlyWithSalary(onlyWithSalary)
+//                .experience(experience)
+//                .cityId(cityId)
+//                .isRemoteAvailable(isRemoteAvailable)
+//                .build());
         return "redirect:/";
     }
 
