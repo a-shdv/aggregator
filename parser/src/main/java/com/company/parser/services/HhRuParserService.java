@@ -132,6 +132,7 @@ public class HhRuParserService {
                     .description(doc.getElementsByClass("vacancy-section").first().getElementsByAttribute("data-qa").first().text())
                     .schedule(doc.getElementsByClass("vacancy-description-list-item").text())
                     .date(doc.getElementsByClass("vacancy-creation-time-redesigned").text())
+                    .logo(doc.getElementsByClass("vacancy-company-logo-image-redesigned").first().absUrl("src"))
                     .source(url)
                     .build();
         }

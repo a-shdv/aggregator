@@ -62,6 +62,7 @@ public class HabrParserService {
                             .schedule(element.getElementsByClass("vacancy-card__meta").text())
                             .description(parseWebPageDescription(vacancyUrl))
                             .source(vacancyUrl)
+                            .logo(element.getElementsByClass("vacancy-card__icon").first().absUrl("src"))
                             .build();
 
                     sendMessageDtoList.add(sendMessageDto);

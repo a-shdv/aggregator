@@ -1,11 +1,15 @@
 package com.company.parser.rabbitmq.dtos;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class SendMessageDto implements Serializable {
     String username;
@@ -17,21 +21,7 @@ public class SendMessageDto implements Serializable {
     String description;
     String schedule;
     String source;
-
-    public SendMessageDto() {
-    }
-
-    public SendMessageDto(String username, String title, String date, String salary, String company, String requirements, String description, String schedule, String source) {
-        this.username = username;
-        this.title = title;
-        this.date = date;
-        this.salary = salary;
-        this.company = company;
-        this.requirements = requirements;
-        this.description = description;
-        this.schedule = schedule;
-        this.source = source;
-    }
+    String logo;
 
     @Override
     public String toString() {
@@ -45,6 +35,7 @@ public class SendMessageDto implements Serializable {
                 ", \n\tdescription='" + description + '\'' +
                 ", \n\tschedule='" + schedule + '\'' +
                 ", \n\tsource='" + source + "\'" + "\n" +
+                ", \n\tlogo='" + logo + "\'" + "\n" +
                 '}';
     }
 }

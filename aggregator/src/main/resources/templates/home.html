@@ -3,18 +3,37 @@
 <div th:insert="~{/partials/head :: head}"></div>
 <body>
 <style>
-    .centered-text {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+    .card {
+        margin: 0 auto; /* Added */
+        float: none; /* Added */
+        margin-bottom: 10px; /* Added */
     }
 </style>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 
+<div class="container mt-5">
+    <div class="row align-items-center vh-100">
+        <div class="col-12 mx-auto">
+            <div class="row">
+                <div th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}" class="col-lg-4">
+                    <div class="card">
+                        <img class="card-img-top" th:src="${vacancy.logo}" alt="Не удалось загрузить изображение">
+                        <div class="card-body" style="height: 200px; overflow: hidden;">
+                            <h5 class="card-title" th:text="${vacancy.title}"></h5>
+                            <p class="card-text" th:text="${#strings.substring(vacancy.description, 0, 30)}"></p>
+                            <p class="card-text"><small class="text-muted"> <a
+                                    th:href="${vacancy.source}"
+                                    th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
+                            </small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div th:if="${isParserAvailable == true}">
-
-
     <!--Вакансия-->
     <div class="container mt-5">
         <div class="row justify-content-center">

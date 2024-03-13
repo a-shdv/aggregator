@@ -58,6 +58,7 @@ public class RabotaRuParserService {
                     String company = it.getElementsByClass("vacancy-preview-card__company-name").first().text();
                     String description = it.getElementsByClass("vacancy-preview-card__short-description").first().text();
                     String schedule = it.getElementsByClass("vacancy-preview-location__address-text").first().text();
+                    String logo = it.getElementsByClass("r-image__image").first().absUrl("src");
 
                     SendMessageDto dto = SendMessageDto.builder()
                             .username(username)
@@ -69,6 +70,7 @@ public class RabotaRuParserService {
                             .description(description)
                             .schedule(schedule)
                             .source(source)
+                            .logo(logo)
                             .build();
 
                     sendMessageDtoList.add(dto);

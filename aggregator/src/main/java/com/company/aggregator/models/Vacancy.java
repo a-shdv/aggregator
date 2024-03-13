@@ -27,6 +27,8 @@ public class Vacancy {
     private String schedule;
     @Column(columnDefinition = "text")
     private String source;
+    @Column(columnDefinition = "text")
+    private String logo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
