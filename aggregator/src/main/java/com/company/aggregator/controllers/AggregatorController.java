@@ -69,12 +69,11 @@ public class AggregatorController {
 
 
     @PostMapping
-    public String findVacancies(@AuthenticationPrincipal User user, String title, int amount, BigDecimal salary, boolean onlyWithSalary,
+    public String findVacancies(@AuthenticationPrincipal User user, String title, BigDecimal salary, boolean onlyWithSalary,
                                 int experience, int cityId, boolean isRemoteAvailable) {
         rabbitMqService.send(SendMessageDto.builder()
                 .username(user.getUsername())
                 .title(title)
-                .amount(amount)
                 .salary(salary)
                 .onlyWithSalary(onlyWithSalary)
                 .experience(experience)

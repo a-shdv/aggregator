@@ -20,9 +20,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HhRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
+    private static final Integer amount = 33;
 
     @Async("jobExecutor")
-    public void findVacancies(String username, String query, int amount, BigDecimal salary, boolean onlyWithSalary,
+    public void findVacancies(String username, String query, BigDecimal salary, boolean onlyWithSalary,
                               int experience, int cityId, boolean isRemoteAvailable) {
         int currentPage = 0;
         int previousPage;
@@ -132,7 +133,7 @@ public class HhRuParserService {
                     .description(doc.getElementsByClass("vacancy-section").first().getElementsByAttribute("data-qa").first().text())
                     .schedule(doc.getElementsByClass("vacancy-description-list-item").text())
                     .date(doc.getElementsByClass("vacancy-creation-time-redesigned").text())
-                    .logo(doc.getElementsByClass("vacancy-company-logo-image-redesigned").first().absUrl("src"))
+                    .logo(doc.getElementsByClass("vacancy-company-logo-image-redesigned").first() != null ? doc.getElementsByClass("vacancy-company-logo-image-redesigned").first().absUrl("src") : null)
                     .source(url)
                     .build();
         }

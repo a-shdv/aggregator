@@ -8,7 +8,7 @@
     <!--Вакансия-->
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <form th:action="@{/}" th:method="post" class="col-lg-4" onsubmit="checkAmount()">
+            <form th:action="@{/}" th:method="post" class="col-lg-4">
                 <h2>Вакансия</h2>
                 <!--Название вакансии-->
                 <div class="form-group">
@@ -17,12 +17,12 @@
                 </div>
 
                 <!--Количество вакансий-->
-                <div class="form-group">
-                    <label for="amount">Количество вакансий (min=35, max=1000)</label>
-                    <input id="amount" class="form-control" type="text" name="amount" min="35" max="1000"
-                           placeholder="500"
-                           required>
-                </div>
+                <!--                <div class="form-group">-->
+                <!--                    <label for="amount">Количество вакансий (min=35, max=1000)</label>-->
+                <!--                    <input id="amount" class="form-control" type="text" name="amount" min="35" max="1000"-->
+                <!--                           placeholder="500"-->
+                <!--                           required>-->
+                <!--                </div>-->
 
                 <!--Зарплата-->
                 <div class="form-group">
@@ -95,7 +95,7 @@
                     </div>
                 </div>
                 <!--Отправка формы-->
-                <input type="submit" value="Найти">
+                <input class="btn btn-md btn-warning" type="submit" value="Найти">
                 <br> <br>
             </form>
         </div>
@@ -109,12 +109,12 @@
     </div>
 
     <div class="container mt-5">
-        <h2>Все вакансии</h2>
         <div th:if="${error}" th:text="${error}" style="color: red"></div>
         <div th:if="${success}" th:text="${success}" style="color: green"></div>
         <div class="row align-items-center vh-100 mt-3">
             <div class="col-12 mx-auto">
                 <div class="row">
+                    <h2>Все вакансии</h2>
                     <div th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}" class="col-lg-3">
                         <div class="card mb-4" style="width: 18rem; height: 25rem;">
                             <!--Заголовок-->
@@ -147,9 +147,11 @@
 
                             <!--Картинка-->
                             <div class="card-body d-flex justify-content-center align-items-center"
-                                 style="height: 12rem; width: inherit;">
-                                <img class="card-img-top" th:src="${vacancy.logo}"
-                                     alt="Не удалось загрузить изображение" style="max-height: 100%; max-width: 75%;">
+                                 style="height: 12rem; width: inherit;" >
+                                <img th:if="${vacancy.logo != null}" class="card-img-top" th:src="${vacancy.logo}"
+                                     style="max-height: 100%; max-width: 75%;">
+                                <img th:if="${vacancy.logo == null}" class="card-img-top" th:src="@{/images/no-image.png}"
+                                     style="max-height: 100%; max-width: 75%;">
                             </div>
 
                             <!--Описание вакансии-->
@@ -158,6 +160,7 @@
                                    th:text="${#strings.abbreviate(#strings.replace(vacancy.description, 'Описание вакансии О компании и команде ', ''), 70)}">
                                     <!--th:text="${ #strings.abbreviate(vacancy.description, 110)}"--></p>
                             </div>
+
                             <!-- Подробнее кнопка -->
                             <div class="d-flex justify-content-center">
                                 <a href="#" class="btn btn-warning mb-2" style="max-width: 10rem;">Подробнее</a>
@@ -208,7 +211,8 @@
     </div>
 </div>
 
-<div style="display: flex; justify-content: center; align-items: center; height: 100vh;" th:if="${isParserAvailable == false}">
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;"
+     th:if="${isParserAvailable == false}">
     <div class="alert alert-danger col-6 mb-5 mt-5" role="alert">
         Извините, в данный момент сервис недоступен!
     </div>
