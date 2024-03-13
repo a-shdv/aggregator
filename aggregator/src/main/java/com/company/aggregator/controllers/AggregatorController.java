@@ -80,9 +80,9 @@ public class AggregatorController {
     }
 
 
-    @PostMapping
-    public String findVacancies(@AuthenticationPrincipal User user, String title, BigDecimal salary, boolean onlyWithSalary,
-                                int experience, int cityId, boolean isRemoteAvailable) {
+//    @PostMapping
+//    public String findVacancies(@AuthenticationPrincipal User user, String title, BigDecimal salary, boolean onlyWithSalary,
+//                                int experience, int cityId, boolean isRemoteAvailable) {
 //        rabbitMqService.send(SendMessageDto.builder()
 //                .username(user.getUsername())
 //                .title(title)
@@ -92,8 +92,8 @@ public class AggregatorController {
 //                .cityId(cityId)
 //                .isRemoteAvailable(isRemoteAvailable)
 //                .build());
-        return "redirect:/";
-    }
+//        return "redirect:/";
+//    }
 
 
     @PostMapping("/clear")

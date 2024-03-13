@@ -70,7 +70,7 @@
                 <div class="form-group">
                     <label>Город</label>
                     <label>
-                        <select required name="cityId">
+                        <select required id="cityId" name="cityId">
                             <option value="" disabled>Выберите город</option>
                             <option value="0" selected>Москва</option>
                             <option value="1">Санкт-Петербург</option>
@@ -119,7 +119,7 @@
         <div class="row align-items-center vh-100 mt-3">
             <div class="col-12 mx-auto">
                 <div class="row">
-                    <h2 th:if="${!#lists.isEmpty(vacancies)}">Все вакансии</h2>
+                    <h2 th:if="${#lists.isEmpty(vacancies)}">Все вакансии</h2>
                     <div th:each="vacancy : ${vacancies}" class="col-lg-3">
                         <div class="card mb-4" style="width: 18rem; height: 25rem;">
                             <!--Заголовок-->
@@ -213,7 +213,7 @@
             </div>
 
             <!--Кнопка "Очистить"-->
-            <div th:unless="${#lists.isEmpty(vacancies)}">
+            <div th:if="${#lists.isEmpty(vacancies)}">
                 <form class="mt-5" th:action="@{/clear}" th:method="post">
                     <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
                 </form>
@@ -228,6 +228,7 @@
         Извините, в данный момент сервис недоступен!
     </div>
 </div>
+
 <script>
     'use strict';
     document.querySelector('#vacancyForm').addEventListener('submit', connect, true)
@@ -243,15 +244,21 @@
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
             stompClient.subscribe('/topic/progressbar', onMessageReceived);
-            stompClient.send("/endpoint/receiveMessage", {}, JSON.stringify({
-                sender: 'test',
-                content: 'test',
-                type: 'test'
-            }));
+            let toSend = JSON.stringify({
+                title: document.querySelector("#title").value,
+                salary: document.querySelector('#salary').value,
+                onlyWithSalary: document.querySelector('#onlyWithSalary').checked,
+                experience: parseInt(document.querySelector('input[name="experience"]:checked').value),
+                cityId: parseInt(document.querySelector('#cityId').value),
+                isRemoteAvailable: document.querySelector('#isRemoteAvailable').checked
+            })
+            console.log(toSend)
+            stompClient.send("/endpoint/receiveMessage", {}, toSend);
         }, function (error) {
             console.error('Error during WebSocket connection: ' + error);
             document.querySelector('#progressbar').style.display = 'none'; // Hide the progress bar on error
         });
+        event.preventDefault()
     }
 
     function onMessageReceived(payload) {
