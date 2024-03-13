@@ -51,7 +51,7 @@ public class AggregatorController {
     @GetMapping
     public String findVacancies(@AuthenticationPrincipal User user,
                                 @RequestParam(required = false, defaultValue = "0") int page,
-                                @RequestParam(required = false, defaultValue = "9") int size,
+                                @RequestParam(required = false, defaultValue = "12") int size,
                                 Model model) {
         String success = (String) model.getAttribute("success");
         String error = (String) model.getAttribute("error");

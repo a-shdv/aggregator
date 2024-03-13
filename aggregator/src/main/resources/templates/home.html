@@ -11,28 +11,6 @@
 </style>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 
-<div class="container mt-5">
-    <div class="row align-items-center vh-100">
-        <div class="col-12 mx-auto">
-            <div class="row">
-                <div th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}" class="col-lg-4">
-                    <div class="card">
-                        <img class="card-img-top" th:src="${vacancy.logo}" alt="Не удалось загрузить изображение">
-                        <div class="card-body" style="height: 200px; overflow: hidden;">
-                            <h5 class="card-title" th:text="${vacancy.title}"></h5>
-                            <p class="card-text" th:text="${#strings.substring(vacancy.description, 0, 30)}"></p>
-                            <p class="card-text"><small class="text-muted"> <a
-                                    th:href="${vacancy.source}"
-                                    th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
-                            </small></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div th:if="${isParserAvailable == true}">
     <!--Вакансия-->
     <div class="container mt-5">
@@ -137,101 +115,80 @@
         </div>
     </div>
 
-    <div class="container" th:if="${!vacancies.isEmpty()}">
-        <div class="row justify-content-center mt-9 col-lg-12">
-            <table class="table table-hover">
-                <h2>Все вакансии</h2>
-                <div th:if="${error}" th:text="${error}" style="color: red"></div>
-                <div th:if="${success}" th:text="${success}" style="color: green"></div>
-                <thead>
-                <tr>
-                    <td class="table-dark">Название</td>
-                    <td class="table-dark">Зарплата</td>
-                    <td class="table-dark">Требования</td>
-                    <td class="table-dark">График работы</td>
-                    <td class="table-dark">Компания</td>
-                    <td class="table-dark">Описание</td>
-                    <td class="table-dark">Дата публикации</td>
-                    <td class="table-dark">Источник</td>
-                    <td class="table-dark"></td>
-                    <!--        <td>Ссылка</td>-->
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}">
-                    <!--Название-->
-                    <td>
-                        <a th:href="${vacancy.source}" th:text="${vacancy.title}" target="_blank"></a>
-                    </td>
-                    <!--Зарплата-->
-                    <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указана'"></td>
-                    <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.salary}"></td>
-                    <!--Требования-->
-                    <td th:if="${vacancy.salary.isEmpty()}" th:text="'Не указаны'"></td>
-                    <td th:unless="${vacancy.salary.isEmpty()}" th:text="${vacancy.requirements}"></td>
-                    <!--График работы-->
-                    <td th:text="${vacancy.schedule}"></td>
-                    <!--Компания-->
-                    <td th:text="${vacancy.company}"></td>
-                    <!--Описание-->
-                    <td th:text="${#strings.abbreviate(vacancy.description, 50)}"></td>
-                    <!--Дата публикации-->
-                    <td th:text="${vacancy.date}"></td>
-                    <!--Ссылка на вакансию-->
-                    <td>
-                        <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
-                           th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
-                    </td>
-                    <!--Кнопка "Добавить в избранное"-->
-                    <td>
-                        <form th:action="@{/favourites}" th:method="post" th:object="${favouriteDto}">
-                            <input type="hidden" name="title" th:value="${vacancy.title}">
-                            <input type="hidden" name="date" th:value="${vacancy.date}">
-                            <input type="hidden" name="company" th:value="${vacancy.company}">
-                            <input type="hidden" name="schedule" th:value="${vacancy.schedule}">
-                            <input type="hidden" name="source" th:value="${vacancy.source}">
+    <div class="container mt-5">
+        <h2>Все вакансии</h2>
+        <div class="row align-items-center vh-100">
+            <div class="col-12 mx-auto">
+                <div class="row">
+                    <div th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}" class="col-lg-4">
+                        <div class="card mb-4" style="width: 18rem; height: 25rem;">
+                            <!--Заголовок-->
+                            <div class="card-header bg-dark text-center" style="height: 3rem;">
+                                <a th:href="${vacancy.source}" style="text-decoration: none; color: white">
+                                    <h5 class="card-title"
+                                        th:text="${#strings.abbreviate(vacancy.title, 25)}"
+                                        style="width: auto"></h5>
+                                </a>
+                            </div>
 
-                            <button type="submit" class="btn btn-sm btn-warning">Добавить в избранное</button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                            <!--Картинка-->
+                            <div class="card-body d-flex justify-content-center align-items-center"
+                                 style="height: 12rem; width: inherit;">
+                                <img class="card-img-top" th:src="${vacancy.logo}"
+                                     alt="Не удалось загрузить изображение" style="max-height: 100%; max-width: 75%;">
+                            </div>
+
+
+                            <div class="card-body" style="height: 9rem">
+                                <p class="card-text"
+                                   th:text="${#strings.abbreviate(#strings.replace(vacancy.description, 'Описание вакансии О компании и команде ', ''), 110)}">
+                                   <!--th:text="${ #strings.abbreviate(vacancy.description, 110)}"--></p>
+                            </div>
+                            <a href="#" class="btn btn-warning">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Пагинация-->
+            <div>
+                <nav>
+                    <ul class="pagination justify-content-center mt-5 mb-5">
+                        <!--Пред-->
+                        <div th:if="${vacancies.hasPrevious()}">
+                            <li class="page-item disabled">
+                                <form th:action="@{/}" method="get">
+                                    <input type="hidden" name="page"
+                                           th:value="${vacancies.previousPageable().pageNumber}"/>
+                                    <input type="hidden" name="size"
+                                           th:value="${vacancies.previousPageable().pageSize}"/>
+                                    <input class="page-link" type="submit" value="Пред."/>
+                                </form>
+                            </li>
+                        </div>
+
+                        <!--След-->
+                        <div th:if="${vacancies.hasNext()}">
+                            <li class="page-item">
+                                <form th:action="@{/}" method="get">
+                                    <input type="hidden" name="page" th:value="${vacancies.nextPageable().pageNumber}"/>
+                                    <input type="hidden" name="size" th:value="${vacancies.nextPageable().pageSize}"/>
+                                    <input class="page-link" type="submit" value="След."/>
+                                </form>
+                            </li>
+                        </div>
+                    </ul>
+                </nav>
+            </div>
+
+            <!--Кнопка "Очистить"-->
+            <div>
+                <form class="mt-5" th:action="@{/clear}" th:method="post">
+                    <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
+                </form>
+            </div>
         </div>
-
-        <!--Пагинация-->
-        <nav>
-            <ul class="pagination justify-content-center mt-5 mb-5">
-                <!--Пред-->
-                <div th:if="${vacancies.hasPrevious()}">
-                    <li class="page-item disabled">
-                        <form th:action="@{/}" method="get">
-                            <input type="hidden" name="page" th:value="${vacancies.previousPageable().pageNumber}"/>
-                            <input type="hidden" name="size" th:value="${vacancies.previousPageable().pageSize}"/>
-                            <input class="page-link" type="submit" value="Пред."/>
-                        </form>
-                    </li>
-                </div>
-
-                <!--След-->
-                <div th:if="${vacancies.hasNext()}">
-                    <li class="page-item">
-                        <form th:action="@{/}" method="get">
-                            <input type="hidden" name="page" th:value="${vacancies.nextPageable().pageNumber}"/>
-                            <input type="hidden" name="size" th:value="${vacancies.nextPageable().pageSize}"/>
-                            <input class="page-link" type="submit" value="След."/>
-                        </form>
-                    </li>
-                </div>
-            </ul>
-        </nav>
-
-        <!--Кнопка "Очистить"-->
-        <form class="mt-5" th:action="@{/clear}" th:method="post">
-            <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
-        </form>
     </div>
-
 </div>
 
 <div class="centered-text" th:if="${isParserAvailable == false}">
@@ -240,7 +197,7 @@
     </div>
 </div>
 
-<div th:insert="~{/partials/footer :: footer}"></div>
+<!--<div th:insert="~{/partials/footer :: footer}"></div>-->
 <script>
     function clearVacancies() {
         confirm("Вы уверены, что хотите очистить список вакансий?")
