@@ -117,11 +117,17 @@
                         <div class="card mb-4" style="width: 18rem; height: 25rem;">
                             <!--Заголовок-->
                             <div class="card-header bg-dark text-center" style="height: 3rem;">
-                                <a th:href="${vacancy.source}" style="text-decoration: none; color: white">
-                                    <h5 class="card-title"
-                                        th:text="${#strings.abbreviate(vacancy.title, 25)}"
-                                        style="width: auto"></h5>
-                                </a>
+                                <div class="row">
+                                    <div class="col-10">
+                                        <a th:href="${vacancy.source}" style="text-decoration: none; color: white">
+                                            <h5 class="card-title" th:text="${#strings.abbreviate(vacancy.title, 20)}" style="width: auto"></h5>
+                                        </a>
+                                    </div>
+                                    <div class="col-2">
+                                        <img src="/images/star-light.png" alt="Star Image" style="max-width: 100%; max-height: 100%">
+<!--                                        <img src="file:///" alt="авыфаывавы" style="background-color: white; max-height: 100%; max-width: 100%;">-->
+                                    </div>
+                                </div>
                             </div>
 
                             <!--Картинка-->
