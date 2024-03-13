@@ -2,6 +2,7 @@ package com.company.aggregator.controllers;
 
 import com.company.aggregator.dtos.FavouriteDto;
 import com.company.aggregator.exceptions.FavouriteAlreadyExistsException;
+import com.company.aggregator.exceptions.FavouriteNotFoundException;
 import com.company.aggregator.exceptions.FavouritesIsEmptyException;
 import com.company.aggregator.models.Favourite;
 import com.company.aggregator.models.User;
@@ -46,7 +47,7 @@ public class FavouriteController {
         if (success != null) {
             model.addAttribute("success", success);
         }
-        CompletableFuture<Page<Favourite>> favourites = favouriteService.findFavouritesAsync(user, PageRequest.of(page, size));
+        CompletableFuture<Page<Favourite>> favourites = favouriteService.findFavouritesAsync(user, PageRequest.of(page, size)); // TODO вылетает
         model.addAttribute("favourites", favourites.join());
         return "users/favourites";
     }
@@ -67,6 +68,17 @@ public class FavouriteController {
         }
         redirectAttributes.addFlashAttribute("success", "Вакансия была добавлена в избранное" + favouriteDto.getSource());
         return "redirect:/";
+    }
+
+    @PostMapping("/{id}")
+    public String deleteFromFavourites(@AuthenticationPrincipal User user, @PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            favouriteService.deleteFromFavourites(user, id);
+            redirectAttributes.addFlashAttribute("success", "Вакансия успешно удалена!");
+        } catch (FavouriteNotFoundException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/favourites";
     }
 
     @PostMapping("/clear")

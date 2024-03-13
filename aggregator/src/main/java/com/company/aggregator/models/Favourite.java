@@ -23,4 +23,5 @@ public class Favourite {
     private String source;
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+    private String logo;
 }

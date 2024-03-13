@@ -112,10 +112,10 @@
         <h2>Все вакансии</h2>
         <div th:if="${error}" th:text="${error}" style="color: red"></div>
         <div th:if="${success}" th:text="${success}" style="color: green"></div>
-        <div class="row align-items-center vh-100">
+        <div class="row align-items-center vh-100 mt-3">
             <div class="col-12 mx-auto">
                 <div class="row">
-                    <div th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}" class="col-lg-4">
+                    <div th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}" class="col-lg-3">
                         <div class="card mb-4" style="width: 18rem; height: 25rem;">
                             <!--Заголовок-->
                             <div class="card-header bg-dark text-center" style="height: 3rem;">
@@ -133,6 +133,7 @@
                                             <input type="hidden" name="company" th:value="${vacancy.company}">
                                             <input type="hidden" name="schedule" th:value="${vacancy.schedule}">
                                             <input type="hidden" name="source" th:value="${vacancy.source}">
+                                            <input type="hidden" name="logo" th:value="${vacancy.logo}">
 
                                             <button type="submit" style="background: none; border: none;">
                                                 <img id="starImage" src="/images/star-light.png" alt=""

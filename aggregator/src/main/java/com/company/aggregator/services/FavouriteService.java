@@ -1,5 +1,6 @@
 package com.company.aggregator.services;
 
+import com.company.aggregator.exceptions.FavouriteNotFoundException;
 import com.company.aggregator.exceptions.FavouritesIsEmptyException;
 import com.company.aggregator.models.Favourite;
 import com.company.aggregator.models.User;
@@ -14,6 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -42,6 +44,18 @@ public class FavouriteService {
         List<Favourite> favourites = favouriteRepository.findByUser(user);
         favourites.clear();
         user.setFavourites(favourites);
+        userRepository.save(user);
+    }
+
+    //TODO
+    @Async
+    @Transactional
+    public void deleteFromFavourites(User user, Long id) throws FavouriteNotFoundException {
+        Optional<Favourite> favourite = favouriteRepository.findById(id);
+        if (favourite.isEmpty()) {
+            throw new FavouriteNotFoundException("Вакансия не найдена!");
+        }
+        favouriteRepository.delete(favourite.get());
         userRepository.save(user);
     }
 
