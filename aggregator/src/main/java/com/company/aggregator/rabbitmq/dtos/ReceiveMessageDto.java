@@ -69,8 +69,8 @@ public class ReceiveMessageDto implements Serializable {
                 ", \n\trequirements='" + requirements + '\'' +
                 ", \n\tdescription='" + description + '\'' +
                 ", \n\tschedule='" + schedule + '\'' +
-                ", \n\tsource='" + source + "\'" + "\n" +
-                ", \n\tlogo='" + logo + "\'" + "\n" +
+                ", \n\tsource='" + source + "\'" +
+                " \n\tlogo='" + logo + "\'" + "\n" +
                 '}';
     }
 }

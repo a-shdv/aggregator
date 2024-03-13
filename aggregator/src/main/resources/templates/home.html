@@ -114,14 +114,15 @@
         <div class="row align-items-center vh-100 mt-3">
             <div class="col-12 mx-auto">
                 <div class="row">
-                    <h2>Все вакансии</h2>
+                    <h2 th:unless="${#lists.isEmpty(vacancies)}">Все вакансии</h2>
                     <div th:unless="${#lists.isEmpty(vacancies)}" th:each="vacancy : ${vacancies}" class="col-lg-3">
                         <div class="card mb-4" style="width: 18rem; height: 25rem;">
                             <!--Заголовок-->
                             <div class="card-header bg-dark text-center" style="height: 3rem;">
                                 <div class="row">
                                     <div class="col-10">
-                                        <a th:href="${vacancy.source}" style="text-decoration: none; color: white" target="_blank">
+                                        <a th:href="${vacancy.source}" style="text-decoration: none; color: white"
+                                           target="_blank">
                                             <h5 class="card-title" th:text="${#strings.abbreviate(vacancy.title, 20)}"
                                                 style="width: auto"></h5>
                                         </a>
@@ -147,10 +148,11 @@
 
                             <!--Картинка-->
                             <div class="card-body d-flex justify-content-center align-items-center"
-                                 style="height: 12rem; width: inherit;" >
+                                 style="height: 12rem; width: inherit;">
                                 <img th:if="${vacancy.logo != null}" class="card-img-top" th:src="${vacancy.logo}"
                                      style="max-height: 100%; max-width: 75%;">
-                                <img th:if="${vacancy.logo == null}" class="card-img-top" th:src="@{/images/no-image.png}"
+                                <img th:if="${vacancy.logo == null}" class="card-img-top"
+                                     th:src="@{/images/no-image.png}"
                                      style="max-height: 100%; max-width: 75%;">
                             </div>
 
@@ -166,7 +168,8 @@
                                 <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
                                    th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
 
-                                <a th:href="@{/{id}(id=${vacancy.id})}" class="btn btn-warning mb-2" style="max-width: 10rem;">Подробнее</a>
+                                <a th:href="@{/{id}(id=${vacancy.id})}" class="btn btn-warning mb-2"
+                                   style="max-width: 10rem;">Подробнее</a>
                             </div>
                         </div>
                     </div>
@@ -205,7 +208,7 @@
             </div>
 
             <!--Кнопка "Очистить"-->
-            <div>
+            <div th:unless="${#lists.isEmpty(vacancies)}">
                 <form class="mt-5" th:action="@{/clear}" th:method="post">
                     <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
                 </form>

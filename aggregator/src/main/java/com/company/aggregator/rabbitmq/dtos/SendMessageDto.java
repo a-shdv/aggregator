@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class SendMessageDto implements Serializable {
     String username;
     String title;
-//    int amount;
+    //    int amount;
     BigDecimal salary;
     boolean onlyWithSalary;
     int experience;
@@ -24,7 +24,7 @@ public class SendMessageDto implements Serializable {
 
     @Override
     public String toString() {
-        return "ReceiveMessageDto {" +
+        return "SendMessageDto {" +
                 "title='" + title + '\'' +
 //                "amount='" + amount + '\'' +
                 "salary='" + salary + '\'' +

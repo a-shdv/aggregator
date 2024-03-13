@@ -48,7 +48,7 @@ public class AggregatorController {
     }
 
     @GetMapping("/{id}")
-    public String findVacancy(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes){
+    public String findVacancy(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Vacancy vacancy = null;
         try {
             vacancy = aggregatorService.findById(id);

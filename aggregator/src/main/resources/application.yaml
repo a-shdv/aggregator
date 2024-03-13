@@ -5,7 +5,7 @@ constants:
   admin:
     email: admin@jobhunter.com
     login: admin
-    password:  admin
+    password: admin
   heartbeat-url: http://localhost:8081/heartbeat
 
 rabbitmq:
@@ -27,12 +27,12 @@ spring:
     password: postgres
     driver-class-name: org.postgresql.Driver
 
-#  liquibase:
-#    url: jdbc:postgresql://localhost:5434/test_db
-#    user: postgres
-#    password: postgres
-#    change-log: liquibase/db.changelog-master.yaml
-#    enabled: true
+  #  liquibase:
+  #    url: jdbc:postgresql://localhost:5434/test_db
+  #    user: postgres
+  #    password: postgres
+  #    change-log: liquibase/db.changelog-master.yaml
+  #    enabled: true
 
   mail:
     host: smtp.gmail.com

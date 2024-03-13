@@ -14,7 +14,8 @@
     <div class="col-lg-6 mx-auto">
         <!-- Post Description -->
         <h3>Описание вакансии</h3>
-        <div class="mb-3" th:text="${#strings.replace(vacancy.description, 'Описание вакансии О компании и команде ', '')}"
+        <div class="mb-3"
+             th:text="${#strings.replace(vacancy.description, 'Описание вакансии О компании и команде ', '')}"
              style="word-wrap: break-word">
         </div>
 

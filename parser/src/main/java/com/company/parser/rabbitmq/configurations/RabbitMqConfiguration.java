@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class RabbitMqConfiguration {
 
     private final RabbitMqProperties rabbitMqProperties;
-    private Map<String, Object> rabbiteArgs = new HashMap<>(){{
+    private Map<String, Object> rabbiteArgs = new HashMap<>() {{
         put("x-message-ttl", 60000L);
     }};
 
@@ -86,7 +86,7 @@ public class RabbitMqConfiguration {
     }
 
     @Bean
-    public MessageConverter converter(){
+    public MessageConverter converter() {
         return new Jackson2JsonMessageConverter();
     }
 

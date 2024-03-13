@@ -34,7 +34,7 @@ public class SendMessageDto implements Serializable {
                 ", \n\trequirements='" + requirements + '\'' +
                 ", \n\tdescription='" + description + '\'' +
                 ", \n\tschedule='" + schedule + '\'' +
-                ", \n\tsource='" + source + "\'" + "\n" +
+                ", \n\tsource='" + source + "\'" +
                 "\n\tlogo='" + logo + "\'" + "\n" +
                 '}';
     }
