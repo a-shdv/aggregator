@@ -42,7 +42,7 @@
                 </td>
                 <!--Разблокировать-->
                 <td>
-                    <form th:action="@{/admin/unblock}"  th:method="post" th:object="${userLockStatusDto}">
+                    <form th:action="@{/admin/unblock}" th:method="post" th:object="${userLockStatusDto}">
                         <input type="hidden" name="id" th:value="${user.id}">
                         <input type="hidden" name="email" th:value="${user.getEmail()}">
                         <input type="hidden" name="username" th:value="${user.getUsername()}">

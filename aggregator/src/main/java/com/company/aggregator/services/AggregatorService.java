@@ -1,5 +1,6 @@
 package com.company.aggregator.services;
 
+import com.company.aggregator.exceptions.VacancyNotFoundException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.models.Vacancy;
 import com.company.aggregator.rabbitmq.dtos.ReceiveMessageDto;
@@ -13,6 +14,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -57,6 +59,14 @@ public class AggregatorService {
         vacancies.clear();
         user.setVacancies(vacancies);
         userRepository.save(user);
+    }
+
+    public Vacancy findById(Long id) throws VacancyNotFoundException {
+        Optional<Vacancy> vacancy = aggregatorRepository.findById(id);
+        if (vacancy.isEmpty()) {
+            throw new VacancyNotFoundException("Вакансия не найдена!");
+        }
+        return aggregatorRepository.findById(id).get();
     }
 
     public Vacancy findBySource(String source) {

@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,9 +19,10 @@ import java.util.List;
 @Slf4j
 public class RabotaRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
+    private static final Integer amount = 33;
 
-    @Async("jobExecutor")
-    public void findVacancies(String username, String query, Integer amount, BigDecimal salary, Boolean onlyWithSalary,
+    //    @Async("jobExecutor")
+    public void findVacancies(String username, String query, BigDecimal salary, Boolean onlyWithSalary,
                               Integer experience, Integer cityId, Boolean isRemoteAvailable) {
         int prevPage;
         int currPage = 1;
@@ -58,6 +58,7 @@ public class RabotaRuParserService {
                     String company = it.getElementsByClass("vacancy-preview-card__company-name").first().text();
                     String description = it.getElementsByClass("vacancy-preview-card__short-description").first().text();
                     String schedule = it.getElementsByClass("vacancy-preview-location__address-text").first().text();
+                    String logo = it.getElementsByClass("r-image__image").first() != null ? it.getElementsByClass("r-image__image").first().absUrl("src") : null;
 
                     SendMessageDto dto = SendMessageDto.builder()
                             .username(username)
@@ -69,6 +70,7 @@ public class RabotaRuParserService {
                             .description(description)
                             .schedule(schedule)
                             .source(source)
+                            .logo(logo)
                             .build();
 
                     sendMessageDtoList.add(dto);

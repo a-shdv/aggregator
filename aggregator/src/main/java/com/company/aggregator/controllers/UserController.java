@@ -1,7 +1,6 @@
 package com.company.aggregator.controllers;
 
 import com.company.aggregator.dtos.ChangePasswordDto;
-import com.company.aggregator.dtos.ChangeUsernameDto;
 import com.company.aggregator.dtos.SignUpDto;
 import com.company.aggregator.exceptions.OldPasswordIsWrongException;
 import com.company.aggregator.exceptions.PasswordsDoNotMatchException;

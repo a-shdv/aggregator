@@ -27,7 +27,6 @@ public class RabbitMqReceiverService {
                 .findVacancies(
                         receiveMessageDto.getUsername(),
                         receiveMessageDto.getTitle(),
-                        receiveMessageDto.getAmount(),
                         receiveMessageDto.getSalary(),
                         receiveMessageDto.isOnlyWithSalary(),
                         receiveMessageDto.getExperience(),
@@ -39,7 +38,6 @@ public class RabbitMqReceiverService {
                 .findVacancies(
                         receiveMessageDto.getUsername(),
                         receiveMessageDto.getTitle(),
-                        receiveMessageDto.getAmount(),
                         receiveMessageDto.getSalary(),
                         receiveMessageDto.isOnlyWithSalary(),
                         receiveMessageDto.getExperience(),
@@ -50,7 +48,6 @@ public class RabbitMqReceiverService {
                 .findVacancies(
                         receiveMessageDto.getUsername(),
                         receiveMessageDto.getTitle(),
-                        receiveMessageDto.getAmount(),
                         receiveMessageDto.getSalary(),
                         receiveMessageDto.isOnlyWithSalary(),
                         receiveMessageDto.getExperience(),

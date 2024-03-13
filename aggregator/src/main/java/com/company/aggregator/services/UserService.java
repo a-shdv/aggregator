@@ -1,7 +1,6 @@
 package com.company.aggregator.services;
 
 import com.company.aggregator.dtos.ChangePasswordDto;
-import com.company.aggregator.dtos.ChangeUsernameDto;
 import com.company.aggregator.dtos.UserLockStatusDto;
 import com.company.aggregator.enums.Role;
 import com.company.aggregator.models.User;

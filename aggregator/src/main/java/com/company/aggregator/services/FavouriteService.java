@@ -1,5 +1,6 @@
 package com.company.aggregator.services;
 
+import com.company.aggregator.exceptions.FavouriteNotFoundException;
 import com.company.aggregator.exceptions.FavouritesIsEmptyException;
 import com.company.aggregator.models.Favourite;
 import com.company.aggregator.models.User;
@@ -14,6 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -23,20 +25,20 @@ public class FavouriteService {
     private final FavouriteRepository favouriteRepository;
     private final UserRepository userRepository;
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public CompletableFuture<Page<Favourite>> findFavouritesAsync(User user, PageRequest pageRequest) {
         return CompletableFuture.completedFuture(favouriteRepository.findByUser(user, pageRequest));
     }
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public void addToFavouritesAsync(User user, Favourite favourite) {
         favourite.setUser(user);
         favouriteRepository.save(favourite);
     }
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public void deleteFavourites(User user) {
         List<Favourite> favourites = favouriteRepository.findByUser(user);
@@ -45,13 +47,28 @@ public class FavouriteService {
         userRepository.save(user);
     }
 
-    @Async
+    //TODO
+    @Async("jobExecutor")
+    @Transactional
+    public void deleteFromFavourites(User user, Long id) throws FavouriteNotFoundException {
+        Optional<Favourite> favourite = favouriteRepository.findById(id);
+        if (favourite.isEmpty()) {
+            throw new FavouriteNotFoundException("Вакансия не найдена!");
+        }
+        List<Favourite> favourites = favouriteRepository.findByUser(user);
+        favourites.remove(favourite.get());
+        user.setFavourites(favourites);
+        userRepository.save(user);
+        favouriteRepository.deleteById(id);
+    }
+
+    @Async("jobExecutor")
     @Transactional
     public CompletableFuture<Favourite> findBySourceAsync(String source) {
         return CompletableFuture.completedFuture(favouriteRepository.findBySource(source));
     }
 
-    @Async
+    @Async("jobExecutor")
     @Transactional
     public CompletableFuture<List<Favourite>> findByUser(User user) throws FavouritesIsEmptyException {
         CompletableFuture<List<Favourite>> favourites = CompletableFuture.completedFuture(favouriteRepository.findByUser(user));

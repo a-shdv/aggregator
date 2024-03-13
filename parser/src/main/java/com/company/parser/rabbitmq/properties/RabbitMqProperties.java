@@ -14,31 +14,49 @@ import java.util.List;
 @ConfigurationProperties(prefix = "rabbitmq")
 public class RabbitMqProperties {
 
-    /** Строка подключения к RabbitMQ. */
+    /**
+     * Строка подключения к RabbitMQ.
+     */
     private URI uri;
 
-    /** Адрес сервера RabbitMQ. */
+    /**
+     * Адрес сервера RabbitMQ.
+     */
     private List<Service> services;
 
-    /** Имя пользователя для подключения к RabbitMQ. */
+    /**
+     * Имя пользователя для подключения к RabbitMQ.
+     */
     private String username;
 
-    /** Пароль пользователя для подключения к RabbitMQ. */
+    /**
+     * Пароль пользователя для подключения к RabbitMQ.
+     */
     private String password;
 
-    /** Наименование точки доступа в RabbitMQ. */
+    /**
+     * Наименование точки доступа в RabbitMQ.
+     */
     private String topic;
 
-    /** Наименование очереди для отправки в RabbitMQ. */
+    /**
+     * Наименование очереди для отправки в RabbitMQ.
+     */
     private String queueToSend;
 
-    /** Наименование очереди для приема в RabbitMQ. */
+    /**
+     * Наименование очереди для приема в RabbitMQ.
+     */
     private String queueToReceive;
 
-    /** Наименование routingKey для отправки в RabbitMQ. */
+    /**
+     * Наименование routingKey для отправки в RabbitMQ.
+     */
     private String routingKeyToSend;
 
-    /** Наименование routingKey для приема в RabbitMQ. */
+    /**
+     * Наименование routingKey для приема в RabbitMQ.
+     */
     private String routingKeyToReceive;
 
     /**
@@ -47,10 +65,14 @@ public class RabbitMqProperties {
     @Data
     public static class Service {
 
-        /** Адрес сервера RabbitMQ. */
+        /**
+         * Адрес сервера RabbitMQ.
+         */
         private String host;
 
-        /** Порт сервера RabbitMQ. */
+        /**
+         * Порт сервера RabbitMQ.
+         */
         private int port;
     }
 

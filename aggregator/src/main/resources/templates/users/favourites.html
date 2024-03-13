@@ -3,9 +3,9 @@
 <div th:insert="~{/partials/head :: head}"></div>
 <body>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
-
-<div class="row justify-content-center">
-    <div th:if="${favourites.isEmpty()}" class="alert alert-warning col-6 mb-5 mt-5" role="alert">
+<div th:if="${favourites.isEmpty()}" class="row justify-content-center"
+     style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <div class="alert alert-warning col-6 mb-5 mt-5" role="alert">
         Список избранных вакансий пуст!
     </div>
 </div>
@@ -15,32 +15,46 @@
         <table class="table table-hover">
             <h2>Избранное</h2>
             <thead>
-            <tr>
-                <td class="table-dark">Название</td>
-                <td class="table-dark">Дата публикации</td>
-                <td class="table-dark">Компания</td>
-                <td class="table-dark">График работы</td>
-                <td class="table-dark">Источник</td>
+            <tr class="table-dark">
+                <td></td>
+                <td>Название</td>
+                <td>Дата публикации</td>
+                <td>Компания</td>
+                <td>График работы</td>
+                <td></td>
             </tr>
             </thead>
             <tbody>
             <div th:if="${error}" th:text="${error}" style="color: red"></div>
             <div th:if="${success}" th:text="${success}" style="color: green"></div>
             <tr th:unless="${#lists.isEmpty(favourites)}" th:each="favourite : ${favourites}">
+                <!--Картинка-->
+                <td class="d-flex justify-content-center align-items-center">
+                    <img th:src="${favourite.logo}" alt="Не удалось загрузить изображение"
+                         style="max-height: 50%; max-width: 50%;">
+                </td>
                 <!--Название-->
                 <td>
-                    <a th:href="${favourite.source}" th:text="${favourite.title}" target="_blank"></a>
+                    <a th:href="${favourite.source}" th:text="${#strings.abbreviate(favourite.title, 20)}"
+                       target="_blank"></a>
                 </td>
                 <!--Дата публикации-->
                 <td th:text="${favourite.date}"></td>
                 <!--Компания-->
                 <td th:text="${favourite.company}"></td>
                 <!--График работы-->
-                <td th:text="${favourite.schedule}"></td>
+                <td th:text="${#strings.abbreviate(favourite.schedule, 20)}"></td>
                 <!--Ссылка на вакансию-->
                 <td>
-                    <a th:href="'https://' + ${#strings.arraySplit(favourite.source, '/')[1]}"
-                       th:text="${#strings.arraySplit(favourite.source, '/')[1]}" target="_blank"></a>
+                    <!--Картинка-->
+                    <form th:action="@{/favourites/{id}(id=${favourite.id})}" th:method="post">
+
+                        <button type="submit" style="background: none; border: none">
+                            <img class="card-img-top" th:src="@{/images/red-cross.png}"
+                                 alt="Не удалось загрузить изображение"
+                                 style="color: white; max-height: 5%; max-width: 5%;">
+                        </button>
+                    </form>
                 </td>
             </tr>
             </tbody>

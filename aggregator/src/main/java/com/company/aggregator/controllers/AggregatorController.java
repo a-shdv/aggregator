@@ -1,5 +1,6 @@
 package com.company.aggregator.controllers;
 
+import com.company.aggregator.exceptions.VacancyNotFoundException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.models.Vacancy;
 import com.company.aggregator.rabbitmq.dtos.SendMessageDto;
@@ -14,12 +15,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
@@ -48,10 +47,23 @@ public class AggregatorController {
         }
     }
 
+    @GetMapping("/{id}")
+    public String findVacancy(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        Vacancy vacancy = null;
+        try {
+            vacancy = aggregatorService.findById(id);
+        } catch (VacancyNotFoundException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/";
+        }
+        model.addAttribute("vacancy", vacancy);
+        return "vacancies/vacancy";
+    }
+
     @GetMapping
     public String findVacancies(@AuthenticationPrincipal User user,
                                 @RequestParam(required = false, defaultValue = "0") int page,
-                                @RequestParam(required = false, defaultValue = "10") int size,
+                                @RequestParam(required = false, defaultValue = "12") int size,
                                 Model model) {
         String success = (String) model.getAttribute("success");
         String error = (String) model.getAttribute("error");
@@ -69,12 +81,11 @@ public class AggregatorController {
 
 
     @PostMapping
-    public String findVacancies(@AuthenticationPrincipal User user, String title, int amount, BigDecimal salary, boolean onlyWithSalary,
+    public String findVacancies(@AuthenticationPrincipal User user, String title, BigDecimal salary, boolean onlyWithSalary,
                                 int experience, int cityId, boolean isRemoteAvailable) {
         rabbitMqService.send(SendMessageDto.builder()
                 .username(user.getUsername())
                 .title(title)
-                .amount(amount)
                 .salary(salary)
                 .onlyWithSalary(onlyWithSalary)
                 .experience(experience)

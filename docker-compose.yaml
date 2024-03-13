@@ -11,7 +11,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-service/aggregator_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
-#      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+    #      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
     depends_on:
       - postgres-service
     networks:
@@ -31,7 +31,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-service/aggregator_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
-#      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+    #      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
     depends_on:
       - postgres-service
     networks:

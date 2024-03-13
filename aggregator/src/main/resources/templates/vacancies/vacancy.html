@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<div th:insert="~{/partials/head :: head}"></div>
+<body>
+<div th:insert="~{/partials/navbar :: navbar}"></div>
+<main class="mt-5">
+    <div class="col-lg-6 mx-auto text-center">
+        <!--Image-->
+        <img th:src="${vacancy.logo}" alt="">
+        <!-- Post Name -->
+        <h1 class="display-4 fw-bold" th:text="${vacancy.title}"></h1>
+    </div>
+
+    <div class="col-lg-6 mx-auto">
+        <!-- Post Description -->
+        <h3>Описание вакансии</h3>
+        <div class="mb-3"
+             th:text="${#strings.replace(vacancy.description, 'Описание вакансии О компании и команде ', '')}"
+             style="word-wrap: break-word">
+        </div>
+
+        <h3>Дата публикации</h3>
+        <div class="mb-3" th:text="${vacancy.date}"></div>
+
+        <h3>Требования</h3>
+        <div class="mb-3" th:text="${vacancy.requirements}"></div>
+
+        <h3>График работы</h3>
+        <div class="mb-3" th:text="${vacancy.schedule}"></div>
+
+        <h3>Заработная плата</h3>
+        <div class="mb-3" th:text="${vacancy.salary}"></div>
+
+        <h3>Источник</h3>
+        <a class="mb-3" th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
+           th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
+    </div>
+
+    <!-- Button "Back" -->
+    <div class="col-lg-6 mx-auto text-center">
+        <a class="btn btn-secondary px-4 mt-5" href="javascript:history.back()">Назад</a>
+        <a class="btn btn-warning px-4 mt-5" th:href="@{${vacancy.source}}" target="_blank">Откликнуться</a>
+    </div>
+</main>
+<div th:insert="~{/partials/footer :: footer}"></div>
+</body>
+</html>
