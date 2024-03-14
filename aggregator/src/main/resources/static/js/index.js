@@ -1,44 +1,68 @@
 'use strict';
+document.querySelector('#vacancyForm').addEventListener('submit', connect, true)
+// document.querySelector('#progressbar').style.display = 'hidden'
 
-document.querySelector('#welcomeForm').addEventListener('submit', connectTest, true)
-document.querySelector('#dialogueForm').addEventListener('submit', sendMessageTest, true)
-
-let name = null;
 let stompClient = null;
+let vacancy = document.querySelector('#vacancy')
+let progressBar = document.querySelector('#progressbar')
+let progressBarLoader = document.querySelector('#progressbar-loader')
+let spaceBefore = document.querySelector('#spaceBefore')
+let spaceAfter = document.querySelector('#spaceAfter')
+let buttonCancelSearch = document.querySelector('#buttonCancelSearch')
+let buttonOk = document.querySelector('#buttonOk')
 
-function connectTest(event) {
-    name = document.querySelector('#name').value.trim();
-    if (name) {
-        document.querySelector('#welcome-page').classList.add('hidden');
-        document.querySelector('#dialogue-page').classList.remove('hidden');
-        let socket = new SockJS('/websocketApp');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, connectionSuccessTest);
-    }
-    event.preventDefault();
+function connect() {
+    event.preventDefault()
+    // document.querySelector('#progressbar').style.display = 'block'
+    let socket = new SockJS('/aggregator');
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame)
+
+        // ON RECEIVE
+        stompClient.subscribe('/topic/progressbar', function (response) {
+            let message = JSON.parse(response.body);
+            progressBarLoader.style.width = message + '%'
+            if (parseInt(progressBarLoader.style.width) >= parseInt('100%')) {
+                progressBarLoader.classList.remove('bg-warning')
+                progressBarLoader.classList.add('bg-success')
+                buttonCancelSearch.style.display = 'none'
+                buttonOk.style.display = ''
+                // progressBarLoader.style.width = '100%';
+                // progressBarLoader.setAttribute('aria-valuenow', '25');
+                // progressBarLoader.setAttribute('aria-valuemin', '0');
+                // progressBarLoader.setAttribute('aria-valuemax', '100');
+            }
+        });
+
+        // BEFORE SEND
+        vacancy.style.display = 'none'
+        spaceBefore.style.height = '50vh'
+        spaceAfter.style.height = '50vh'
+        progressBar.style.display = ''
+        buttonCancelSearch.style.display = ''
+        // document.querySelector('#emptyVacanciesAlert').style.display = ''
+        // document.querySelector('#vacanciesList').style.display = ''
+        // document.querySelector('#clearButton').style.display = ''
+
+        stompClient.send("/endpoint/toJava", {}, JSON.stringify({
+            username: document.querySelector("#username").value,
+            title: document.querySelector("#title").value,
+            salary: document.querySelector('#salary').value,
+            onlyWithSalary: document.querySelector('#onlyWithSalary').checked,
+            experience: parseInt(document.querySelector('input[name="experience"]:checked').value),
+            cityId: parseInt(document.querySelector('#cityId').value),
+            isRemoteAvailable: document.querySelector('#isRemoteAvailable').checked
+        }));
+    }, function (error) {
+        console.error('Error during WebSocket connection: ' + error);
+        // document.querySelector('#progressbar').style.display = 'none';
+    });
 }
 
-function connectionSuccessTest() {
-    stompClient.subscribe('/topic/javainuse', onMessageReceivedTest);
-    stompClient.send("/app/chat.newUser", {}, JSON.stringify({
-        sender: name,
-        type: 'newUser'
-    }))
-}
-
-function sendMessageTest(event) {
-    let messageContent = document.querySelector('#chatMessage').value.trim();
-    if (messageContent && stompClient) {
-        let chatMessage = {
-            sender: name,
-            content: document.querySelector('#chatMessage').value,
-            type: 'CHAT'
-        };
-        stompClient.send("/app/chat.sendMessage", {}, JSON
-            .stringify(chatMessage));
-        document.querySelector('#chatMessage').value = '';
-    }
-    event.preventDefault();
+function clearVacancies() {
+    confirm("Вы уверены, что хотите очистить список вакансий?")
 }
 
 function onMessageReceivedTest(payload) {
@@ -68,15 +92,4 @@ function onMessageReceivedTest(payload) {
     document.querySelector('#messageList').appendChild(messageElement);
     document.querySelector('#messageList').scrollTop = document
         .querySelector('#messageList').scrollHeight;
-}
-
-function clearVacancies() {
-    confirm("Вы уверены, что хотите очистить список вакансий?")
-}
-
-function checkAmount() {
-    let amount = document.getElementById("amount").value
-    if (amount < 35 || amount > 1000) {
-        alert("Количество вакансий не должно быть меньше 35 и больше 1000!")
-    }
 }

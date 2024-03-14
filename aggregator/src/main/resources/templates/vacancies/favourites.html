@@ -102,10 +102,7 @@
 </div>
 <div th:insert="~{/partials/footer :: footer}"></div>
 
-<script>
-    function clearFavourites() {
-        confirm("Вы уверены, что хотите очистить список избранных вакансий?")
-    }
+<script th:inline="javascript" th:src="@{/js/favourites.js}">
 </script>
 
 </body>
