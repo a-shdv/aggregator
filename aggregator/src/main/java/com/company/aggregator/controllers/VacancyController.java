@@ -6,7 +6,7 @@ import com.company.aggregator.models.Vacancy;
 import com.company.aggregator.rabbitmq.dtos.SendMessageDto;
 import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
 import com.company.aggregator.rabbitmq.services.RabbitMqService;
-import com.company.aggregator.services.AggregatorService;
+import com.company.aggregator.services.VacancyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -25,8 +25,8 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/vacancies")
 @RequiredArgsConstructor
 @Slf4j
-public class AggregatorController {
-    private final AggregatorService aggregatorService;
+public class VacancyController {
+    private final VacancyService vacancyService;
     private final RabbitMqService rabbitMqService;
     private final RabbitTemplate rabbitTemplate;
     private final RabbitMqProperties rabbitProperties;
@@ -35,7 +35,7 @@ public class AggregatorController {
     public String findVacancy(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Vacancy vacancy = null;
         try {
-            vacancy = aggregatorService.findById(id);
+            vacancy = vacancyService.findById(id);
         } catch (VacancyNotFoundException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/";
@@ -57,7 +57,7 @@ public class AggregatorController {
         if (success != null) {
             model.addAttribute("success", success);
         }
-        CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findVacanciesAsync(user, PageRequest.of(page, size));
+        CompletableFuture<Page<Vacancy>> vacancies = vacancyService.findVacanciesAsync(user, PageRequest.of(page, size));
         model.addAttribute("vacancies", vacancies.join());
         return "vacancies/vacancies";
     }
@@ -75,14 +75,14 @@ public class AggregatorController {
                 .cityId(cityId)
                 .isRemoteAvailable(isRemoteAvailable)
                 .build());
-        return "redirect:/";
+        return "redirect:/vacancies";
     }
 
 
     @PostMapping("/clear")
     public String deleteVacancies(@AuthenticationPrincipal User user) {
-        aggregatorService.deleteVacanciesByUserAsync(user);
-        return "redirect:/";
+        vacancyService.deleteVacanciesByUserAsync(user);
+        return "redirect:/vacancies";
     }
 
     @PostMapping("/stop-consuming-messages")

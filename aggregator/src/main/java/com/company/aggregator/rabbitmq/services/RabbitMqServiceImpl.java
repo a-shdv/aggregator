@@ -5,7 +5,7 @@ import com.company.aggregator.models.User;
 import com.company.aggregator.rabbitmq.dtos.ReceiveMessageDto;
 import com.company.aggregator.rabbitmq.dtos.SendMessageDto;
 import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
-import com.company.aggregator.services.AggregatorService;
+import com.company.aggregator.services.VacancyService;
 import com.company.aggregator.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     private final RabbitTemplate rabbitTemplate;
 
     private final RabbitMqProperties rabbitProperties;
-    private final AggregatorService aggregatorService;
+    private final VacancyService vacancyService;
     private final UserService userService;
     private final SimpMessagingTemplate messagingTemplate;
     private static int progressbarLoaderCounter = 0;
@@ -41,7 +41,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
 //        receiveMessageDtoList
 //                .removeIf(receiveMessageDto -> aggregatorService.findBySource(receiveMessageDto.getSource()) != null);
         if (!receiveMessageDtoList.isEmpty()) {
-            aggregatorService.saveMessageListAsync(receiveMessageDtoList, user);
+            vacancyService.saveMessageListAsync(receiveMessageDtoList, user);
         }
 
         progressbarLoaderCounter += 12;
@@ -50,7 +50,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
 
     @Override
     public void send(SendMessageDto sendMessageDto) {
-        aggregatorService.deleteVacanciesByUserAsync(userService.findUserByUsername(sendMessageDto.getUsername()));
+        vacancyService.deleteVacanciesByUserAsync(userService.findUserByUsername(sendMessageDto.getUsername()));
         rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), sendMessageDto);
         log.info("SENT: {}", sendMessageDto);
     }

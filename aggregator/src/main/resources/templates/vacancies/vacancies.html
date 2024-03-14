@@ -8,10 +8,14 @@
 <div class="container mt-5">
     <div th:if="${error}" th:text="${error}" style="color: red"></div>
     <div th:if="${success}" th:text="${success}" style="color: green"></div>
-    <div id="vacanciesList" class="row align-items-center vh-100 mt-3" style="display: none">
+    <div style="height: 10vh;"></div>
+    <div th:if="${vacancies.isEmpty()}" class="alert alert-warning" role="alert">
+        Список вакансий пуст!
+    </div>
+    <div th:if="${!vacancies.isEmpty()}" id="vacanciesList" class="row align-items-center vh-100 mt-3">
         <div class="col-12 mx-auto">
             <div class="row">
-                <h2>Все вакансии</h2>
+                <h2 class="text-center mb-5">Все вакансии</h2>
                 <div th:each="vacancy : ${vacancies}" class="col-lg-3">
                     <div class="card mb-4" style="width: 18rem; height: 25rem;">
                         <!--Заголовок-->
@@ -73,6 +77,13 @@
             </div>
         </div>
 
+        <!--Кнопка "Очистить"-->
+        <div id="clearButton">
+            <form class="mt-5" th:action="@{/vacancies/clear}" th:method="post">
+                <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
+            </form>
+        </div>
+
         <!--Пагинация-->
         <div>
             <nav>
@@ -80,7 +91,7 @@
                     <!--Пред-->
                     <div th:if="${vacancies.hasPrevious()}">
                         <li class="page-item disabled">
-                            <form th:action="@{/}" method="get">
+                            <form th:action="@{/vacancies}" method="get">
                                 <input type="hidden" name="page"
                                        th:value="${vacancies.previousPageable().pageNumber}"/>
                                 <input type="hidden" name="size"
@@ -93,7 +104,7 @@
                     <!--След-->
                     <div th:if="${vacancies.hasNext()}">
                         <li class="page-item">
-                            <form th:action="@{/}" method="get">
+                            <form th:action="@{/vacancies}" method="get">
                                 <input type="hidden" name="page" th:value="${vacancies.nextPageable().pageNumber}"/>
                                 <input type="hidden" name="size" th:value="${vacancies.nextPageable().pageSize}"/>
                                 <input class="page-link" type="submit" value="След."/>
@@ -103,14 +114,8 @@
                 </ul>
             </nav>
         </div>
-
-        <!--Кнопка "Очистить"-->
-        <div id="clearButton" style="display: none">
-            <form class="mt-5" th:action="@{/clear}" th:method="post">
-                <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
-            </form>
-        </div>
     </div>
+    <div style="height: 25vh;"></div>
 </div>
 
 <div th:insert="~{/partials/footer :: footer}"></div>

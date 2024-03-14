@@ -64,10 +64,10 @@ public class FavouriteController {
         } catch (FavouriteAlreadyExistsException e) {
             log.info(e.getMessage());
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/";
+            return "redirect:/vacancies";
         }
         redirectAttributes.addFlashAttribute("success", "Вакансия была добавлена в избранное " + favouriteDto.getSource());
-        return "redirect:/";
+        return "redirect:/favourites";
     }
 
     @PostMapping("/{id}")
