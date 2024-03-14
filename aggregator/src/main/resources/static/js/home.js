@@ -10,8 +10,9 @@ const buttonCancelSearch = document.querySelector('#buttonCancelSearch');
 const buttonOk = document.querySelector('#buttonOk');
 
 // Load visibility state from local storage
+let isProgressBarVisible
 document.addEventListener('DOMContentLoaded', function () {
-    const isProgressBarVisible = localStorage.getItem('progressBarVisible');
+    isProgressBarVisible = localStorage.getItem('progressBarVisible');
     if (isProgressBarVisible === 'true') {
         progressBar.style.display = '';
         progressBarLoader.style.width = localStorage.getItem('progressBarWidth');
@@ -20,10 +21,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-window.addEventListener('beforeunload', function(event) {
-    event.preventDefault();
-    event.returnValue = ''; // Required for Chrome
-    return 'Are you sure you want to leave the page? Your progress may be lost.';
+window.addEventListener('beforeunload', function (event) {
+    if (isProgressBarVisible === 'true') {
+        event.preventDefault();
+        event.returnValue = ''; // Required for Chrome
+        return 'Вы уверены, что хотите покинуть страницу? Прогресс может не сохраниться.';
+    }
 });
 
 document.querySelector('#vacancyForm').addEventListener('submit', connect, true);
