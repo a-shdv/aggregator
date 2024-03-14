@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -47,11 +46,11 @@ public class RabbitMqServiceImpl implements RabbitMqService {
 
         i++;
         messagingTemplate.convertAndSend("/topic/progressbar", i);
-//        messagingTemplate.convertAndSend("/topic/progressbar", receiveMessageDtoList.size());
     }
 
     @Override
     public void send(SendMessageDto sendMessageDto) {
+        aggregatorService.deleteVacanciesByUserAsync(userService.findUserByUsername(sendMessageDto.getUsername()));
         rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), sendMessageDto);
         log.info("SENT: {}", sendMessageDto);
     }

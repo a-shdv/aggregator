@@ -18,17 +18,6 @@ public class ProgressBarController {
     private final SimpMessagingTemplate messagingTemplate;
     private final RabbitMqService rabbitMqService;
 
-//    @MessageMapping("/fromJava")
-//    @SendTo("/topic/progressbar")
-//    public ProgressBarMessage sendMessage(@Payload ProgressBarMessage progressBarMessage) {
-//        progressBarMessage.setContent("rer");
-//        progressBarMessage.setType("rer");
-//        progressBarMessage.setSender("rer");
-//        messagingTemplate.convertAndSend("/topic/progressbar", progressBarMessage);
-//
-//        return progressBarMessage;
-//    }
-
     @MessageMapping("/toJava")
     public ProgressBarMessage receiveMessage(@RequestBody WebSocketMessage msg,
                                              @Payload ProgressBarMessage progressBarMessage) {
