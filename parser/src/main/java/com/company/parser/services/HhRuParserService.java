@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class HhRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
     private static final Integer amount = 33;
 
-    //    @Async("jobExecutor")
+   @Async("jobExecutor")
     public void findVacancies(String username, String query, BigDecimal salary, boolean onlyWithSalary,
                               int experience, int cityId, boolean isRemoteAvailable) {
         int currentPage = 0;

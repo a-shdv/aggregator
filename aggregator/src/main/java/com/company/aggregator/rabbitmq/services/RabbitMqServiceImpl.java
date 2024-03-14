@@ -37,14 +37,14 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     @SendTo("/topic/progressbar")
     public void receive(List<ReceiveMessageDto> receiveMessageDtoList) {
         User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername());
-        log.info("RECEIVED: {}", receiveMessageDtoList.toString());
+        log.info("RECEIVED: {}", receiveMessageDtoList);
 //        receiveMessageDtoList
 //                .removeIf(receiveMessageDto -> aggregatorService.findBySource(receiveMessageDto.getSource()) != null);
         if (!receiveMessageDtoList.isEmpty()) {
             aggregatorService.saveMessageListAsync(receiveMessageDtoList, user);
         }
 
-        i++;
+        i += 10;
         messagingTemplate.convertAndSend("/topic/progressbar", i);
     }
 
