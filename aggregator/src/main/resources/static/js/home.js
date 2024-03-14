@@ -17,12 +17,13 @@ function connect() {
     let socket = new SockJS('/aggregator');
     stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, function (frame) {
+    stompClient.connect({}, frame => {
         console.log('Connected: ' + frame)
 
         // ON RECEIVE
-        stompClient.subscribe('/topic/progressbar', function (response) {
+        stompClient.subscribe('/topic/progressbar', response => {
             let message = JSON.parse(response.body);
+            console.log('received ' + message)
             progressBarLoader.style.width = message + '%'
             if (parseInt(progressBarLoader.style.width) >= parseInt('100%')) {
                 progressBarLoader.classList.remove('bg-warning')
@@ -37,16 +38,13 @@ function connect() {
         });
 
         // BEFORE SEND
-        vacancy.style.display = 'none'
-        spaceBefore.style.height = '50vh'
-        spaceAfter.style.height = '50vh'
+        // vacancy.style.display = 'none'
+        // spaceBefore.style.height = '50vh'
+        // spaceAfter.style.height = '50vh'
         progressBar.style.display = ''
         buttonCancelSearch.style.display = ''
-        // document.querySelector('#emptyVacanciesAlert').style.display = ''
-        // document.querySelector('#vacanciesList').style.display = ''
-        // document.querySelector('#clearButton').style.display = ''
 
-        stompClient.send("/endpoint/toJava", {}, JSON.stringify({
+        stompClient.send("/app/toJava", {}, JSON.stringify({
             username: document.querySelector("#username").value,
             title: document.querySelector("#title").value,
             salary: document.querySelector('#salary').value,
@@ -55,10 +53,17 @@ function connect() {
             cityId: parseInt(document.querySelector('#cityId').value),
             isRemoteAvailable: document.querySelector('#isRemoteAvailable').checked
         }));
-    }, function (error) {
+    }, error => {
         console.error('Error during WebSocket connection: ' + error);
         // document.querySelector('#progressbar').style.display = 'none';
     });
+}
+
+function disconnect() {
+    if (stompClient != null) {
+        stompClient.disconnect()
+        console.log("Disconnected")
+    }
 }
 
 // Selecting form elements

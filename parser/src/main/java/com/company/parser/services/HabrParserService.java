@@ -44,7 +44,7 @@ public class HabrParserService {
                     .getElementsByClass("section-box");
         }
 
-        if (elements != null) {
+        if (elements != null && !elements.isEmpty()) {
             final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
             while (currentPage <= amount / elements.size()) {

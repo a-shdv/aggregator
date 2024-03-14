@@ -1,12 +1,10 @@
-package com.company.aggregator.websocket.controllers;
+package com.company.aggregator.controllers;
 
-import com.company.aggregator.dtos.WebSocketMessage;
+import com.company.aggregator.dtos.WebSocketMessageDto;
 import com.company.aggregator.rabbitmq.dtos.SendMessageDto;
 import com.company.aggregator.rabbitmq.services.RabbitMqService;
-import com.company.aggregator.websocket.models.ProgressBarMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +16,7 @@ public class ProgressBarController {
     private final RabbitMqService rabbitMqService;
 
     @MessageMapping("/toJava")
-    public ProgressBarMessage receiveMessage(@RequestBody WebSocketMessage msg,
-                                             @Payload ProgressBarMessage progressBarMessage) {
+    public void receiveMessage(@RequestBody WebSocketMessageDto msg) {
         rabbitMqService.send(SendMessageDto.builder()
                 .username(msg.getUsername())
                 .title(msg.getTitle())
@@ -29,6 +26,5 @@ public class ProgressBarController {
                 .cityId(msg.getCityId())
                 .isRemoteAvailable(msg.getIsRemoteAvailable())
                 .build());
-        return progressBarMessage;
     }
 }

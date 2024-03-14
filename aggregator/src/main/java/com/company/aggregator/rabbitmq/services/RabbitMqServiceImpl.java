@@ -33,7 +33,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     private static int progressbarLoaderCounter = 0;
 
     @Override
-    @RabbitListener(queues = "${rabbitmq.queue-to-receive}", id = "jh-queue-to-aggregator-id")
+    @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     @SendTo("/topic/progressbar")
     public void receive(List<ReceiveMessageDto> receiveMessageDtoList) {
         User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername());

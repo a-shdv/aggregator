@@ -56,7 +56,7 @@ public class HhRuParserService {
                             .getElementsByClass("serp-item") : null;
         }
 
-        if (elements != null) {
+        if (elements != null && !elements.isEmpty()) {
             final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
             while (currentPage < amount / elements.size()) {
