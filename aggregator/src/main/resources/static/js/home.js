@@ -1,48 +1,67 @@
 'use strict';
+
 let stompClient = null;
+const vacancy = document.querySelector('#vacancy');
+const progressBar = document.querySelector('#progressbar');
+const progressBarLoader = document.querySelector('#progressbar-loader');
+// const spaceBefore = document.querySelector('#spaceBefore');
+// const spaceAfter = document.querySelector('#spaceAfter');
+const buttonCancelSearch = document.querySelector('#buttonCancelSearch');
+const buttonOk = document.querySelector('#buttonOk');
 
-const vacancy = document.querySelector('#vacancy')
-const progressBar = document.querySelector('#progressbar')
-const progressBarLoader = document.querySelector('#progressbar-loader')
-const spaceBefore = document.querySelector('#spaceBefore')
-const spaceAfter = document.querySelector('#spaceAfter')
-const buttonCancelSearch = document.querySelector('#buttonCancelSearch')
-const buttonOk = document.querySelector('#buttonOk')
+// Load visibility state from local storage
+document.addEventListener('DOMContentLoaded', function () {
+    const isProgressBarVisible = localStorage.getItem('progressBarVisible');
+    if (isProgressBarVisible === 'true') {
+        progressBar.style.display = '';
+        progressBarLoader.style.width = localStorage.getItem('progressBarWidth');
+    } else {
+        progressBar.style.display = 'none';
+    }
+});
 
-document.querySelector('#vacancyForm').addEventListener('submit', connect, true)
+window.addEventListener('beforeunload', function(event) {
+    event.preventDefault();
+    event.returnValue = ''; // Required for Chrome
+    return 'Are you sure you want to leave the page? Your progress may be lost.';
+});
+
+document.querySelector('#vacancyForm').addEventListener('submit', connect, true);
 
 function connect() {
-    event.preventDefault()
-    // document.querySelector('#progressbar').style.display = 'block'
+    event.preventDefault();
     let socket = new SockJS('/aggregator');
     stompClient = Stomp.over(socket);
 
-    stompClient.connect({}, frame => {
-        console.log('Connected: ' + frame)
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
 
         // ON RECEIVE
-        stompClient.subscribe('/topic/progressbar', response => {
+        stompClient.subscribe('/topic/progressbar', function (response) {
             let message = JSON.parse(response.body);
-            console.log('received ' + message)
-            progressBarLoader.style.width = message + '%'
-            if (parseInt(progressBarLoader.style.width) >= parseInt('100%')) {
-                progressBarLoader.classList.remove('bg-warning')
-                progressBarLoader.classList.add('bg-success')
-                buttonCancelSearch.style.display = 'none'
-                buttonOk.style.display = ''
-                // progressBarLoader.style.width = '100%';
-                // progressBarLoader.setAttribute('aria-valuenow', '25');
-                // progressBarLoader.setAttribute('aria-valuemin', '0');
-                // progressBarLoader.setAttribute('aria-valuemax', '100');
+            progressBarLoader.style.width = message + '%';
+
+            if (parseInt(progressBarLoader.style.width) >= 100) {
+                buttonCancelSearch.style.display = 'none';
+                progressBar.style.display = 'none'; // Hide the progress bar
+                localStorage.setItem('progressBarVisible', 'false');
+                localStorage.setItem('progressBarWidth', '');
+
+                // Show the vacancy element
+                vacancy.style.display = '';
+            } else {
+                progressBar.style.display = ''; // Show the progress bar
+                localStorage.setItem('progressBarVisible', 'true');
+                localStorage.setItem('progressBarWidth', progressBarLoader.style.width);
             }
         });
 
         // BEFORE SEND
-        // vacancy.style.display = 'none'
-        // spaceBefore.style.height = '50vh'
-        // spaceAfter.style.height = '50vh'
-        progressBar.style.display = ''
-        buttonCancelSearch.style.display = ''
+        vacancy.style.display = 'none';
+        // spaceBefore.style.height = '50vh';
+        // spaceAfter.style.height = '50vh';
+        progressBar.style.display = '';
+        buttonCancelSearch.style.display = '';
 
         stompClient.send("/app/toJava", {}, JSON.stringify({
             username: document.querySelector("#username").value,
@@ -53,17 +72,10 @@ function connect() {
             cityId: parseInt(document.querySelector('#cityId').value),
             isRemoteAvailable: document.querySelector('#isRemoteAvailable').checked
         }));
-    }, error => {
+    }, function (error) {
         console.error('Error during WebSocket connection: ' + error);
         // document.querySelector('#progressbar').style.display = 'none';
     });
-}
-
-function disconnect() {
-    if (stompClient != null) {
-        stompClient.disconnect()
-        console.log("Disconnected")
-    }
 }
 
 // Selecting form elements
@@ -120,5 +132,5 @@ function loadFormValues() {
 window.addEventListener('load', loadFormValues);
 
 function clearVacancies() {
-    confirm("Вы уверены, что хотите очистить список вакансий?")
+    confirm("Вы уверены, что хотите очистить список вакансий?");
 }
