@@ -30,10 +30,10 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     private final AggregatorService aggregatorService;
     private final UserService userService;
     private final SimpMessagingTemplate messagingTemplate;
-    private static int i = 0;
+    private static int progressbarLoaderCounter = 0;
 
     @Override
-    @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
+    @RabbitListener(queues = "${rabbitmq.queue-to-receive}", id = "jh-queue-to-aggregator-id")
     @SendTo("/topic/progressbar")
     public void receive(List<ReceiveMessageDto> receiveMessageDtoList) {
         User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername());
@@ -44,8 +44,8 @@ public class RabbitMqServiceImpl implements RabbitMqService {
             aggregatorService.saveMessageListAsync(receiveMessageDtoList, user);
         }
 
-        i += 10;
-        messagingTemplate.convertAndSend("/topic/progressbar", i);
+        progressbarLoaderCounter += 12;
+        messagingTemplate.convertAndSend("/topic/progressbar", progressbarLoaderCounter);
     }
 
     @Override

@@ -4,48 +4,32 @@ import com.company.aggregator.exceptions.VacancyNotFoundException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.models.Vacancy;
 import com.company.aggregator.rabbitmq.dtos.SendMessageDto;
+import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
 import com.company.aggregator.rabbitmq.services.RabbitMqService;
 import com.company.aggregator.services.AggregatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/vacancies")
 @RequiredArgsConstructor
 @Slf4j
 public class AggregatorController {
     private final AggregatorService aggregatorService;
     private final RabbitMqService rabbitMqService;
-    private final RestTemplate restTemplate;
-
-    @Value("${constants.heartbeat-url}")
-    private String heartbeatUrl;
-
-    private boolean isParserAvailable;
-
-    @Scheduled(initialDelay = 2_000, fixedDelay = 1_000) // TODO поменять fixedDelay
-    public void sendHeartBeat() {
-        try {
-            restTemplate.getForEntity(heartbeatUrl, String.class).getStatusCode().is2xxSuccessful();
-            isParserAvailable = true;
-        } catch (ResourceAccessException ex) {
-            isParserAvailable = false;
-        }
-    }
+    private final RabbitTemplate rabbitTemplate;
+    private final RabbitMqProperties rabbitProperties;
 
     @GetMapping("/{id}")
     public String findVacancy(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
@@ -75,30 +59,37 @@ public class AggregatorController {
         }
         CompletableFuture<Page<Vacancy>> vacancies = aggregatorService.findVacanciesAsync(user, PageRequest.of(page, size));
         model.addAttribute("vacancies", vacancies.join());
-        model.addAttribute("isParserAvailable", isParserAvailable);
-        return "home";
+        return "vacancies/vacancies";
     }
 
 
-//    @PostMapping
-//    public String findVacancies(@AuthenticationPrincipal User user, String title, BigDecimal salary, boolean onlyWithSalary,
-//                                int experience, int cityId, boolean isRemoteAvailable) {
-//        rabbitMqService.send(SendMessageDto.builder()
-//                .username(user.getUsername())
-//                .title(title)
-//                .salary(salary)
-//                .onlyWithSalary(onlyWithSalary)
-//                .experience(experience)
-//                .cityId(cityId)
-//                .isRemoteAvailable(isRemoteAvailable)
-//                .build());
-//        return "redirect:/";
-//    }
+    @PostMapping
+    public String findVacancies(@AuthenticationPrincipal User user, String title, BigDecimal salary, boolean onlyWithSalary,
+                                int experience, int cityId, boolean isRemoteAvailable) {
+        rabbitMqService.send(SendMessageDto.builder()
+                .username(user.getUsername())
+                .title(title)
+                .salary(salary)
+                .onlyWithSalary(onlyWithSalary)
+                .experience(experience)
+                .cityId(cityId)
+                .isRemoteAvailable(isRemoteAvailable)
+                .build());
+        return "redirect:/";
+    }
 
 
     @PostMapping("/clear")
     public String deleteVacancies(@AuthenticationPrincipal User user) {
         aggregatorService.deleteVacanciesByUserAsync(user);
+        return "redirect:/";
+    }
+
+    @PostMapping("/stop-consuming-messages")
+    public String stopConsumingMessages(@RequestParam("isConsumingCancelled") Boolean isConsumingCancelled, RedirectAttributes redirectAttributes) {
+        SendMessageDto dto = SendMessageDto.builder().isConsumingCancelled(isConsumingCancelled).build();
+        rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), dto);
+        log.info("SENT: {}", dto);
         return "redirect:/";
     }
 }

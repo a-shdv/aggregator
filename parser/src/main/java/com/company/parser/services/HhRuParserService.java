@@ -20,11 +20,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HhRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
-    private static final Integer amount = 33;
+    private static final Integer amount = 10;
 
    @Async("jobExecutor")
-    public void findVacancies(String username, String query, BigDecimal salary, boolean onlyWithSalary,
-                              int experience, int cityId, boolean isRemoteAvailable) {
+    public void findVacancies(String username, String query, BigDecimal salary, Boolean onlyWithSalary,
+                              Integer experience, Integer cityId, Boolean isRemoteAvailable) {
         int currentPage = 0;
         int previousPage;
 

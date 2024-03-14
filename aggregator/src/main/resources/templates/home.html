@@ -8,7 +8,7 @@
     <!--Вакансия-->
     <div id="vacancy" class="container mt-5">
         <div class="row justify-content-center">
-            <form id="vacancyForm" th:action="@{/}" th:method="post" class="col-lg-4">
+            <form id="vacancyForm" th:action="@{/vacancies}" th:method="post" class="col-lg-4">
                 <h2>Вакансия</h2>
                 <input id="username" type="hidden" th:value="${#authentication.principal.username}">
                 <!--Название вакансии-->
@@ -16,14 +16,6 @@
                     <label for="title">Название вакансии</label>
                     <input id="title" class="form-control" type="text" name="title" placeholder="Программист" required>
                 </div>
-
-                <!--Количество вакансий-->
-                <!--                <div class="form-group">-->
-                <!--                    <label for="amount">Количество вакансий (min=35, max=1000)</label>-->
-                <!--                    <input id="amount" class="form-control" type="text" name="amount" min="35" max="1000"-->
-                <!--                           placeholder="500"-->
-                <!--                           required>-->
-                <!--                </div>-->
 
                 <!--Зарплата-->
                 <div class="form-group">
@@ -97,6 +89,11 @@
                     </div>
                 </div>
 
+                <!--isConsumingCancelled-->
+                <div>
+                    <input type="hidden" th:value="false" name="isConsumingCancelled">
+                </div>
+
                 <!--Отправка формы-->
                 <input class="btn btn-md btn-warning mt-3" type="submit" value="Найти">
             </form>
@@ -104,20 +101,26 @@
     </div>
 
     <!--Прогресс бар-->
-
-
     <div class="container justify-content-center align-items-center">
-            <div id="spaceBefore"></div>
-            <div id="progressbar" class="progress" style="display: none;">
-                <div id="progressbar-loader" class="progress-bar bg-warning" role="progressbar"
-                     aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-            </div>
-            <form id="cancelSearchButton" class="text-center" action="" method="post" style="display: none">
-                <input class="btn btn-md btn-warning mt-3" type="submit" value="Отменить">
-            </form>
-            <div id="spaceAfter"></div>
-    </div>
+        <div id="spaceBefore"></div>
+        <div id="progressbar" class="progress" style="display: none;">
+            <div id="progressbar-loader" class="progress-bar bg-warning" role="progressbar"
+                 aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+        </div>
 
+        <form id="buttonCancelSearch" class="text-center" th:action="@{/stop-consuming-messages}" th:method="post"
+              style="display: none">
+            <input type="hidden" th:value="true" name="isConsumingCancelled">
+            <input class="btn btn-md btn-warning mt-3" type="submit" value="Отменить">
+        </form>
+        <div style="display: flex; justify-content: center">
+            <a id="buttonOk" th:href="@{/vacancies}" style="display: none">
+                <button type="button" class="btn btn-md btn-success mt-3">Перейти</button>
+            </a>
+        </div>
+
+        <div id="spaceAfter"></div>
+    </div>
 
 
     <!--Пустые вакансии-->
@@ -126,115 +129,6 @@
     <!--            Список вакансий пуст!-->
     <!--        </div>-->
     <!--    </div>-->
-
-    <!--Список вакансий-->
-    <div class="container mt-5">
-        <div th:if="${error}" th:text="${error}" style="color: red"></div>
-        <div th:if="${success}" th:text="${success}" style="color: green"></div>
-        <div id="vacanciesList" class="row align-items-center vh-100 mt-3" style="display: none">
-            <div class="col-12 mx-auto">
-                <div class="row">
-                    <h2>Все вакансии</h2>
-                    <div th:each="vacancy : ${vacancies}" class="col-lg-3">
-                        <div class="card mb-4" style="width: 18rem; height: 25rem;">
-                            <!--Заголовок-->
-                            <div class="card-header bg-dark text-center" style="height: 3rem;">
-                                <div class="row">
-                                    <div class="col-10">
-                                        <a th:href="${vacancy.source}" style="text-decoration: none; color: white"
-                                           target="_blank">
-                                            <h5 class="card-title" th:text="${#strings.abbreviate(vacancy.title, 20)}"
-                                                style="width: auto"></h5>
-                                        </a>
-                                    </div>
-                                    <div class="col-2">
-                                        <form th:action="@{/favourites}" th:method="post" th:object="${favouriteDto}">
-                                            <input type="hidden" name="title" th:value="${vacancy.title}">
-                                            <input type="hidden" name="date" th:value="${vacancy.date}">
-                                            <input type="hidden" name="company" th:value="${vacancy.company}">
-                                            <input type="hidden" name="schedule" th:value="${vacancy.schedule}">
-                                            <input type="hidden" name="source" th:value="${vacancy.source}">
-                                            <input type="hidden" name="logo" th:value="${vacancy.logo}">
-
-                                            <button type="submit" style="background: none; border: none;">
-                                                <img id="starImage" src="/images/star-light.png" alt=""
-                                                     style="max-width: 100%; max-height: 100%"
-                                                     title="Добавить в избранное">
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!--Картинка-->
-                            <div class="card-body d-flex justify-content-center align-items-center"
-                                 style="height: 12rem; width: inherit;">
-                                <img th:if="${vacancy.logo != null}" class="card-img-top" th:src="${vacancy.logo}"
-                                     style="max-height: 100%; max-width: 75%;">
-                                <img th:if="${vacancy.logo == null}" class="card-img-top"
-                                     th:src="@{/images/no-image.png}"
-                                     style="max-height: 100%; max-width: 75%;">
-                            </div>
-
-                            <!--Описание вакансии-->
-                            <div class="card-body" style="height: 9rem">
-                                <p class="card-text"
-                                   th:text="${#strings.abbreviate(#strings.replace(vacancy.description, 'Описание вакансии О компании и команде ', ''), 70)}">
-                                    <!--th:text="${ #strings.abbreviate(vacancy.description, 110)}"--></p>
-                            </div>
-
-                            <!-- Подробнее кнопка -->
-                            <div class="d-flex justify-content-between p-2">
-                                <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
-                                   th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
-
-                                <a th:href="@{/{id}(id=${vacancy.id})}" class="btn btn-warning mb-2"
-                                   style="max-width: 10rem;">Подробнее</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!--Пагинация-->
-            <div>
-                <nav>
-                    <ul class="pagination justify-content-center mt-5 mb-5">
-                        <!--Пред-->
-                        <div th:if="${vacancies.hasPrevious()}">
-                            <li class="page-item disabled">
-                                <form th:action="@{/}" method="get">
-                                    <input type="hidden" name="page"
-                                           th:value="${vacancies.previousPageable().pageNumber}"/>
-                                    <input type="hidden" name="size"
-                                           th:value="${vacancies.previousPageable().pageSize}"/>
-                                    <input class="page-link" type="submit" value="Пред."/>
-                                </form>
-                            </li>
-                        </div>
-
-                        <!--След-->
-                        <div th:if="${vacancies.hasNext()}">
-                            <li class="page-item">
-                                <form th:action="@{/}" method="get">
-                                    <input type="hidden" name="page" th:value="${vacancies.nextPageable().pageNumber}"/>
-                                    <input type="hidden" name="size" th:value="${vacancies.nextPageable().pageSize}"/>
-                                    <input class="page-link" type="submit" value="След."/>
-                                </form>
-                            </li>
-                        </div>
-                    </ul>
-                </nav>
-            </div>
-
-            <!--Кнопка "Очистить"-->
-            <div id="clearButton" style="display: none">
-                <form class="mt-5" th:action="@{/clear}" th:method="post">
-                    <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
-                </form>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh;"
@@ -251,6 +145,13 @@
     // document.querySelector('#progressbar').style.display = 'hidden'
 
     let stompClient = null;
+    let vacancy = document.querySelector('#vacancy')
+    let progressBar = document.querySelector('#progressbar')
+    let progressBarLoader = document.querySelector('#progressbar-loader')
+    let spaceBefore = document.querySelector('#spaceBefore')
+    let spaceAfter = document.querySelector('#spaceAfter')
+    let buttonCancelSearch = document.querySelector('#buttonCancelSearch')
+    let buttonOk = document.querySelector('#buttonOk')
 
     function connect() {
         event.preventDefault()
@@ -259,20 +160,30 @@
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
+            console.log('Connected: ' + frame)
 
             // ON RECEIVE
             stompClient.subscribe('/topic/progressbar', function (response) {
                 let message = JSON.parse(response.body);
-                document.querySelector('#progressbar-loader').style.width = message + '%'
+                progressBarLoader.style.width = message + '%'
+                if (parseInt(progressBarLoader.style.width) >= parseInt('100%')) {
+                    progressBarLoader.classList.remove('bg-warning')
+                    progressBarLoader.classList.add('bg-success')
+                    buttonCancelSearch.style.display = 'none'
+                    buttonOk.style.display = ''
+                    // progressBarLoader.style.width = '100%';
+                    // progressBarLoader.setAttribute('aria-valuenow', '25');
+                    // progressBarLoader.setAttribute('aria-valuemin', '0');
+                    // progressBarLoader.setAttribute('aria-valuemax', '100');
+                }
             });
 
             // BEFORE SEND
-            document.querySelector('#vacancy').style.display = 'none'
-            document.querySelector('#spaceBefore').style.height = '50vh'
-            document.querySelector('#spaceAfter').style.height = '50vh'
-            document.querySelector('#progressbar').style.display = ''
-            document.querySelector('#cancelSearchButton').style.display = ''
+            vacancy.style.display = 'none'
+            spaceBefore.style.height = '50vh'
+            spaceAfter.style.height = '50vh'
+            progressBar.style.display = ''
+            buttonCancelSearch.style.display = ''
             // document.querySelector('#emptyVacanciesAlert').style.display = ''
             // document.querySelector('#vacanciesList').style.display = ''
             // document.querySelector('#clearButton').style.display = ''
