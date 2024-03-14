@@ -41,7 +41,7 @@ function connect() {
             let message = JSON.parse(response.body);
             progressBarLoader.style.width = message + '%';
 
-            if (parseInt(progressBarLoader.style.width) >= 100) {
+            if (parseInt(progressBarLoader.style.width) >= 60) {
                 buttonCancelSearch.style.display = 'none';
                 progressBar.style.display = 'none'; // Hide the progress bar
                 localStorage.setItem('progressBarVisible', 'false');

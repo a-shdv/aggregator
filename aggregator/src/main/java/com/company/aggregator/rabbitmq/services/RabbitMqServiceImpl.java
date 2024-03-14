@@ -44,7 +44,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
             vacancyService.saveMessageListAsync(receiveMessageDtoList, user);
         }
 
-        progressbarLoaderCounter += 12;
+        progressbarLoaderCounter += receiveMessageDtoList.size();
         messagingTemplate.convertAndSend("/topic/progressbar", progressbarLoaderCounter);
     }
 

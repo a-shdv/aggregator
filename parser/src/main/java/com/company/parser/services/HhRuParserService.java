@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HhRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
-    private static final Integer amount = 10;
+    private static final Integer amount = 33;
 
    @Async("jobExecutor")
     public void findVacancies(String username, String query, BigDecimal salary, Boolean onlyWithSalary,
