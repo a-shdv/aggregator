@@ -22,37 +22,38 @@ public class RabbitMqReceiverService {
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(ReceiveMessageDto receiveMessageDto) {
         log.info("RECEIVED: {}", receiveMessageDto.toString());
+        if (receiveMessageDto.getIsConsumingCancelled() == null || !receiveMessageDto.getIsConsumingCancelled()) {
+            habrParserService
+                    .findVacancies(
+                            receiveMessageDto.getUsername(),
+                            receiveMessageDto.getTitle(),
+                            receiveMessageDto.getSalary(),
+                            receiveMessageDto.getIsOnlyWithSalary(),
+                            receiveMessageDto.getExperience(),
+                            receiveMessageDto.getCityId(),
+                            receiveMessageDto.getIsRemoteAvailable()
+                    );
 
-        habrParserService
-                .findVacancies(
-                        receiveMessageDto.getUsername(),
-                        receiveMessageDto.getTitle(),
-                        receiveMessageDto.getSalary(),
-                        receiveMessageDto.isOnlyWithSalary(),
-                        receiveMessageDto.getExperience(),
-                        receiveMessageDto.getCityId(),
-                        receiveMessageDto.isRemoteAvailable()
-                );
-
-        hhRuParserService
-                .findVacancies(
-                        receiveMessageDto.getUsername(),
-                        receiveMessageDto.getTitle(),
-                        receiveMessageDto.getSalary(),
-                        receiveMessageDto.isOnlyWithSalary(),
-                        receiveMessageDto.getExperience(),
-                        receiveMessageDto.getCityId(),
-                        receiveMessageDto.isRemoteAvailable()
-                );
-        rabotaRuParserService
-                .findVacancies(
-                        receiveMessageDto.getUsername(),
-                        receiveMessageDto.getTitle(),
-                        receiveMessageDto.getSalary(),
-                        receiveMessageDto.isOnlyWithSalary(),
-                        receiveMessageDto.getExperience(),
-                        receiveMessageDto.getCityId(),
-                        receiveMessageDto.isRemoteAvailable()
-                );
+            hhRuParserService
+                    .findVacancies(
+                            receiveMessageDto.getUsername(),
+                            receiveMessageDto.getTitle(),
+                            receiveMessageDto.getSalary(),
+                            receiveMessageDto.getIsOnlyWithSalary(),
+                            receiveMessageDto.getExperience(),
+                            receiveMessageDto.getCityId(),
+                            receiveMessageDto.getIsRemoteAvailable()
+                    );
+            rabotaRuParserService
+                    .findVacancies(
+                            receiveMessageDto.getUsername(),
+                            receiveMessageDto.getTitle(),
+                            receiveMessageDto.getSalary(),
+                            receiveMessageDto.getIsOnlyWithSalary(),
+                            receiveMessageDto.getExperience(),
+                            receiveMessageDto.getCityId(),
+                            receiveMessageDto.getIsRemoteAvailable()
+                    );
+        }
     }
 }

@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
-public class AggregatorService {
+public class VacancyService {
     private final AggregatorRepository aggregatorRepository;
     private final UserRepository userRepository;
 

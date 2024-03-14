@@ -5,7 +5,7 @@
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 <div th:if="${favourites.isEmpty()}" class="row justify-content-center"
      style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-    <div class="alert alert-warning col-6 mb-5 mt-5" role="alert">
+    <div class="alert alert-warning col-6" role="alert">
         Список избранных вакансий пуст!
     </div>
 </div>
@@ -102,11 +102,7 @@
 </div>
 <div th:insert="~{/partials/footer :: footer}"></div>
 
-<script>
-    function clearFavourites() {
-        confirm("Вы уверены, что хотите очистить список избранных вакансий?")
-    }
+<script th:inline="javascript" th:src="@{/js/favourites.js}">
 </script>
-
 </body>
 </html>

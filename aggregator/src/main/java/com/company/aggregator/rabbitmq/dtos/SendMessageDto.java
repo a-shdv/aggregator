@@ -17,10 +17,11 @@ public class SendMessageDto implements Serializable {
     String title;
     //    int amount;
     BigDecimal salary;
-    boolean onlyWithSalary;
-    int experience;
-    int cityId;
-    boolean isRemoteAvailable;
+    Boolean onlyWithSalary;
+    Integer experience;
+    Integer cityId;
+    Boolean isRemoteAvailable;
+    Boolean isConsumingCancelled;
 
     @Override
     public String toString() {
@@ -32,6 +33,7 @@ public class SendMessageDto implements Serializable {
                 "experience='" + experience + '\'' +
                 "cityId='" + cityId + '\'' +
                 "isRemoteAvailable='" + isRemoteAvailable + '\'' +
+                "isConsumingCancelled='" + isConsumingCancelled + '\'' +
                 '}';
     }
 }

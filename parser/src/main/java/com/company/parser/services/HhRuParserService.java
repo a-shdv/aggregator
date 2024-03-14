@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,11 +20,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HhRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
-    private static final Integer amount = 33;
+    private static final Integer amount = 10;
 
-    //    @Async("jobExecutor")
-    public void findVacancies(String username, String query, BigDecimal salary, boolean onlyWithSalary,
-                              int experience, int cityId, boolean isRemoteAvailable) {
+   @Async("jobExecutor")
+    public void findVacancies(String username, String query, BigDecimal salary, Boolean onlyWithSalary,
+                              Integer experience, Integer cityId, Boolean isRemoteAvailable) {
         int currentPage = 0;
         int previousPage;
 
@@ -55,7 +56,7 @@ public class HhRuParserService {
                             .getElementsByClass("serp-item") : null;
         }
 
-        if (elements != null) {
+        if (elements != null && !elements.isEmpty()) {
             final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
             while (currentPage < amount / elements.size()) {
