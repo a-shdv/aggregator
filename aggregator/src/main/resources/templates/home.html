@@ -102,8 +102,8 @@
                 <br> <br>
             </form>
         </div>
-        <div id="progressbar" class="progress">
-            <div class="progress-bar bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+        <div id="progressbar" class="progress" style="display: none">
+            <div id="progressbar-loader" class="progress-bar bg-warning" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
     </div>
 
@@ -117,10 +117,10 @@
     <div class="container mt-5">
         <div th:if="${error}" th:text="${error}" style="color: red"></div>
         <div th:if="${success}" th:text="${success}" style="color: green"></div>
-        <div class="row align-items-center vh-100 mt-3">
+        <div th:if="${!vacancies.isEmpty()}" class="row align-items-center vh-100 mt-3">
             <div class="col-12 mx-auto">
                 <div class="row">
-                    <h2 th:if="${#lists.isEmpty(vacancies)}">Все вакансии</h2>
+                    <h2>Все вакансии</h2>
                     <div th:each="vacancy : ${vacancies}" class="col-lg-3">
                         <div class="card mb-4" style="width: 18rem; height: 25rem;">
                             <!--Заголовок-->
@@ -214,7 +214,7 @@
             </div>
 
             <!--Кнопка "Очистить"-->
-            <div th:if="${#lists.isEmpty(vacancies)}">
+            <div th:if="${!vacancies.isEmpty()}">
                 <form class="mt-5" th:action="@{/clear}" th:method="post">
                     <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
                 </form>
@@ -233,19 +233,23 @@
 <script>
     'use strict';
     document.querySelector('#vacancyForm').addEventListener('submit', connect, true)
-    document.querySelector('#progressbar').style.display = 'none'
+    // document.querySelector('#progressbar').style.display = 'hidden'
 
     let stompClient = null;
 
     function connect() {
-        document.querySelector('#progressbar').style.display = 'block'
+        // document.querySelector('#progressbar').style.display = 'block'
         let socket = new SockJS('/aggregator');
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/progressbar', onMessageReceived);
-            let toSend = JSON.stringify({
+            stompClient.subscribe('/topic/progressbar', function (response) {
+                let message = JSON.parse(response.body);
+                document.querySelector('#progressbar').style.display = ''
+                document.querySelector('#progressbar-loader').style.width = message + '%'
+            });
+            let messageToSend = JSON.stringify({
                 username: document.querySelector("#username").value,
                 title: document.querySelector("#title").value,
                 salary: document.querySelector('#salary').value,
@@ -254,8 +258,8 @@
                 cityId: parseInt(document.querySelector('#cityId').value),
                 isRemoteAvailable: document.querySelector('#isRemoteAvailable').checked
             })
-            console.log(toSend)
-            stompClient.send("/endpoint/receiveMessage", {}, toSend);
+            console.log(messageToSend)
+            stompClient.send("/endpoint/toJava", {}, messageToSend);
         }, function (error) {
             console.error('Error during WebSocket connection: ' + error);
             document.querySelector('#progressbar').style.display = 'none'; // Hide the progress bar on error
@@ -264,8 +268,9 @@
     }
 
     function onMessageReceived(payload) {
+        let message = JSON.parse(payload.body)
         // Handle received messages
-        console.log('Received message: ' + payload.body);
+        console.log('Received message: ' + message);
         // Additional message handling if needed
     }
 

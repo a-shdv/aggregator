@@ -19,7 +19,7 @@ import java.util.List;
 @Slf4j
 public class RabotaRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
-    private static final Integer amount = 33;
+    private static final Integer amount = 10;
 
     //    @Async("jobExecutor")
     public void findVacancies(String username, String query, BigDecimal salary, Boolean onlyWithSalary,
@@ -45,7 +45,7 @@ public class RabotaRuParserService {
         if (doc != null) {
             elements = doc.getElementsByClass("r-serp__item r-serp__item_vacancy");
         }
-        if (elements != null) {
+        if (elements != null && !elements.isEmpty()) {
             List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
             while (currPage <= amount / elements.size()) {

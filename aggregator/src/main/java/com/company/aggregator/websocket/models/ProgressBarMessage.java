@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class WebSocketProgressBarMessage {
+public class ProgressBarMessage {
     private String type;
     private String content;
     private String sender;

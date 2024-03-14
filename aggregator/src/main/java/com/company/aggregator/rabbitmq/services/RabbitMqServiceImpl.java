@@ -31,7 +31,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     private final AggregatorService aggregatorService;
     private final UserService userService;
     private final SimpMessagingTemplate messagingTemplate;
-
+    private static int i = 0;
 
     @Override
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
@@ -44,6 +44,9 @@ public class RabbitMqServiceImpl implements RabbitMqService {
         if (!receiveMessageDtoList.isEmpty()) {
             aggregatorService.saveMessageListAsync(receiveMessageDtoList, user);
         }
+
+        i++;
+        messagingTemplate.convertAndSend("/topic/progressbar", i);
 //        messagingTemplate.convertAndSend("/topic/progressbar", receiveMessageDtoList.size());
     }
 
