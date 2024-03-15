@@ -1,6 +1,35 @@
 <!doctype html>
 <html lang="en">
 <div th:insert="~{/partials/head :: head}"></div>
+<style>
+    ::selection {
+        background: #ffc107;
+        color: #fff
+    }
+
+    form .form-control:focus {
+        box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        -o-box-shadow: none !important;
+        border-color: #ffc107;
+    }
+
+    input[type=radio], input[type=checkbox] {
+        accent-color: #ffc107;
+    }
+
+    .page-link {
+        color: #ffc107
+    }
+    .page-link:hover {
+        color: #ffc107
+    }
+
+    input[type=radio], input[type=checkbox] {
+        accent-color: #ffc107;
+    }
+</style>
 <body>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 <main class="mt-5">

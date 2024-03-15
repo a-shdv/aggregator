@@ -1,6 +1,35 @@
 <!doctype html>
 <html lang="en">
 <div th:insert="~{/partials/head :: head}"></div>
+<style>
+    ::selection {
+        background: #ffc107;
+        color: #fff
+    }
+
+    form .form-control:focus {
+        box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        -o-box-shadow: none !important;
+        border-color: #ffc107;
+    }
+
+    input[type=radio], input[type=checkbox] {
+        accent-color: #ffc107;
+    }
+
+    .page-link {
+        color: #ffc107
+    }
+    .page-link:hover {
+        color: #ffc107
+    }
+
+    input[type=radio], input[type=checkbox] {
+        accent-color: #ffc107;
+    }
+</style>
 <body>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 <div th:if="${favourites.isEmpty()}" class="row justify-content-center"
@@ -69,31 +98,44 @@
     </div>
 
     <!--Пагинация-->
-    <nav>
-        <ul class="pagination justify-content-center mt-5 mb-5">
-            <!--Пред-->
-            <div th:if="${favourites.hasPrevious()}">
-                <li class="page-item disabled">
-                    <form th:action="@{/favourites}" method="get">
+    <div>
+        <nav aria-label="...">
+            <ul class="pagination justify-content-center mt-5 mb-5">
+                <!-- Previous -->
+                <li class="page-item" th:if="${favourites.hasPrevious()}">
+                    <form th:action="@{/vacancies}" method="get">
                         <input type="hidden" name="page" th:value="${favourites.previousPageable().pageNumber}"/>
                         <input type="hidden" name="size" th:value="${favourites.previousPageable().pageSize}"/>
-                        <input class="page-link" type="submit" value="Пред."/>
+                        <button class="page-link" type="submit" aria-label="Пред">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Пред</span>
+                        </button>
                     </form>
                 </li>
-            </div>
 
-            <!--След-->
-            <div th:if="${favourites.hasNext()}">
-                <li class="page-item">
+                <!-- Pages -->
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, favourites.totalPages)}" th:class="${i == favourites.number + 1} ? 'page-item active' : 'page-item'">
+                    <form th:action="@{/favourites}" method="get">
+                        <input type="hidden" name="page" th:value="${i - 1}"/>
+                        <input type="hidden" name="size" th:value="${favourites.size}"/>
+                        <button class="page-link" type="submit" th:text="${i}"></button>
+                    </form>
+                </li>
+
+                <!-- Next -->
+                <li class="page-item" th:if="${favourites.hasNext()}">
                     <form th:action="@{/favourites}" method="get">
                         <input type="hidden" name="page" th:value="${favourites.nextPageable().pageNumber}"/>
                         <input type="hidden" name="size" th:value="${favourites.nextPageable().pageSize}"/>
-                        <input class="page-link" type="submit" value="След."/>
+                        <button class="page-link" type="submit" aria-label="След">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">След</span>
+                        </button>
                     </form>
                 </li>
-            </div>
-        </ul>
-    </nav>
+            </ul>
+        </nav>
+    </div>
 
     <!--Кнопка "Очистить"-->
     <form class="mt-5" th:action="@{/favourites/clear}" th:method="post">

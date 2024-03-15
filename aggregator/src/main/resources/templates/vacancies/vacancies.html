@@ -1,6 +1,35 @@
 <!doctype html>
 <html lang="en">
 <div th:insert="~{/partials/head :: head}"></div>
+<style>
+    ::selection {
+        background: #ffc107;
+        color: #fff
+    }
+
+    form .form-control:focus {
+        box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        -o-box-shadow: none !important;
+        border-color: #ffc107;
+    }
+
+    input[type=radio], input[type=checkbox] {
+        accent-color: #ffc107;
+    }
+
+    .page-link {
+        color: #ffc107
+    }
+    .page-link:hover {
+        color: #ffc107
+    }
+
+    input[type=radio], input[type=checkbox] {
+        accent-color: #ffc107;
+    }
+</style>
 <body>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 
@@ -88,31 +117,40 @@
 
         <!--Пагинация-->
         <div>
-            <nav>
+            <nav aria-label="...">
                 <ul class="pagination justify-content-center mt-5 mb-5">
-                    <!--Пред-->
-                    <div th:if="${vacancies.hasPrevious()}">
-                        <li class="page-item disabled">
-                            <form th:action="@{/vacancies}" method="get">
-                                <input type="hidden" name="page"
-                                       th:value="${vacancies.previousPageable().pageNumber}"/>
-                                <input type="hidden" name="size"
-                                       th:value="${vacancies.previousPageable().pageSize}"/>
-                                <input class="page-link" type="submit" value="Пред."/>
-                            </form>
-                        </li>
-                    </div>
+                    <!-- Previous -->
+                    <li class="page-item" th:if="${vacancies.hasPrevious()}">
+                        <form th:action="@{/vacancies}" method="get">
+                            <input type="hidden" name="page" th:value="${vacancies.previousPageable().pageNumber}"/>
+                            <input type="hidden" name="size" th:value="${vacancies.previousPageable().pageSize}"/>
+                            <button class="page-link" type="submit" aria-label="Пред">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Пред</span>
+                            </button>
+                        </form>
+                    </li>
 
-                    <!--След-->
-                    <div th:if="${vacancies.hasNext()}">
-                        <li class="page-item">
-                            <form th:action="@{/vacancies}" method="get">
-                                <input type="hidden" name="page" th:value="${vacancies.nextPageable().pageNumber}"/>
-                                <input type="hidden" name="size" th:value="${vacancies.nextPageable().pageSize}"/>
-                                <input class="page-link" type="submit" value="След."/>
-                            </form>
-                        </li>
-                    </div>
+                    <!-- Pages -->
+                    <li class="page-item" th:each="i : ${#numbers.sequence(1, vacancies.totalPages)}" th:class="${i == vacancies.number + 1} ? 'page-item active' : 'page-item'">
+                        <form th:action="@{/vacancies}" method="get">
+                            <input type="hidden" name="page" th:value="${i - 1}"/>
+                            <input type="hidden" name="size" th:value="${vacancies.size}"/>
+                            <button class="page-link" type="submit" th:text="${i}"></button>
+                        </form>
+                    </li>
+
+                    <!-- Next -->
+                    <li class="page-item" th:if="${vacancies.hasNext()}">
+                        <form th:action="@{/vacancies}" method="get">
+                            <input type="hidden" name="page" th:value="${vacancies.nextPageable().pageNumber}"/>
+                            <input type="hidden" name="size" th:value="${vacancies.nextPageable().pageSize}"/>
+                            <button class="page-link" type="submit" aria-label="След">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">След</span>
+                            </button>
+                        </form>
+                    </li>
                 </ul>
             </nav>
         </div>

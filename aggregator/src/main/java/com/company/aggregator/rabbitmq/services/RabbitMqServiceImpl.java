@@ -38,7 +38,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     @Override
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(List<ReceiveMessageDto> receiveMessageDtoList) {
-        if (progressbarLoaderCounter >= 100) {
+        if (progressbarLoaderCounter >= 80) {
             progressbarLoaderCounter = 0;
         }
 
