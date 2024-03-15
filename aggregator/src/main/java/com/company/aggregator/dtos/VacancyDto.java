@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WebSocketMessageDto {
+public class VacancyDto {
     String username;
     String title;
     BigDecimal salary;
@@ -19,4 +19,5 @@ public class WebSocketMessageDto {
     Integer experience;
     Integer cityId;
     Boolean isRemoteAvailable;
+    String type;
 }

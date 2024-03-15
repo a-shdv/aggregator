@@ -11,6 +11,7 @@
             <form id="vacancyForm" th:action="@{/vacancies}" th:method="post" class="col-lg-4">
                 <h2>Вакансия</h2>
                 <input id="username" type="hidden" th:value="${#authentication.principal.username}">
+
                 <!--Название вакансии-->
                 <div class="form-group">
                     <label for="title">Название вакансии</label>
@@ -95,40 +96,26 @@
                 </div>
 
                 <!--Отправка формы-->
-                <input class="btn btn-md btn-warning mt-3" type="submit" value="Найти">
+                <input id="searchVacanciesButton" class="btn btn-md btn-warning mt-3" type="submit" value="Найти">
             </form>
         </div>
     </div>
 
     <!--Прогресс бар-->
-    <div class="container justify-content-center align-items-center">
-        <div id="spaceBefore"></div>
-        <div id="progressbar" class="progress" style="display: none;">
+    <div class="container justify-content-center align-items-center mt-5 mb-5">
+        <div id="progressbar" class="progress hidden">
             <div id="progressbar-loader" class="progress-bar bg-warning" role="progressbar"
                  aria-valuemin="0" aria-valuemax="60" style="width: 0%;"></div>
         </div>
 
-        <form id="buttonCancelSearch" class="text-center" th:action="@{/stop-consuming-messages}" th:method="post"
-              style="display: none">
-            <input type="hidden" th:value="true" name="isConsumingCancelled">
-            <input class="btn btn-md btn-warning mt-3" type="submit" value="Отменить">
-        </form>
-<!--        <div style="display: flex; justify-content: center">-->
-<!--            <a id="buttonOk" th:href="@{/vacancies}" style="display: none">-->
-<!--                <button type="button" class="btn btn-md btn-success mt-3">Перейти</button>-->
-<!--            </a>-->
-<!--        </div>-->
-
-        <div id="spaceAfter"></div>
+<!--        <form id="buttonCancelSearch" class="text-center" th:action="@{/stop-consuming-messages}" th:method="post"-->
+<!--              style="display: none">-->
+<!--            <input type="hidden" th:value="true" name="isConsumingCancelled">-->
+<!--            <input class="btn btn-md btn-warning mt-3" type="submit" value="Отменить">-->
+<!--        </form>-->
     </div>
 
 
-    <!--Пустые вакансии-->
-    <!--    <div th:if="${vacancies.isEmpty()}" class="row justify-content-center">-->
-    <!--        <div id="emptyVacanciesAlert" class="alert alert-warning col-6 mb-5 mt-5" role="alert">-->
-    <!--            Список вакансий пуст!-->
-    <!--        </div>-->
-    <!--    </div>-->
 </div>
 
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh;"

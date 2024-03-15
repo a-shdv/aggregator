@@ -24,7 +24,7 @@
                                 <div class="col-10">
                                     <a th:href="${vacancy.source}" style="text-decoration: none; color: white"
                                        target="_blank">
-                                        <h5 class="card-title" th:text="${#strings.abbreviate(vacancy.title, 20)}"
+                                        <h5 class="card-title" th:text="${#strings.abbreviate(vacancy.title, 18)}"
                                             style="width: auto"></h5>
                                     </a>
                                 </div>
@@ -80,7 +80,8 @@
         <!--Кнопка "Очистить"-->
         <div id="clearButton">
             <form class="mt-5" th:action="@{/vacancies/clear}" th:method="post">
-                <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить" onclick="clearVacancies()">
+                <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить"
+                       onclick="confirm('Вы уверены, что хотите очистить список вакансий?')">
             </form>
         </div>
 

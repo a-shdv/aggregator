@@ -49,13 +49,6 @@
             <artifactId>jsoup</artifactId>
             <version>1.10.2</version>
         </dependency>
-
-        <!--kotlin-->
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

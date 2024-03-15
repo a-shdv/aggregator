@@ -1,139 +1,109 @@
-'use strict';
+'use strict'
+
+const vacancy = document.querySelector('#vacancy')
+const vacancyForm = document.querySelector('#vacancyForm')
+const searchVacanciesButton = document.querySelector('#searchVacanciesButton')
+const progressbar = document.querySelector('#progressbar')
+const progressbarLoader = document.querySelector('#progressbar-loader')
 
 let stompClient = null;
-const vacancy = document.querySelector('#vacancy');
-const progressBar = document.querySelector('#progressbar');
-const progressBarLoader = document.querySelector('#progressbar-loader');
-// const spaceBefore = document.querySelector('#spaceBefore');
-// const spaceAfter = document.querySelector('#spaceAfter');
-const buttonCancelSearch = document.querySelector('#buttonCancelSearch');
-const buttonOk = document.querySelector('#buttonOk');
+let username = null;
 
-// Load visibility state from local storage
-let isProgressBarVisible
-document.addEventListener('DOMContentLoaded', function () {
-    isProgressBarVisible = localStorage.getItem('progressBarVisible');
-    if (isProgressBarVisible === 'true') {
-        progressBar.style.display = '';
-        progressBarLoader.style.width = localStorage.getItem('progressBarWidth');
-    } else {
-        progressBar.style.display = 'none';
+function connect(event) {
+    username = document.querySelector('#username').value;
+
+    if (username) {
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, onConnected, onError);
     }
-});
-
-window.addEventListener('beforeunload', function (event) {
-    if (isProgressBarVisible === 'true') {
-        event.preventDefault();
-        event.returnValue = ''; // Required for Chrome
-        return 'Вы уверены, что хотите покинуть страницу? Прогресс может не сохраниться.';
-    }
-});
-
-document.querySelector('#vacancyForm').addEventListener('submit', connect, true);
-
-function connect() {
     event.preventDefault();
-    let socket = new SockJS('/aggregator');
-    stompClient = Stomp.over(socket);
-
-    stompClient.connect({}, function (frame) {
-        console.log('Connected: ' + frame);
-
-        // ON RECEIVE
-        stompClient.subscribe('/topic/progressbar', function (response) {
-            let message = JSON.parse(response.body);
-            progressBarLoader.style.width = message + '%';
-
-            if (parseInt(progressBarLoader.style.width) >= 60) {
-                buttonCancelSearch.style.display = 'none';
-                progressBar.style.display = 'none'; // Hide the progress bar
-                localStorage.setItem('progressBarVisible', 'false');
-                localStorage.setItem('progressBarWidth', '');
-
-                // Show the vacancy element
-                vacancy.style.display = '';
-            } else {
-                progressBar.style.display = ''; // Show the progress bar
-                localStorage.setItem('progressBarVisible', 'true');
-                localStorage.setItem('progressBarWidth', progressBarLoader.style.width);
-            }
-        });
-
-        // BEFORE SEND
-        vacancy.style.display = 'none';
-        // spaceBefore.style.height = '50vh';
-        // spaceAfter.style.height = '50vh';
-        progressBar.style.display = '';
-        buttonCancelSearch.style.display = '';
-
-        stompClient.send("/app/toJava", {}, JSON.stringify({
-            username: document.querySelector("#username").value,
-            title: document.querySelector("#title").value,
-            salary: document.querySelector('#salary').value,
-            onlyWithSalary: document.querySelector('#onlyWithSalary').checked,
-            experience: parseInt(document.querySelector('input[name="experience"]:checked').value),
-            cityId: parseInt(document.querySelector('#cityId').value),
-            isRemoteAvailable: document.querySelector('#isRemoteAvailable').checked
-        }));
-    }, function (error) {
-        console.error('Error during WebSocket connection: ' + error);
-        // document.querySelector('#progressbar').style.display = 'none';
-    });
 }
 
-// Selecting form elements
-const titleInput = document.getElementById('title');
-const salaryInput = document.getElementById('salary');
-const onlyWithSalaryCheckbox = document.getElementById('onlyWithSalary');
-const experienceRadios = document.getElementsByName('experience');
-const citySelect = document.getElementById('cityId');
-const isRemoteAvailableCheckbox = document.getElementById('isRemoteAvailable');
+function onConnected() {
+    // Subscribe to the Public Topic
+    stompClient.subscribe('/topic/public', onMessageReceived); // TODO
 
-// Adding event listeners to form elements
-titleInput.addEventListener('input', saveFormValues);
-salaryInput.addEventListener('input', saveFormValues);
-onlyWithSalaryCheckbox.addEventListener('change', saveFormValues);
-for (let i = 0; i < experienceRadios.length; i++) {
-    experienceRadios[i].addEventListener('change', saveFormValues);
+    // Tell your username to the server
+    stompClient.send("/app/chat.addUser",
+        {},
+        JSON.stringify({sender: username, type: 'JOIN'})
+    )
+
+    // connectingElement.classList.add('hidden');
 }
-citySelect.addEventListener('change', saveFormValues);
-isRemoteAvailableCheckbox.addEventListener('change', saveFormValues);
 
-// Function to save form field values in local storage
-function saveFormValues() {
-    // Saving values to local storage
-    localStorage.setItem('title', titleInput.value);
-    localStorage.setItem('salary', salaryInput.value);
-    localStorage.setItem('onlyWithSalary', onlyWithSalaryCheckbox.checked);
-    for (let i = 0; i < experienceRadios.length; i++) {
-        if (experienceRadios[i].checked) {
-            localStorage.setItem('experience', experienceRadios[i].value);
-            break;
-        }
+function onError(error) {
+    // connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
+    // connectingElement.style.color = 'red';
+    console.log('Error connecting to websocket server: ' + error)
+}
+
+function onMessageReceived(payload) {
+    let message = JSON.parse(payload.body);
+
+    switch (message.type) {
+        case 'JOIN':
+            console.log('joined')
+            break
+        case 'LEAVE':
+            console.log('left')
+            break
+        default:
+            console.log('default')
     }
-    localStorage.setItem('cityId', citySelect.value);
-    localStorage.setItem('isRemoteAvailable', isRemoteAvailableCheckbox.checked);
+    // let messageElement = document.createElement('li');
+    //
+    // if (message.type === 'JOIN') {
+    //     messageElement.classList.add('event-message');
+    //     message.content = message.sender + ' joined!';
+    // } else if (message.type === 'LEAVE') {
+    //     messageElement.classList.add('event-message');
+    //     message.content = message.sender + ' left!';
+    // } else {
+    //     messageElement.classList.add('chat-message');
+    //
+    //     let avatarElement = document.createElement('i');
+    //     let avatarText = document.createTextNode(message.sender[0]);
+    //     avatarElement.appendChild(avatarText);
+    //
+    //     messageElement.appendChild(avatarElement);
+    //
+    //     let usernameElement = document.createElement('span');
+    //     let usernameText = document.createTextNode(message.sender);
+    //     usernameElement.appendChild(usernameText);
+    //     messageElement.appendChild(usernameElement);
+    // }
+    //
+    // let textElement = document.createElement('p');
+    // let messageText = document.createTextNode(message.content);
+    // textElement.appendChild(messageText);
+    //
+    // messageElement.appendChild(textElement);
+    //
+    // messageArea.appendChild(messageElement);
+    // messageArea.scrollTop = messageArea.scrollHeight;
 }
 
-// Function to load form field values from local storage
-function loadFormValues() {
-    // Loading values from local storage
-    titleInput.value = localStorage.getItem('title') || '';
-    salaryInput.value = localStorage.getItem('salary') || '0';
-    onlyWithSalaryCheckbox.checked = localStorage.getItem('onlyWithSalary') === 'true';
-    const experienceValue = localStorage.getItem('experience');
-    for (let i = 0; i < experienceRadios.length; i++) {
-        if (experienceRadios[i].value === experienceValue) {
-            experienceRadios[i].checked = true;
-            break;
-        }
+function sendMessage(event) {
+    const title = document.querySelector("#title").value
+    const salary = document.querySelector('#salary').value
+    const onlyWithSalary = document.querySelector('#onlyWithSalary').checked
+    const experience = parseInt(document.querySelector('input[name="experience"]:checked').value)
+    const cityId = parseInt(document.querySelector('#cityId').value)
+    const isRemoteAvailable = document.querySelector('#isRemoteAvailable').checked
+    const type = 'CHAT'
+    const messageContent = {username, title, salary, onlyWithSalary, experience, cityId, isRemoteAvailable, type}
+    if (messageContent && stompClient) {
+        // hide vacancy form and show progressbar
+        vacancy.style.display = 'none'
+        progressbar.style.display = ''
+
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(messageContent));
     }
-    citySelect.value = localStorage.getItem('cityId') || '0';
-    isRemoteAvailableCheckbox.checked = localStorage.getItem('isRemoteAvailable') === 'true';
+    event.preventDefault();
 }
 
-window.addEventListener('load', loadFormValues);
-
-function clearVacancies() {
-    confirm("Вы уверены, что хотите очистить список вакансий?");
-}
+window.onload = (event) => connect(event)
+searchVacanciesButton.addEventListener('click', sendMessage)

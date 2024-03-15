@@ -28,7 +28,7 @@ public class HomeController {
         return "home";
     }
 
-    @Scheduled(initialDelay = 2_000, fixedDelay = 1_000) // TODO поменять fixedDelay
+    @Scheduled(initialDelay = 2_000, fixedDelay = 10_000) // TODO поменять fixedDelay
     public void sendHeartBeat() {
         try {
             restTemplate.getForEntity(heartbeatUrl, String.class).getStatusCode().is2xxSuccessful();
