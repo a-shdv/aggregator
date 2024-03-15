@@ -44,7 +44,6 @@ public class RabbitMqServiceImpl implements RabbitMqService {
         if (!receiveMessageDtoList.isEmpty()) {
             vacancyService.saveMessageListAsync(receiveMessageDtoList, user);
         }
-
         progressbarLoaderCounter += receiveMessageDtoList.size();
         messageSendingOperations.convertAndSend("/topic/public", WebsocketDto.builder().counter(progressbarLoaderCounter).type("RECEIVE").build());
     }
@@ -60,6 +59,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     public void checkProgressbarLoaderCounter() {
         if (previousProgressbarLoaderCounter == progressbarLoaderCounter) {
             progressbarLoaderCounter = 0;
+            messageSendingOperations.convertAndSend("/topic/public", WebsocketDto.builder().counter(100).type("RECEIVE").build());
         }
         previousProgressbarLoaderCounter = progressbarLoaderCounter;
 
