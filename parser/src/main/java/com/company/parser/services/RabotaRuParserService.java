@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -22,85 +23,86 @@ public class RabotaRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
     private static final Integer amount = 33;
 
-    @Async("jobExecutor")
-    public void findVacancies(String username, String query, BigDecimal salary, Boolean onlyWithSalary,
-                              Integer experience, Integer cityId, Boolean isRemoteAvailable) {
-        int prevPage;
-        int currPage = 1;
-        StringBuilder url = new StringBuilder(
-                "https://www.rabota.ru/vacancy" +
-                        "?query=" + query +
-                        "&min_salary=" + salary +
-                        "&experience_ids=" + parseExperience(experience) +
-                        "&page=" + currPage
-        );
-        String parsedCityId = parseCityId(cityId);
-        if (!parsedCityId.isEmpty()) {
-            url.replace(0, 30, "https://" + parsedCityId + ".rabota.ru/vacancy/");
-        }
-        if (isRemoteAvailable) {
-            url.append("&schedule_ids=6");
-        }
-        Document doc = connectDocumentToUrl(url.toString());
-        Elements elements = null;
-        if (doc != null) {
-            elements = doc.getElementsByClass("r-serp__item r-serp__item_vacancy");
-        }
-        if (elements != null && !elements.isEmpty()) {
-            List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
+    public CompletableFuture<Void> findVacancies(String username, String query, BigDecimal salary, Boolean onlyWithSalary,
+                                                 Integer experience, Integer cityId, Boolean isRemoteAvailable) {
+        return CompletableFuture.runAsync(() -> {
+            int prevPage;
+            int currPage = 1;
+            StringBuilder url = new StringBuilder(
+                    "https://www.rabota.ru/vacancy" +
+                            "?query=" + query +
+                            "&min_salary=" + salary +
+                            "&experience_ids=" + parseExperience(experience) +
+                            "&page=" + currPage
+            );
+            String parsedCityId = parseCityId(cityId);
+            if (!parsedCityId.isEmpty()) {
+                url.replace(0, 30, "https://" + parsedCityId + ".rabota.ru/vacancy/");
+            }
+            if (isRemoteAvailable) {
+                url.append("&schedule_ids=6");
+            }
+            Document doc = connectDocumentToUrl(url.toString());
+            Elements elements = null;
+            if (doc != null) {
+                elements = doc.getElementsByClass("r-serp__item r-serp__item_vacancy");
+            }
+            if (elements != null && !elements.isEmpty()) {
+                List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
-            while (currPage <= amount / elements.size()) {
-                elements.forEach(it -> {
-                    String source = it.getElementsByAttribute("href").first().absUrl("href");
-                    String title = it.getElementsByClass("vacancy-preview-card__title").first().text();
-                    String date = parseUpdatedDate(source).toString();
-                    String vacancySalary = it.getElementsByClass("vacancy-preview-card__salary").first().text();
-                    String requirements = "Нет поддержки ключевых слов для rabota.ru.";
-                    String company = it.getElementsByClass("vacancy-preview-card__company-name").first().text();
-                    String description = it.getElementsByClass("vacancy-preview-card__short-description").first().text();
-                    String schedule = it.getElementsByClass("vacancy-preview-location__address-text").first().text();
-                    String logo = it.getElementsByClass("r-image__image").first() != null ? it.getElementsByClass("r-image__image").first().absUrl("src") : null;
+                while (currPage <= amount / elements.size()) {
+                    elements.forEach(it -> {
+                        String source = it.getElementsByAttribute("href").first().absUrl("href");
+                        String title = it.getElementsByClass("vacancy-preview-card__title").first().text();
+                        String date = parseUpdatedDate(source).toString();
+                        String vacancySalary = it.getElementsByClass("vacancy-preview-card__salary").first().text();
+                        String requirements = "Нет поддержки ключевых слов для rabota.ru.";
+                        String company = it.getElementsByClass("vacancy-preview-card__company-name").first().text();
+                        String description = it.getElementsByClass("vacancy-preview-card__short-description").first().text();
+                        String schedule = it.getElementsByClass("vacancy-preview-location__address-text").first().text();
+                        String logo = it.getElementsByClass("r-image__image").first() != null ? it.getElementsByClass("r-image__image").first().absUrl("src") : null;
 
-                    SendMessageDto dto = SendMessageDto.builder()
-                            .username(username)
-                            .title(title)
-                            .date(date)
-                            .salary(vacancySalary)
-                            .company(company)
-                            .requirements(requirements)
-                            .description(description)
-                            .schedule(schedule)
-                            .source(source)
-                            .logo(logo)
-                            .build();
+                        SendMessageDto dto = SendMessageDto.builder()
+                                .username(username)
+                                .title(title)
+                                .date(date)
+                                .salary(vacancySalary)
+                                .company(company)
+                                .requirements(requirements)
+                                .description(description)
+                                .schedule(schedule)
+                                .source(source)
+                                .logo(logo)
+                                .build();
 
-                    sendMessageDtoList.add(dto);
-                });
+                        sendMessageDtoList.add(dto);
+                    });
 
-                prevPage = currPage;
-                currPage++;
-                url.replace(
-                        url.indexOf("&page=") + prevPage,
-                        url.lastIndexOf("&page=") + prevPage,
-                        "&page=" + currPage
-                );
+                    prevPage = currPage;
+                    currPage++;
+                    url.replace(
+                            url.indexOf("&page=") + prevPage,
+                            url.lastIndexOf("&page=") + prevPage,
+                            "&page=" + currPage
+                    );
 
-                if (sendMessageDtoList.size() == elements.size()) {
+                    if (sendMessageDtoList.size() == elements.size()) {
+                        rabbitMqSenderService.send(sendMessageDtoList);
+                        sendMessageDtoList.clear();
+                    }
+                }
+
+                // Отправка оставшихся сообщений, если в списке осталось < sendMessageDtoListMaxSize сообщений после парсинга
+                if (!sendMessageDtoList.isEmpty()) {
                     rabbitMqSenderService.send(sendMessageDtoList);
                     sendMessageDtoList.clear();
                 }
+
+
+            } else {
+                log.error("Could not parse elements");
             }
-
-            // Отправка оставшихся сообщений, если в списке осталось < sendMessageDtoListMaxSize сообщений после парсинга
-            if (!sendMessageDtoList.isEmpty()) {
-                rabbitMqSenderService.send(sendMessageDtoList);
-                sendMessageDtoList.clear();
-            }
-
-
-        } else {
-            log.error("Could not parse elements");
-        }
+        });
     }
 
     private String parseExperience(Integer experience) {

@@ -10,6 +10,8 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.CompletableFuture;
+
 @Service
 @RequiredArgsConstructor
 @EnableRabbit
@@ -23,7 +25,7 @@ public class RabbitMqReceiverService {
     public void receive(ReceiveMessageDto receiveMessageDto) {
         log.info("RECEIVED: {}", receiveMessageDto.toString());
         if (receiveMessageDto.getIsConsumingCancelled() == null || !receiveMessageDto.getIsConsumingCancelled()) {
-            habrParserService
+            CompletableFuture<Void> habr = habrParserService
                     .findVacancies(
                             receiveMessageDto.getUsername(),
                             receiveMessageDto.getTitle(),
@@ -34,7 +36,7 @@ public class RabbitMqReceiverService {
                             receiveMessageDto.getIsRemoteAvailable()
                     );
 
-            hhRuParserService
+            CompletableFuture<Void> hh = hhRuParserService
                     .findVacancies(
                             receiveMessageDto.getUsername(),
                             receiveMessageDto.getTitle(),
@@ -44,7 +46,7 @@ public class RabbitMqReceiverService {
                             receiveMessageDto.getCityId(),
                             receiveMessageDto.getIsRemoteAvailable()
                     );
-            rabotaRuParserService
+            CompletableFuture<Void> rabota = rabotaRuParserService
                     .findVacancies(
                             receiveMessageDto.getUsername(),
                             receiveMessageDto.getTitle(),
@@ -54,6 +56,8 @@ public class RabbitMqReceiverService {
                             receiveMessageDto.getCityId(),
                             receiveMessageDto.getIsRemoteAvailable()
                     );
+
+            CompletableFuture.allOf(habr, hh, rabota);
         }
     }
 }

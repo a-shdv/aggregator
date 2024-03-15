@@ -103,7 +103,7 @@
 
     <!--Прогресс бар-->
     <div class="container justify-content-center align-items-center mt-5 mb-5">
-        <p id="counter" class="text-warning text-center" style="display: none"></p>
+        <p id="counter" class="text-warning text-center" style="display: none">0%</p>
         <div id="progressbar" class="progress" style="display: none">
             <div id="progressbar-loader" class="progress-bar bg-warning" role="progressbar"
                  aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
@@ -111,7 +111,7 @@
             <!--th:action="@{/stop-consuming-messages}"-->
         </div>
         <!--Отменить-->
-        <form id="cancelSearchForm" class="text-center" th:method="post"
+        <form id="cancelSearchForm" class="text-center" th:method="post" th:action="@{/}"
               style="display: none">
             <!--                <input type="hidden" th:value="true" name="isConsumingCancelled">-->
             <input class="btn btn-md btn-warning mt-3" type="submit" value="Отменить">

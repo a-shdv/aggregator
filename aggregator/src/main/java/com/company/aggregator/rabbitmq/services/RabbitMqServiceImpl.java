@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistry;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -34,9 +35,8 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     private static int progressbarLoaderCounter = 0;
     private final SimpMessageSendingOperations messageSendingOperations;
 
-
     @Override
-    @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
+    @RabbitListener(queues = "${rabbitmq.queue-to-receive}", id = "jh-queue-to-aggregator-id")
     public void receive(List<ReceiveMessageDto> receiveMessageDtoList) {
         if (progressbarLoaderCounter >= 100) {
             progressbarLoaderCounter = 0;

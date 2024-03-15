@@ -32,7 +32,7 @@ public class RabbitMqConfiguration {
 
     private final RabbitMqProperties rabbitMqProperties;
     private Map<String, Object> rabbiteArgs = new HashMap<>() {{
-        put("x-message-ttl", 60000L);
+        put("x-message-ttl", 1000L);
     }};
 
     @Bean

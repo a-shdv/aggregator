@@ -84,11 +84,11 @@ public class VacancyController {
         return "redirect:/vacancies";
     }
 
-    @PostMapping("/stop-consuming-messages")
-    public String stopConsumingMessages(@RequestParam("isConsumingCancelled") Boolean isConsumingCancelled, RedirectAttributes redirectAttributes) {
-        SendMessageDto dto = SendMessageDto.builder().isConsumingCancelled(isConsumingCancelled).build();
-        rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), dto);
-        log.info("SENT: {}", dto);
-        return "redirect:/";
-    }
+//    @PostMapping("/stop-consuming-messages")
+//    public String stopConsumingMessages(@RequestParam("isConsumingCancelled") Boolean isConsumingCancelled, RedirectAttributes redirectAttributes) {
+//        SendMessageDto dto = SendMessageDto.builder().isConsumingCancelled(isConsumingCancelled).build();
+//        rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), dto);
+//        log.info("SENT: {}", dto);
+//        return "redirect:/";
+//    }
 }

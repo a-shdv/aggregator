@@ -59,7 +59,7 @@ function onMessageReceived(payload) {
             counter.textContent = messageCounter
             progressbarLoader.style.width = messageCounter
 
-            if (parseInt(progressbarLoader.style.width) >= 12 && parseInt(progressbarLoader.style.width) <= 60) {
+            if (parseInt(progressbarLoader.style.width) >= 36 && parseInt(progressbarLoader.style.width) <= 80) {
                 counter.classList.remove('text-warning')
                 counter.classList.add('text-success')
 
@@ -68,7 +68,7 @@ function onMessageReceived(payload) {
 
                 cancelSearchForm.style.display = 'none'
                 okButton.style.display = ''
-            } else if (parseInt(progressbarLoader.style.width) > 60) {
+            } else if (parseInt(progressbarLoader.style.width) > 80) {
                 counter.textContent = '100%'
                 progressbarLoader.style.width = '100%'
                 // stompClient.disconnect(() => {
@@ -100,5 +100,15 @@ function sendMessage(event) {
     event.preventDefault();
 }
 
+function cancelSearch() {
+    vacancy.style.display = ''
+    progressbar.style.display = 'none'
+    counter.style.display = 'none'
+    cancelSearchForm.style.display = 'none'
+    okButton.style.display = 'none'
+    stompClient.disconnect()
+}
+
 window.onload = (event) => {connect(event)}
 searchVacanciesButton.addEventListener('click', sendMessage)
+cancelSearchForm.addEventListener('click', cancelSearch)

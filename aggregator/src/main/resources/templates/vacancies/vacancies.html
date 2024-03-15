@@ -12,6 +12,12 @@
     <div th:if="${vacancies.isEmpty()}" class="alert alert-warning" role="alert">
         Список вакансий пуст!
     </div>
+    <!--Отменить-->
+    <form id="cancelSearchForm" class="text-center" th:method="post" th:action="@{/}">
+        <!--                <input type="hidden" th:value="true" name="isConsumingCancelled">-->
+        <input class="btn btn-md btn-warning mt-3" type="submit" value="Отменить">
+    </form>
+
     <div th:if="${!vacancies.isEmpty()}" id="vacanciesList" class="row align-items-center vh-100 mt-3">
         <div class="col-12 mx-auto">
             <div class="row">
