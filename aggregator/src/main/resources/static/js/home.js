@@ -73,7 +73,7 @@ function onMessageReceived(payload) {
                 progressbarLoader.classList.add('bg-success')
 
                 okButton.style.display = ''
-            } else if (parseInt(progressbarLoader.style.width) === 100) {
+            } else if (parseInt(progressbarLoader.style.width) >= 100) {
                 counter.textContent = 'Готово!'
                 progressbarLoader.style.width = '100%'
             }
