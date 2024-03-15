@@ -7,6 +7,8 @@ const searchVacanciesButton = document.querySelector('#searchVacanciesButton')
 const counter = document.querySelector('#counter')
 const progressbar = document.querySelector('#progressbar')
 const progressbarLoader = document.querySelector('#progressbar-loader')
+const cancelSearchForm = document.querySelector('#cancelSearchForm')
+const okForm = document.querySelector('#okForm')
 
 let stompClient = null;
 let username = null;
@@ -58,8 +60,14 @@ function onMessageReceived(payload) {
             counter.textContent = messageCounter
             progressbarLoader.style.width = messageCounter
             if (progressbarLoader.style.width >= '80%') {
+                counter.classList.remove('text-warning')
+                counter.classList.add('text-success')
+
                 progressbarLoader.classList.remove('bg-warning')
                 progressbarLoader.classList.add('bg-success')
+
+                cancelSearchForm.style.display = 'none'
+                okForm.style.display = ''
             }
             break
     }
@@ -110,6 +118,7 @@ function sendMessage(event) {
         vacancy.style.display = 'none'
         progressbar.style.display = ''
         counter.style.display = ''
+        cancelSearchForm.style.display = ''
 
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(messageContent));
     }

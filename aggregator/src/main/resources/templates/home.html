@@ -106,14 +106,22 @@
         <p id="counter" class="text-warning text-center" style="display: none"></p>
         <div id="progressbar" class="progress" style="display: none">
             <div id="progressbar-loader" class="progress-bar bg-warning" role="progressbar"
-                 aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                 aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+            </div>
+            <!--th:action="@{/stop-consuming-messages}"-->
         </div>
-
-<!--        <form id="buttonCancelSearch" class="text-center" th:action="@{/stop-consuming-messages}" th:method="post"-->
-<!--              style="display: none">-->
-<!--            <input type="hidden" th:value="true" name="isConsumingCancelled">-->
-<!--            <input class="btn btn-md btn-warning mt-3" type="submit" value="Отменить">-->
-<!--        </form>-->
+        <!--Отменить-->
+        <form id="cancelSearchForm" class="text-center" th:method="post"
+              style="display: none">
+            <!--                <input type="hidden" th:value="true" name="isConsumingCancelled">-->
+            <input class="btn btn-md btn-warning mt-3" type="submit" value="Отменить">
+        </form>
+        <!--Ok-->
+        <form id="okForm" class="text-center" th:method="post"
+              style="display: none">
+            <!--                <input type="hidden" th:value="true" name="isConsumingCancelled">-->
+            <input class="btn btn-md btn-success mt-3" type="submit" value="Перейти">
+        </form>
     </div>
 
 
