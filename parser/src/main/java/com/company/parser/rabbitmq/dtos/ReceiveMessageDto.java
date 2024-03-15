@@ -21,7 +21,6 @@ public class ReceiveMessageDto implements Serializable {
     Integer experience;
     Integer cityId;
     Boolean isRemoteAvailable;
-    Boolean isConsumingCancelled;
 
     @Override
     public String toString() {
@@ -34,7 +33,6 @@ public class ReceiveMessageDto implements Serializable {
                 "experience='" + experience + '\'' +
                 "cityId='" + cityId + '\'' +
                 "isRemoteAvailable='" + isRemoteAvailable + '\'' +
-                "isConsumingCancelled='" + isConsumingCancelled + '\'' +
                 '}';
     }
 }

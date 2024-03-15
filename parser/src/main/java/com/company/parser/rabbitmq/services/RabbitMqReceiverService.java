@@ -24,7 +24,6 @@ public class RabbitMqReceiverService {
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(ReceiveMessageDto receiveMessageDto) {
         log.info("RECEIVED: {}", receiveMessageDto.toString());
-        if (receiveMessageDto.getIsConsumingCancelled() == null || !receiveMessageDto.getIsConsumingCancelled()) {
             CompletableFuture<Void> habr = habrParserService
                     .findVacancies(
                             receiveMessageDto.getUsername(),
@@ -58,6 +57,5 @@ public class RabbitMqReceiverService {
                     );
 
             CompletableFuture.allOf(habr, hh, rabota);
-        }
     }
 }

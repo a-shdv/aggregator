@@ -21,19 +21,12 @@ public class HomeController {
     @Value("${constants.heartbeat-url}")
     private String heartbeatUrl;
     private final RestTemplate restTemplate;
-    private final RabbitListenerEndpointRegistry rabbitListenerEndpointRegistry;
     private boolean isParserAvailable;
 
     @GetMapping
     public String home(Model model) {
         model.addAttribute("isParserAvailable", isParserAvailable);
         return "home";
-    }
-
-    @PostMapping
-    public String test() {
-        rabbitListenerEndpointRegistry.getListenerContainer("jh-queue-to-aggregator-id").stop();
-        return "redirect:/";
     }
 
     @Scheduled(initialDelay = 2_000, fixedDelay = 10_000) // TODO поменять fixedDelay

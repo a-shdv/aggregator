@@ -91,9 +91,9 @@
                 </div>
 
                 <!--isConsumingCancelled-->
-                <div>
-                    <input type="hidden" th:value="false" name="isConsumingCancelled">
-                </div>
+<!--                <div>-->
+<!--                    <input type="hidden" th:value="false" name="isConsumingCancelled">-->
+<!--                </div>-->
 
                 <!--Отправка формы-->
                 <input id="searchVacanciesButton" class="btn btn-md btn-warning mt-3" type="submit" value="Найти">
@@ -111,11 +111,11 @@
             <!--th:action="@{/stop-consuming-messages}"-->
         </div>
         <!--Отменить-->
-        <form id="cancelSearchForm" class="text-center" th:method="post" th:action="@{/}"
-              style="display: none">
-            <!--                <input type="hidden" th:value="true" name="isConsumingCancelled">-->
-            <input class="btn btn-md btn-warning mt-3" type="submit" value="Отменить">
-        </form>
+<!--        <form id="cancelSearchForm" class="text-center" th:method="post" th:action="@{/}"-->
+<!--              style="display: none">-->
+<!--            &lt;!&ndash;                <input type="hidden" th:value="true" name="isConsumingCancelled">&ndash;&gt;-->
+<!--            <input class="btn btn-md btn-warning mt-3" type="submit" value="Отменить">-->
+<!--        </form>-->
         <!--Ok-->
         <div style="text-align: center">
             <a id="okButton" th:href="@{/vacancies}" style="display: none" target="_blank">

@@ -36,7 +36,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     private final SimpMessageSendingOperations messageSendingOperations;
 
     @Override
-    @RabbitListener(queues = "${rabbitmq.queue-to-receive}", id = "jh-queue-to-aggregator-id")
+    @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(List<ReceiveMessageDto> receiveMessageDtoList) {
         if (progressbarLoaderCounter >= 100) {
             progressbarLoaderCounter = 0;
