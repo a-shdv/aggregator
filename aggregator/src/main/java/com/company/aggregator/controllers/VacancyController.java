@@ -3,9 +3,7 @@ package com.company.aggregator.controllers;
 import com.company.aggregator.exceptions.VacancyNotFoundException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.models.Vacancy;
-import com.company.aggregator.rabbitmq.dtos.SendMessageDto;
 import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
-import com.company.aggregator.rabbitmq.services.RabbitMqService;
 import com.company.aggregator.services.VacancyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
 import java.util.concurrent.CompletableFuture;
 
 @Controller

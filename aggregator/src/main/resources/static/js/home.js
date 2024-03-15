@@ -24,6 +24,13 @@ function connect(event) {
     }
 }
 
+function disconnect() {
+    if (stompClient !== null) {
+        stompClient.disconnect();
+    }
+    console.log("Disconnected");
+}
+
 function onConnected() {
     // Subscribe to the Public Topic
     stompClient.subscribe('/topic/public', onMessageReceived);
@@ -46,6 +53,8 @@ function onMessageReceived(payload) {
 
     switch (message.type) {
         case 'JOIN':
+            counter.textContent = '0%'
+            progressbarLoader.style.width = '0%'
             sendMessage()
             break
         case 'LEAVE':
@@ -56,7 +65,7 @@ function onMessageReceived(payload) {
             counter.textContent = messageCounter
             progressbarLoader.style.width = messageCounter
 
-            if (parseInt(progressbarLoader.style.width) >= 12 && parseInt(progressbarLoader.style.width) <= 80) {
+            if (parseInt(progressbarLoader.style.width) >= 12 && parseInt(progressbarLoader.style.width) < 60) {
                 counter.classList.remove('text-warning')
                 counter.classList.add('text-success')
 
@@ -64,10 +73,10 @@ function onMessageReceived(payload) {
                 progressbarLoader.classList.add('bg-success')
 
                 okButton.style.display = ''
-            } else if (parseInt(progressbarLoader.style.width) > 80) {
+            } else if (parseInt(progressbarLoader.style.width) >= 75) {
                 counter.textContent = '100%'
                 progressbarLoader.style.width = '100%'
-                stompClient.disconnect()
+
             }
             break
     }
@@ -83,16 +92,22 @@ function sendMessage() {
     const cityId = parseInt(document.querySelector('#cityId').value)
     const isRemoteAvailable = document.querySelector('#isRemoteAvailable').checked
     const type = 'CHAT'
-    const messageContent = {username, title, salary, onlyWithSalary, experience, cityId, isRemoteAvailable, type}
-    if (messageContent && stompClient) {
+    const message = {username, title, salary, onlyWithSalary, experience, cityId, isRemoteAvailable, type}
+    if (message && stompClient) {
         // hide vacancy form and show progressbar, counter
         vacancy.style.display = 'none'
         progressbar.style.display = ''
         counter.style.display = ''
 
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(messageContent));
+        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message));
     }
 }
 
-// window.onload = (event) => {connect(event)}
+// function sendLeaveMessage() {
+//     if (stompClient) {
+//         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify('LEAVE'));
+//     }
+// }
+
+window.addEventListener('unload', disconnect);
 searchVacanciesButton.addEventListener('click', connect)

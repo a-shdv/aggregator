@@ -13,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistry;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -27,21 +25,18 @@ import java.util.List;
 @EnableRabbit
 public class RabbitMqServiceImpl implements RabbitMqService {
 
+    private static int previousProgressbarLoaderCounter = 0;
+    private static int progressbarLoaderCounter = 0;
+    private static boolean previousProgressbarLoaderCounterIsSet = false;
     private final RabbitTemplate rabbitTemplate;
-
     private final RabbitMqProperties rabbitProperties;
     private final VacancyService vacancyService;
     private final UserService userService;
-    private static int progressbarLoaderCounter = 0;
     private final SimpMessageSendingOperations messageSendingOperations;
 
     @Override
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(List<ReceiveMessageDto> receiveMessageDtoList) {
-        if (progressbarLoaderCounter >= 80) {
-            progressbarLoaderCounter = 0;
-        }
-
         User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername());
         log.info("RECEIVED: {}", receiveMessageDtoList);
 //        receiveMessageDtoList
@@ -59,6 +54,15 @@ public class RabbitMqServiceImpl implements RabbitMqService {
         vacancyService.deleteVacanciesByUserAsync(userService.findUserByUsername(sendMessageDto.getUsername()));
         rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), sendMessageDto);
         log.info("SENT: {}", sendMessageDto);
+    }
+
+    @Scheduled(initialDelay = 2_000, fixedDelay = 10_000)
+    public void checkProgressbarLoaderCounter() {
+        if (previousProgressbarLoaderCounter == progressbarLoaderCounter) {
+            progressbarLoaderCounter = 0;
+        }
+        previousProgressbarLoaderCounter = progressbarLoaderCounter;
+
     }
 }
 

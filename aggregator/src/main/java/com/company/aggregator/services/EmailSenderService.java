@@ -18,17 +18,17 @@ import java.io.FileNotFoundException;
 @Service
 @Slf4j
 public class EmailSenderService {
-    private final JavaMailSender emailSender;
+    public static final String attachment = "/Users/a-shdv/Desktop/report.pdf";
     @Value("${spring.mail.username}")
     public static String fromAddress = "shadaevlab7@gmail.com";
-    public static final String attachment = "/Users/a-shdv/Desktop/report.pdf";
+    private final JavaMailSender emailSender;
 
     @Autowired
     public EmailSenderService(JavaMailSender emailSender) {
         this.emailSender = emailSender;
     }
 
-    @Async
+    @Async("asyncExecutor")
     public void sendSimpleEmail(String toAddress, String subject, String message) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(fromAddress);
@@ -38,7 +38,7 @@ public class EmailSenderService {
         emailSender.send(simpleMailMessage);
     }
 
-    @Async
+    @Async("asyncExecutor")
     public void sendEmailWithAttachment(String toAddress, String subject, String message, String attachment) throws MessagingException, FileNotFoundException {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);

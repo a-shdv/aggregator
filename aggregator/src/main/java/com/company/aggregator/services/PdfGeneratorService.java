@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class PdfGeneratorService {
-    @Async
+    @Async("asyncExecutor")
     public void generatePdf(List<Favourite> favourites, String path) {
         Document document = new Document();
         try {

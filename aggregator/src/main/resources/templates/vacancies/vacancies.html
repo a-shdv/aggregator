@@ -22,6 +22,7 @@
     .page-link {
         color: #ffc107
     }
+
     .page-link:hover {
         color: #ffc107
     }
@@ -35,40 +36,40 @@
 
 <!--Список вакансий-->
 <div class="container mt-5">
-    <div th:if="${error}" th:text="${error}" style="color: red"></div>
-    <div th:if="${success}" th:text="${success}" style="color: green"></div>
+    <div style="color: red" th:if="${error}" th:text="${error}"></div>
+    <div style="color: green" th:if="${success}" th:text="${success}"></div>
     <div style="height: 10vh;"></div>
-    <div th:if="${vacancies.isEmpty()}" class="alert alert-warning" role="alert">
+    <div class="alert alert-warning" role="alert" th:if="${vacancies.isEmpty()}">
         Список вакансий пуст!
     </div>
 
-    <div th:if="${!vacancies.isEmpty()}" id="vacanciesList" class="row align-items-center vh-100 mt-3">
+    <div class="row align-items-center vh-100 mt-3" id="vacanciesList" th:if="${!vacancies.isEmpty()}">
         <div class="col-12 mx-auto">
             <div class="row">
                 <h2 class="text-center">Все вакансии</h2>
-                <div th:each="vacancy : ${vacancies}" class="col-lg-3">
+                <div class="col-lg-3" th:each="vacancy : ${vacancies}">
                     <div class="card mb-4" style="width: 18rem; height: 25rem;">
                         <!--Заголовок-->
                         <div class="card-header bg-dark text-center" style="height: 3rem;">
                             <div class="row">
                                 <div class="col-10">
-                                    <a th:href="${vacancy.source}" style="text-decoration: none; color: white"
-                                       target="_blank">
-                                        <h5 class="card-title" th:text="${#strings.abbreviate(vacancy.title, 18)}"
-                                            style="width: auto"></h5>
+                                    <a style="text-decoration: none; color: white" target="_blank"
+                                       th:href="${vacancy.source}">
+                                        <h5 class="card-title" style="width: auto"
+                                            th:text="${#strings.abbreviate(vacancy.title, 18)}"></h5>
                                     </a>
                                 </div>
                                 <div class="col-2">
                                     <form th:action="@{/favourites}" th:method="post" th:object="${favouriteDto}">
-                                        <input type="hidden" name="title" th:value="${vacancy.title}">
-                                        <input type="hidden" name="date" th:value="${vacancy.date}">
-                                        <input type="hidden" name="company" th:value="${vacancy.company}">
-                                        <input type="hidden" name="schedule" th:value="${vacancy.schedule}">
-                                        <input type="hidden" name="source" th:value="${vacancy.source}">
-                                        <input type="hidden" name="logo" th:value="${vacancy.logo}">
+                                        <input name="title" th:value="${vacancy.title}" type="hidden">
+                                        <input name="date" th:value="${vacancy.date}" type="hidden">
+                                        <input name="company" th:value="${vacancy.company}" type="hidden">
+                                        <input name="schedule" th:value="${vacancy.schedule}" type="hidden">
+                                        <input name="source" th:value="${vacancy.source}" type="hidden">
+                                        <input name="logo" th:value="${vacancy.logo}" type="hidden">
 
-                                        <button type="submit" style="background: none; border: none;">
-                                            <img id="starImage" src="/images/star-light.png" alt=""
+                                        <button style="background: none; border: none;" type="submit">
+                                            <img alt="" id="starImage" src="/images/star-light.png"
                                                  style="max-width: 100%; max-height: 100%"
                                                  title="Добавить в избранное">
                                         </button>
@@ -80,11 +81,11 @@
                         <!--Картинка-->
                         <div class="card-body d-flex justify-content-center align-items-center"
                              style="height: 12rem; width: inherit;">
-                            <img th:if="${vacancy.logo != null}" class="card-img-top" th:src="${vacancy.logo}"
-                                 style="max-height: 100%; max-width: 75%;">
-                            <img th:if="${vacancy.logo == null}" class="card-img-top"
-                                 th:src="@{/images/no-image.png}"
-                                 style="max-height: 100%; max-width: 75%;">
+                            <img class="card-img-top" style="max-height: 100%; max-width: 75%;" th:if="${vacancy.logo != null}"
+                                 th:src="${vacancy.logo}">
+                            <img class="card-img-top" style="max-height: 100%; max-width: 75%;"
+                                 th:if="${vacancy.logo == null}"
+                                 th:src="@{/images/no-image.png}">
                         </div>
 
                         <!--Описание вакансии-->
@@ -96,11 +97,11 @@
 
                         <!-- Подробнее кнопка -->
                         <div class="d-flex justify-content-between p-2">
-                            <a th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
-                               th:text="${#strings.arraySplit(vacancy.source, '/')[1]}" target="_blank"></a>
+                            <a target="_blank"
+                               th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}" th:text="${#strings.arraySplit(vacancy.source, '/')[1]}"></a>
 
-                            <a th:href="@{/{id}(id=${vacancy.id})}" class="btn btn-warning mb-2"
-                               style="max-width: 10rem;">Подробнее</a>
+                            <a class="btn btn-warning mb-2" style="max-width: 10rem;"
+                               th:href="@{/{id}(id=${vacancy.id})}">Подробнее</a>
                         </div>
                     </div>
                 </div>
@@ -110,8 +111,8 @@
         <!--Кнопка "Очистить"-->
         <div id="clearButton">
             <form class="mt-5" th:action="@{/vacancies/clear}" th:method="post">
-                <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить"
-                       onclick="confirm('Вы уверены, что хотите очистить список вакансий?')">
+                <input class="btn btn-danger btn-md mb-5" onclick="confirm('Вы уверены, что хотите очистить список вакансий?')" type="submit"
+                       value="Очистить">
             </form>
         </div>
 
@@ -121,10 +122,10 @@
                 <ul class="pagination justify-content-center mt-5 mb-5">
                     <!-- Previous -->
                     <li class="page-item" th:if="${vacancies.hasPrevious()}">
-                        <form th:action="@{/vacancies}" method="get">
-                            <input type="hidden" name="page" th:value="${vacancies.previousPageable().pageNumber}"/>
-                            <input type="hidden" name="size" th:value="${vacancies.previousPageable().pageSize}"/>
-                            <button class="page-link" type="submit" aria-label="Пред">
+                        <form method="get" th:action="@{/vacancies}">
+                            <input name="page" th:value="${vacancies.previousPageable().pageNumber}" type="hidden"/>
+                            <input name="size" th:value="${vacancies.previousPageable().pageSize}" type="hidden"/>
+                            <button aria-label="Пред" class="page-link" type="submit">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Пред</span>
                             </button>
@@ -132,20 +133,21 @@
                     </li>
 
                     <!-- Pages -->
-                    <li class="page-item" th:each="i : ${#numbers.sequence(1, vacancies.totalPages)}" th:class="${i == vacancies.number + 1} ? 'page-item active' : 'page-item'">
-                        <form th:action="@{/vacancies}" method="get">
-                            <input type="hidden" name="page" th:value="${i - 1}"/>
-                            <input type="hidden" name="size" th:value="${vacancies.size}"/>
-                            <button class="page-link" type="submit" th:text="${i}"></button>
+                    <li class="page-item" th:class="${i == vacancies.number + 1} ? 'page-item active' : 'page-item'"
+                        th:each="i : ${#numbers.sequence(1, vacancies.totalPages)}">
+                        <form method="get" th:action="@{/vacancies}">
+                            <input name="page" th:value="${i - 1}" type="hidden"/>
+                            <input name="size" th:value="${vacancies.size}" type="hidden"/>
+                            <button class="page-link" th:text="${i}" type="submit"></button>
                         </form>
                     </li>
 
                     <!-- Next -->
                     <li class="page-item" th:if="${vacancies.hasNext()}">
-                        <form th:action="@{/vacancies}" method="get">
-                            <input type="hidden" name="page" th:value="${vacancies.nextPageable().pageNumber}"/>
-                            <input type="hidden" name="size" th:value="${vacancies.nextPageable().pageSize}"/>
-                            <button class="page-link" type="submit" aria-label="След">
+                        <form method="get" th:action="@{/vacancies}">
+                            <input name="page" th:value="${vacancies.nextPageable().pageNumber}" type="hidden"/>
+                            <input name="size" th:value="${vacancies.nextPageable().pageSize}" type="hidden"/>
+                            <button aria-label="След" class="page-link" type="submit">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">След</span>
                             </button>

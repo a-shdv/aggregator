@@ -72,7 +72,7 @@ public class FavouriteController {
     @PostMapping("/{id}")
     public String deleteFromFavourites(@AuthenticationPrincipal User user, @PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            favouriteService.deleteFromFavourites(user, id);
+            favouriteService.deleteFromFavouritesAsync(user, id);
             redirectAttributes.addFlashAttribute("success", "Вакансия успешно удалена!");
         } catch (FavouriteNotFoundException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -82,7 +82,7 @@ public class FavouriteController {
 
     @PostMapping("/clear")
     public String deleteFavourites(@AuthenticationPrincipal User user) {
-        favouriteService.deleteFavourites(user);
+        favouriteService.deleteFavouritesAsync(user);
         return "redirect:/favourites";
     }
 

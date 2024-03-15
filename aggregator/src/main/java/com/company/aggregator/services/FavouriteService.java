@@ -25,32 +25,31 @@ public class FavouriteService {
     private final FavouriteRepository favouriteRepository;
     private final UserRepository userRepository;
 
-    @Async("jobExecutor")
+    @Async("asyncExecutor")
     @Transactional
     public CompletableFuture<Page<Favourite>> findFavouritesAsync(User user, PageRequest pageRequest) {
         return CompletableFuture.completedFuture(favouriteRepository.findByUser(user, pageRequest));
     }
 
-    @Async("jobExecutor")
+    @Async("asyncExecutor")
     @Transactional
     public void addToFavouritesAsync(User user, Favourite favourite) {
         favourite.setUser(user);
         favouriteRepository.save(favourite);
     }
 
-    @Async("jobExecutor")
+    @Async("asyncExecutor")
     @Transactional
-    public void deleteFavourites(User user) {
+    public void deleteFavouritesAsync(User user) {
         List<Favourite> favourites = favouriteRepository.findByUser(user);
         favourites.clear();
         user.setFavourites(favourites);
         userRepository.save(user);
     }
 
-    //TODO
-    @Async("jobExecutor")
+    @Async("asyncExecutor")
     @Transactional
-    public void deleteFromFavourites(User user, Long id) throws FavouriteNotFoundException {
+    public void deleteFromFavouritesAsync(User user, Long id) throws FavouriteNotFoundException {
         Optional<Favourite> favourite = favouriteRepository.findById(id);
         if (favourite.isEmpty()) {
             throw new FavouriteNotFoundException("Вакансия не найдена!");
@@ -62,13 +61,13 @@ public class FavouriteService {
         favouriteRepository.deleteById(id);
     }
 
-    @Async("jobExecutor")
+    @Async("asyncExecutor")
     @Transactional
     public CompletableFuture<Favourite> findBySourceAsync(String source) {
         return CompletableFuture.completedFuture(favouriteRepository.findBySource(source));
     }
 
-    @Async("jobExecutor")
+    @Async("asyncExecutor")
     @Transactional
     public CompletableFuture<List<Favourite>> findByUser(User user) throws FavouritesIsEmptyException {
         CompletableFuture<List<Favourite>> favourites = CompletableFuture.completedFuture(favouriteRepository.findByUser(user));

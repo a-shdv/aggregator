@@ -22,6 +22,7 @@
     .page-link {
         color: #ffc107
     }
+
     .page-link:hover {
         color: #ffc107
     }
@@ -29,10 +30,11 @@
     input[type=radio], input[type=checkbox] {
         accent-color: #ffc107;
     }
+
     .centered-form {
         display: flex;
         justify-content: center;
-        align-items:center;
+        align-items: center;
         height: 100vh;
     }
 </style>
@@ -41,27 +43,27 @@
 
 <div class="centered-form">
     <form th:action="@{/sign-up}" th:method="post" th:object="${signUpDto}">
-        <div th:if="${error}" th:text="${error}" style="color: red"></div>
-        <div th:if="${success}" th:text="${success}" style="color: green"></div>
+        <div style="color: red" th:if="${error}" th:text="${error}"></div>
+        <div style="color: green" th:if="${success}" th:text="${success}"></div>
         <div class="form-row mb-3">
             <!--Email-->
             <div class="form-group col-xl-12">
                 <label for="email">Электронная почта</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="test@gmail.com">
+                <input class="form-control" id="email" name="email" placeholder="test@gmail.com" type="email">
             </div>
         </div>
         <div class="form-row mb-3">
             <!--Username-->
             <div class="form-group col-xl-12">
                 <label for="username">Имя пользователя</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="test">
+                <input class="form-control" id="username" name="username" placeholder="test" type="text">
             </div>
         </div>
         <div class="form-row mb-3">
             <!--Password-->
             <div class="form-group col-xl-12">
                 <label for="password">Пароль</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="12345678">
+                <input class="form-control" id="password" name="password" placeholder="12345678" type="password">
             </div>
         </div>
 
@@ -69,12 +71,12 @@
             <!--Confirm Password-->
             <div class="form-group col-xl-12">
                 <label for="passwordConfirm">Подтвердите пароль</label>
-                <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm"
-                       placeholder="12345678">
+                <input class="form-control" id="passwordConfirm" name="passwordConfirm" placeholder="12345678"
+                       type="password">
             </div>
         </div>
         <div class="form-row mb-3">
-            <button type="submit" class="btn btn-warning">Зарегистрироваться</button>
+            <button class="btn btn-warning" type="submit">Зарегистрироваться</button>
         </div>
     </form>
 </div>

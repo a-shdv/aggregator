@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -19,75 +20,75 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 @RequiredArgsConstructor
 public class HhRuParserService {
-    private final RabbitMqSenderService rabbitMqSenderService;
     private static final Integer amount = 33;
+    private final RabbitMqSenderService rabbitMqSenderService;
 
+    @Async
     public CompletableFuture<Void> findVacancies(String username, String query, BigDecimal salary, Boolean onlyWithSalary,
                                                  Integer experience, Integer cityId, Boolean isRemoteAvailable) {
-        return CompletableFuture.runAsync(() -> {
-            int currentPage = 0;
-            int previousPage;
+        int currentPage = 0;
+        int previousPage;
 
-            String schedule = isRemoteAvailable ? "&schedule=remote" : "";
-            StringBuilder url = new StringBuilder("https://hh.ru/search/vacancy" +
-                    "?hhtmFrom=main" +
-                    "&hhtmFromLabel=vacancy_search_line" +
-                    "&search_field=name" +
-                    "&search_field=company_name" +
-                    "&search_field=description" +
-                    "&enable_snippets=false" +
-                    "&L_save_area=true" +
-                    "&area=" + parseCityId(cityId) +
-                    "&text=" + query +
-                    "&page=" + currentPage +
-                    "&salary=" + salary +
-                    "&only_with_salary=" + onlyWithSalary +
-                    "&experience=" + parseExperience(experience) +
-                    "&schedule=fullDay" + schedule +
-                    "&customDomain=1");
+        String schedule = isRemoteAvailable ? "&schedule=remote" : "";
+        StringBuilder url = new StringBuilder("https://hh.ru/search/vacancy" +
+                "?hhtmFrom=main" +
+                "&hhtmFromLabel=vacancy_search_line" +
+                "&search_field=name" +
+                "&search_field=company_name" +
+                "&search_field=description" +
+                "&enable_snippets=false" +
+                "&L_save_area=true" +
+                "&area=" + parseCityId(cityId) +
+                "&text=" + query +
+                "&page=" + currentPage +
+                "&salary=" + salary +
+                "&only_with_salary=" + onlyWithSalary +
+                "&experience=" + parseExperience(experience) +
+                "&schedule=fullDay" + schedule +
+                "&customDomain=1");
 
-            Document doc = connectDocumentToUrl(url.toString());
-            Elements elements = null;
-            if (doc != null) {
-                elements = doc
-                        .getElementsByClass("vacancy-serp-content").first() != null ?
-                        doc
-                                .getElementsByClass("vacancy-serp-content").first()
-                                .getElementsByClass("serp-item") : null;
-            }
+        Document doc = connectDocumentToUrl(url.toString());
+        Elements elements = null;
+        if (doc != null) {
+            elements = doc
+                    .getElementsByClass("vacancy-serp-content").first() != null ?
+                    doc
+                            .getElementsByClass("vacancy-serp-content").first()
+                            .getElementsByClass("serp-item") : null;
+        }
 
-            if (elements != null && !elements.isEmpty()) {
-                final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
+        if (elements != null && !elements.isEmpty()) {
+            final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
-                while (currentPage < amount / elements.size()) {
-                    elements.forEach(element -> {
-                        String vacancyUrl = element.getElementsByClass("bloko-link").first().absUrl("href");
-                        SendMessageDto sendMessageDto = parseVacancyWebPage(username, vacancyUrl);
-                        sendMessageDtoList.add(sendMessageDto);
-                    });
+            while (currentPage < amount / elements.size()) {
+                elements.forEach(element -> {
+                    String vacancyUrl = element.getElementsByClass("bloko-link").first().absUrl("href");
+                    SendMessageDto sendMessageDto = parseVacancyWebPage(username, vacancyUrl);
+                    sendMessageDtoList.add(sendMessageDto);
+                });
 
-                    previousPage = currentPage;
-                    currentPage++;
-                    url.replace(
-                            url.indexOf("&page=" + previousPage),
-                            url.lastIndexOf("&page=" + previousPage),
-                            "&page=" + currentPage
-                    );
+                previousPage = currentPage;
+                currentPage++;
+                url.replace(
+                        url.indexOf("&page=" + previousPage),
+                        url.lastIndexOf("&page=" + previousPage),
+                        "&page=" + currentPage
+                );
 
-                    if (sendMessageDtoList.size() == elements.size()) {
-                        rabbitMqSenderService.send(sendMessageDtoList);
-                        sendMessageDtoList.clear();
-                    }
-                }
-                // Отправка оставшихся сообщений, если в списке осталось < elements.size() сообщений после парсинга
-                if (!sendMessageDtoList.isEmpty()) {
+                if (sendMessageDtoList.size() == elements.size()) {
                     rabbitMqSenderService.send(sendMessageDtoList);
                     sendMessageDtoList.clear();
                 }
-            } else {
-                log.error("Could not parse elements");
             }
-        });
+            // Отправка оставшихся сообщений, если в списке осталось < elements.size() сообщений после парсинга
+            if (!sendMessageDtoList.isEmpty()) {
+                rabbitMqSenderService.send(sendMessageDtoList);
+                sendMessageDtoList.clear();
+            }
+        } else {
+            log.error("Could not parse elements");
+        }
+        return null;
     }
 
     private int parseCityId(int cityId) {
