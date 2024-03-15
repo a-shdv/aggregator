@@ -103,9 +103,10 @@
 
     <!--Прогресс бар-->
     <div class="container justify-content-center align-items-center mt-5 mb-5">
-        <div id="progressbar" class="progress hidden">
+        <p id="counter" class="text-warning text-center" style="display: none"></p>
+        <div id="progressbar" class="progress" style="display: none">
             <div id="progressbar-loader" class="progress-bar bg-warning" role="progressbar"
-                 aria-valuemin="0" aria-valuemax="60" style="width: 0%;"></div>
+                 aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
         </div>
 
 <!--        <form id="buttonCancelSearch" class="text-center" th:action="@{/stop-consuming-messages}" th:method="post"-->

@@ -3,11 +3,14 @@
 const vacancy = document.querySelector('#vacancy')
 const vacancyForm = document.querySelector('#vacancyForm')
 const searchVacanciesButton = document.querySelector('#searchVacanciesButton')
+
+const counter = document.querySelector('#counter')
 const progressbar = document.querySelector('#progressbar')
 const progressbarLoader = document.querySelector('#progressbar-loader')
 
 let stompClient = null;
 let username = null;
+let isFirstStart = true;
 
 function connect(event) {
     username = document.querySelector('#username').value;
@@ -31,7 +34,7 @@ function onConnected() {
         JSON.stringify({sender: username, type: 'JOIN'})
     )
 
-    // connectingElement.classList.add('hidden');
+    localStorage.setItem('username', username);
 }
 
 function onError(error) {
@@ -50,8 +53,15 @@ function onMessageReceived(payload) {
         case 'LEAVE':
             console.log('left')
             break
-        default:
-            console.log('default')
+        case 'RECEIVE':
+            let messageCounter = message.counter + '%'
+            counter.textContent = messageCounter
+            progressbarLoader.style.width = messageCounter
+            if (progressbarLoader.style.width >= '80%') {
+                progressbarLoader.classList.remove('bg-warning')
+                progressbarLoader.classList.add('bg-success')
+            }
+            break
     }
     // let messageElement = document.createElement('li');
     //
@@ -96,9 +106,10 @@ function sendMessage(event) {
     const type = 'CHAT'
     const messageContent = {username, title, salary, onlyWithSalary, experience, cityId, isRemoteAvailable, type}
     if (messageContent && stompClient) {
-        // hide vacancy form and show progressbar
+        // hide vacancy form and show progressbar, counter
         vacancy.style.display = 'none'
         progressbar.style.display = ''
+        counter.style.display = ''
 
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(messageContent));
     }

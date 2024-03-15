@@ -27,7 +27,6 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class VacancyController {
     private final VacancyService vacancyService;
-    private final RabbitMqService rabbitMqService;
     private final RabbitTemplate rabbitTemplate;
     private final RabbitMqProperties rabbitProperties;
 
@@ -63,20 +62,20 @@ public class VacancyController {
     }
 
 
-    @PostMapping
-    public String findVacancies(@AuthenticationPrincipal User user, String title, BigDecimal salary, boolean onlyWithSalary,
-                                int experience, int cityId, boolean isRemoteAvailable) {
-        rabbitMqService.send(SendMessageDto.builder()
-                .username(user.getUsername())
-                .title(title)
-                .salary(salary)
-                .onlyWithSalary(onlyWithSalary)
-                .experience(experience)
-                .cityId(cityId)
-                .isRemoteAvailable(isRemoteAvailable)
-                .build());
-        return "redirect:/vacancies";
-    }
+//    @PostMapping
+//    public String findVacancies(@AuthenticationPrincipal User user, String title, BigDecimal salary, boolean onlyWithSalary,
+//                                int experience, int cityId, boolean isRemoteAvailable) {
+//        rabbitMqService.send(SendMessageDto.builder()
+//                .username(user.getUsername())
+//                .title(title)
+//                .salary(salary)
+//                .onlyWithSalary(onlyWithSalary)
+//                .experience(experience)
+//                .cityId(cityId)
+//                .isRemoteAvailable(isRemoteAvailable)
+//                .build());
+//        return "redirect:/vacancies";
+//    }
 
 
     @PostMapping("/clear")
