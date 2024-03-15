@@ -80,6 +80,8 @@ function onMessageReceived(payload) {
 }
 
 function sendMessage(event) {
+    window.onbeforeunload = () => "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
+
     const title = document.querySelector("#title").value
     const salary = document.querySelector('#salary').value
     const onlyWithSalary = document.querySelector('#onlyWithSalary').checked
