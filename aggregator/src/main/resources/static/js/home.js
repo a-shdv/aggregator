@@ -49,7 +49,7 @@ function onMessageReceived(payload) {
 
     switch (message.type) {
         case 'JOIN':
-            console.log('joined')
+            sendMessage()
             break
         case 'LEAVE':
             console.log('left')
@@ -109,6 +109,6 @@ function cancelSearch() {
     stompClient.disconnect()
 }
 
-window.onload = (event) => {connect(event)}
-searchVacanciesButton.addEventListener('click', sendMessage)
+// window.onload = (event) => {connect(event)}
+searchVacanciesButton.addEventListener('click', connect)
 cancelSearchForm.addEventListener('click', cancelSearch)
