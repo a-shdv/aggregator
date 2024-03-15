@@ -117,11 +117,17 @@
             <input class="btn btn-md btn-warning mt-3" type="submit" value="Отменить">
         </form>
         <!--Ok-->
-        <form id="okForm" class="text-center" th:method="post"
-              style="display: none">
-            <!--                <input type="hidden" th:value="true" name="isConsumingCancelled">-->
-            <input class="btn btn-md btn-success mt-3" type="submit" value="Перейти">
-        </form>
+        <div style="text-align: center">
+            <a id="okButton" th:href="@{/vacancies}" style="display: none" target="_blank">
+                <input class="btn btn-md btn-success mt-3 text-center" type="button" value="Перейти">
+            </a>
+        </div>
+
+<!--        <form id="okForm" class="text-center" th:method="post"-->
+<!--              style="display: none">-->
+<!--            &lt;!&ndash;                <input type="hidden" th:value="true" name="isConsumingCancelled">&ndash;&gt;-->
+<!--            <input class="btn btn-md btn-success mt-3" type="submit" value="Перейти">-->
+<!--        </form>-->
     </div>
 
 

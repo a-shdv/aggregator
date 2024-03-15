@@ -8,11 +8,10 @@ const counter = document.querySelector('#counter')
 const progressbar = document.querySelector('#progressbar')
 const progressbarLoader = document.querySelector('#progressbar-loader')
 const cancelSearchForm = document.querySelector('#cancelSearchForm')
-const okForm = document.querySelector('#okForm')
+const okButton = document.querySelector('#okButton')
 
 let stompClient = null;
 let username = null;
-let isFirstStart = true;
 
 function connect(event) {
     username = document.querySelector('#username').value;
@@ -59,7 +58,8 @@ function onMessageReceived(payload) {
             let messageCounter = message.counter + '%'
             counter.textContent = messageCounter
             progressbarLoader.style.width = messageCounter
-            if (progressbarLoader.style.width >= '80%') {
+
+            if (parseInt(progressbarLoader.style.width) >= 12 && parseInt(progressbarLoader.style.width) <= 60) {
                 counter.classList.remove('text-warning')
                 counter.classList.add('text-success')
 
@@ -67,41 +67,16 @@ function onMessageReceived(payload) {
                 progressbarLoader.classList.add('bg-success')
 
                 cancelSearchForm.style.display = 'none'
-                okForm.style.display = ''
+                okButton.style.display = ''
+            } else if (parseInt(progressbarLoader.style.width) > 60) {
+                counter.textContent = '100%'
+                progressbarLoader.style.width = '100%'
+                // stompClient.disconnect(() => {
+                //     alert("See you next time!")
+                // });
             }
             break
     }
-    // let messageElement = document.createElement('li');
-    //
-    // if (message.type === 'JOIN') {
-    //     messageElement.classList.add('event-message');
-    //     message.content = message.sender + ' joined!';
-    // } else if (message.type === 'LEAVE') {
-    //     messageElement.classList.add('event-message');
-    //     message.content = message.sender + ' left!';
-    // } else {
-    //     messageElement.classList.add('chat-message');
-    //
-    //     let avatarElement = document.createElement('i');
-    //     let avatarText = document.createTextNode(message.sender[0]);
-    //     avatarElement.appendChild(avatarText);
-    //
-    //     messageElement.appendChild(avatarElement);
-    //
-    //     let usernameElement = document.createElement('span');
-    //     let usernameText = document.createTextNode(message.sender);
-    //     usernameElement.appendChild(usernameText);
-    //     messageElement.appendChild(usernameElement);
-    // }
-    //
-    // let textElement = document.createElement('p');
-    // let messageText = document.createTextNode(message.content);
-    // textElement.appendChild(messageText);
-    //
-    // messageElement.appendChild(textElement);
-    //
-    // messageArea.appendChild(messageElement);
-    // messageArea.scrollTop = messageArea.scrollHeight;
 }
 
 function sendMessage(event) {
@@ -125,5 +100,5 @@ function sendMessage(event) {
     event.preventDefault();
 }
 
-window.onload = (event) => connect(event)
+window.onload = (event) => {connect(event)}
 searchVacanciesButton.addEventListener('click', sendMessage)
