@@ -1,4 +1,4 @@
-package com.company.aggregator.dtos;
+package com.company.aggregator.websockets.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WebsocketDto {
-    Integer counter;
+public class WebSocketSendMessageDto {
+    String content;
     String type;
 }

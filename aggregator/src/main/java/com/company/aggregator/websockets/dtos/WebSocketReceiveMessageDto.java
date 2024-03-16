@@ -8,7 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 //model to create communicate between clients and server
-public class ProgressBarMessageDto {
+public class WebSocketReceiveMessageDto {
 
     private MessageType type;
     private String content;

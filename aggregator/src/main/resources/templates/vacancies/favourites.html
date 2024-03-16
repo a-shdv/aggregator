@@ -55,8 +55,18 @@
             </tr>
             </thead>
             <tbody>
-            <div style="color: red" th:if="${error}" th:text="${error}"></div>
-            <div style="color: green" th:if="${success}" th:text="${success}"></div>
+            <div class="mb-3 mt-3">
+
+                <div id="spinner" style="display: none">
+                    <div class="spinner-border text-warning" role="status">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+
+                <div style="color: red; display: none;" id="error">Ошибка!</div>
+                <div style="color: green; display: none;" id="success">Успех!</div>
+            </div>
+
             <tr style=" border-bottom: transparent" th:each="favourite : ${favourites}"
                 th:unless="${#lists.isEmpty(favourites)}">
                 <!--Картинка-->
@@ -93,8 +103,10 @@
     </div>
     <div class="row mb-2">
         <div>
-            <form th:action="@{/favourites/generate-pdf}" th:method="post">
-                <button class="btn btn-md btn-warning" th:text="'Сформировать PDF'" type="submit"></button>
+            <form th:action="@{/favourites/generate-pdf-and-send-to-email}" th:method="post">
+                <input id="username" th:value="${#authentication.principal.username}" type="hidden">
+
+                <button id="pdfEmailButton" class="btn btn-md btn-warning" th:text="'Сформировать PDF'" type="submit"></button>
             </form>
         </div>
     </div>
@@ -146,5 +158,6 @@
     </form>
 </div>
 <div th:insert="~{/partials/footer :: footer}"></div>
+<script th:inline="javascript" th:src="@{/js/favourites.js}"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 package com.company.aggregator.websockets.listeners;
 
-import com.company.aggregator.websockets.dtos.ProgressBarMessageDto;
+import com.company.aggregator.websockets.dtos.WebSocketReceiveMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -30,11 +30,11 @@ public class WebSocketEventListener {
             if (username != null) {
                 log.info("User Disconnected : " + username);
 
-                ProgressBarMessageDto progressBarMessageDto = new ProgressBarMessageDto();
-                progressBarMessageDto.setType(ProgressBarMessageDto.MessageType.LEAVE);
-                progressBarMessageDto.setSender(username);
+                WebSocketReceiveMessageDto webSocketReceiveMessageDto = new WebSocketReceiveMessageDto();
+                webSocketReceiveMessageDto.setType(WebSocketReceiveMessageDto.MessageType.LEAVE);
+                webSocketReceiveMessageDto.setSender(username);
 
-                messageSendingOperations.convertAndSend("/topic/public", progressBarMessageDto);
+                messageSendingOperations.convertAndSend("/topic/public", webSocketReceiveMessageDto);
             }
         }
     }

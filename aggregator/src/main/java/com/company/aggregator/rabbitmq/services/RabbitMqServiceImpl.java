@@ -1,7 +1,7 @@
 package com.company.aggregator.rabbitmq.services;
 
 
-import com.company.aggregator.dtos.WebsocketDto;
+import com.company.aggregator.websockets.dtos.WebSocketSendMessageDto;
 import com.company.aggregator.models.User;
 import com.company.aggregator.rabbitmq.dtos.ReceiveMessageDto;
 import com.company.aggregator.rabbitmq.dtos.SendMessageDto;
@@ -27,7 +27,6 @@ public class RabbitMqServiceImpl implements RabbitMqService {
 
     private static int previousProgressbarLoaderCounter = 0;
     private static int progressbarLoaderCounter = 0;
-    private static boolean previousProgressbarLoaderCounterIsSet = false;
     private final RabbitTemplate rabbitTemplate;
     private final RabbitMqProperties rabbitProperties;
     private final VacancyService vacancyService;
@@ -45,7 +44,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
             vacancyService.saveMessageListAsync(receiveMessageDtoList, user);
         }
         progressbarLoaderCounter += receiveMessageDtoList.size();
-        messageSendingOperations.convertAndSend("/topic/public", WebsocketDto.builder().counter(progressbarLoaderCounter).type("RECEIVE").build());
+        messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(progressbarLoaderCounter)).type("RECEIVE").build());
     }
 
     @Override
@@ -59,7 +58,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     public void checkProgressbarLoaderCounter() {
         if (previousProgressbarLoaderCounter == progressbarLoaderCounter) {
             progressbarLoaderCounter = 0;
-            messageSendingOperations.convertAndSend("/topic/public", WebsocketDto.builder().counter(100).type("RECEIVE").build());
+            messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(100)).type("RECEIVE").build());
         }
         previousProgressbarLoaderCounter = progressbarLoaderCounter;
 

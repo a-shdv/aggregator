@@ -61,7 +61,7 @@ function onMessageReceived(payload) {
             console.log('left')
             break
         case 'RECEIVE':
-            let messageCounter = message.counter + '%'
+            let messageCounter = message.content + '%'
             counter.textContent = messageCounter
             progressbarLoader.style.width = messageCounter
 
