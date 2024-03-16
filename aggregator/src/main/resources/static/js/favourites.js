@@ -9,6 +9,8 @@ let username = null;
 function connect(event) {
     event.preventDefault();
 
+    spinner.style.display = ''
+
     username = document.querySelector('#username').value;
     if (username) {
         const socket = new SockJS('/ws');
@@ -22,6 +24,7 @@ function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
+    // window.removeEventListener('unload')
     console.log("Disconnected");
 }
 
@@ -64,13 +67,13 @@ function onMessageReceived(payload) {
                     success.style.display = ''
                     break
             }
+            disconnect()
             break
     }
 }
 
 function sendMessage() {
     if (stompClient) {
-        spinner.style.display = ''
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(''));
     }
     // window.onbeforeunload = () => "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
@@ -99,5 +102,5 @@ function sendMessage() {
 //     }
 // }
 //
-// window.addEventListener('unload', disconnect);
+window.addEventListener('unload', disconnect);
 pdfEmailButton.addEventListener('click', connect)

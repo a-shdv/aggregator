@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 @Slf4j
 public class HabrParserService {
-    private static final Integer amount = 33;
+    private static final Integer amount = 10;
     private final RabbitMqSenderService rabbitMqSenderService;
 
     @Async

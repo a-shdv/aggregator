@@ -1,13 +1,13 @@
 package com.company.aggregator.rabbitmq.services;
 
 
-import com.company.aggregator.websockets.dtos.WebSocketSendMessageDto;
 import com.company.aggregator.models.User;
 import com.company.aggregator.rabbitmq.dtos.ReceiveMessageDto;
 import com.company.aggregator.rabbitmq.dtos.SendMessageDto;
 import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
 import com.company.aggregator.services.UserService;
 import com.company.aggregator.services.VacancyService;
+import com.company.aggregator.websockets.dtos.WebSocketSendMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
@@ -51,17 +51,17 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     public void send(SendMessageDto sendMessageDto) {
         vacancyService.deleteVacanciesByUserAsync(userService.findUserByUsername(sendMessageDto.getUsername()));
         rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), sendMessageDto);
+        messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(0)).type("RECEIVE").build());
         log.info("SENT: {}", sendMessageDto);
     }
 
     @Scheduled(fixedRate = 10_000)
     public void checkProgressbarLoaderCounter() {
-        if (previousProgressbarLoaderCounter == progressbarLoaderCounter) {
+        if (previousProgressbarLoaderCounter == progressbarLoaderCounter ) {
             progressbarLoaderCounter = 0;
             messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(100)).type("RECEIVE").build());
         }
         previousProgressbarLoaderCounter = progressbarLoaderCounter;
-
     }
 }
 

@@ -29,6 +29,7 @@ function disconnect() {
         stompClient.disconnect();
     }
     console.log("Disconnected");
+    window.removeEventListener('unload', disconnect);
 }
 
 function onConnected() {
@@ -76,6 +77,7 @@ function onMessageReceived(payload) {
             } else if (parseInt(progressbarLoader.style.width) >= 100) {
                 counter.textContent = 'Готово!'
                 progressbarLoader.style.width = '100%'
+                disconnect()
             }
             break
     }

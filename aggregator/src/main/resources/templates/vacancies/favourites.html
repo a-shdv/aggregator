@@ -61,10 +61,11 @@
                     <div class="spinner-border text-warning" role="status">
                         <span class="sr-only"></span>
                     </div>
+                    <p class="text-warning">Пожалуйста, подождите. Идет формирование отчета...</p>
                 </div>
 
-                <div style="color: red; display: none;" id="error">Ошибка!</div>
-                <div style="color: green; display: none;" id="success">Успех!</div>
+                <div style="color: red; display: none;" id="error">При формировании отчета произошла ошибка!</div>
+                <div style="color: green; display: none;" id="success">Отчет успешно сформирован и отправлен на почту!</div>
             </div>
 
             <tr style=" border-bottom: transparent" th:each="favourite : ${favourites}"
