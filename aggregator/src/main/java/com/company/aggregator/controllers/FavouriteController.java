@@ -1,7 +1,6 @@
 package com.company.aggregator.controllers;
 
 import com.company.aggregator.dtos.FavouriteDto;
-import com.company.aggregator.exceptions.FavouriteAlreadyExistsException;
 import com.company.aggregator.exceptions.FavouriteNotFoundException;
 import com.company.aggregator.exceptions.FavouritesIsEmptyException;
 import com.company.aggregator.models.Favourite;
@@ -24,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Controller
 @RequiredArgsConstructor
@@ -47,8 +47,8 @@ public class FavouriteController {
         if (success != null) {
             model.addAttribute("success", success);
         }
-        CompletableFuture<Page<Favourite>> favourites = favouriteService.findFavouritesAsync(user, PageRequest.of(page, size)); // TODO вылетает
-        model.addAttribute("favourites", favourites.join());
+        Page<Favourite> favourites = favouriteService.findFavouritesAsync(user, PageRequest.of(page, size)).join();
+        model.addAttribute("favourites", favourites);
         return "vacancies/favourites";
     }
 
@@ -56,15 +56,19 @@ public class FavouriteController {
     public String addToFavourites(@AuthenticationPrincipal User user,
                                   @ModelAttribute("favouriteDto") FavouriteDto favouriteDto,
                                   RedirectAttributes redirectAttributes) {
-        try {
-            favouriteService.addToFavouritesAsync(user, FavouriteDto.toFavourite(favouriteDto));
-        } catch (FavouriteAlreadyExistsException e) {
-            log.info(e.getMessage());
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
-//        redirectAttributes.addFlashAttribute("success", "Вакансия была добавлена в избранное " + favouriteDto.getSource());
+        CompletableFuture<Void> future = favouriteService.addToFavouritesAsync(user, FavouriteDto.toFavourite(favouriteDto));
+        future.handle((res, ex) -> {
+            if (ex != null) {
+                log.info(ex.getMessage());
+                redirectAttributes.addFlashAttribute("error", ex.getMessage());
+            } else {
+                redirectAttributes.addFlashAttribute("success", "Вакансия была успешно добавлена в избранное!");
+            }
+            return null;
+        }).join();
         return "redirect:/vacancies";
     }
+
 
     @PostMapping("/{id}")
     public String deleteFromFavourites(@AuthenticationPrincipal User user, @PathVariable Long id, RedirectAttributes redirectAttributes) {

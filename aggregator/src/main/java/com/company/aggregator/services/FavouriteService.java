@@ -34,12 +34,19 @@ public class FavouriteService {
 
     @Async("asyncExecutor")
     @Transactional
-    public void addToFavouritesAsync(User user, Favourite favourite) throws FavouriteAlreadyExistsException {
-        if (favouriteRepository.findBySource(favourite.getSource()) != null) {
-            throw new FavouriteAlreadyExistsException("Вакансия уже существует в избранном " + favourite.getSource());
+    public CompletableFuture<Void> addToFavouritesAsync(User user, Favourite favourite) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        try {
+            if (favouriteRepository.findBySource(favourite.getSource()) != null) {
+                throw new FavouriteAlreadyExistsException("Вакансия уже существует в избранном " + favourite.getSource());
+            }
+            favourite.setUser(user);
+            favouriteRepository.save(favourite);
+            future.complete(null);
+        } catch (FavouriteAlreadyExistsException e) {
+            future.completeExceptionally(e);
         }
-        favourite.setUser(user);
-        favouriteRepository.save(favourite);
+        return future;
     }
 
     @Async("asyncExecutor")

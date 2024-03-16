@@ -98,18 +98,18 @@ public class UserService implements UserDetailsService {
 
     @Async("asyncExecutor")
     @Transactional
-    public void block(UserLockStatusDto userLockStatusDto) {
+    public CompletableFuture<User> block(UserLockStatusDto userLockStatusDto) {
         User user = (User) loadUserByUsername(userLockStatusDto.getUsername());
         user.setAccountNonLocked(false);
-        userRepository.save(user);
+        return CompletableFuture.completedFuture(userRepository.save(user));
     }
 
     @Async("asyncExecutor")
     @Transactional
-    public void unblock(UserLockStatusDto userLockStatusDto) {
+    public CompletableFuture<User> unblock(UserLockStatusDto userLockStatusDto) {
         User user = (User) loadUserByUsername(userLockStatusDto.getUsername());
         user.setAccountNonLocked(true);
-        userRepository.save(user);
+        return CompletableFuture.completedFuture(userRepository.save(user));
     }
 
     @Override
