@@ -109,8 +109,8 @@
         </div>
 
         <!--Кнопка "Очистить"-->
-        <div id="clearButton">
-            <form class="mt-5" th:action="@{/vacancies/clear}" th:method="post">
+        <div id="">
+            <form id="clearVacanciesForm" onsubmit="return confirmClearVacanciesForm()" class="mt-5" th:action="@{/vacancies/clear}" th:method="post">
                 <input class="btn btn-danger btn-md mb-5" type="submit"
                        value="Очистить">
             </form>
@@ -161,5 +161,7 @@
 </div>
 
 <div th:insert="~{/partials/footer :: footer}"></div>
+
+<script th:inline="javascript" th:src="@{/js/vacancies.js}"></script>
 </body>
 </html>
