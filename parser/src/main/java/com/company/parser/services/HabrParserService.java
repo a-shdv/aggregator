@@ -89,7 +89,7 @@ public class HabrParserService {
                 sendMessageDtoList.clear();
             }
         }
-        return null;
+        return CompletableFuture.completedFuture(null);
     }
 
     private int parseCityId(int cityId) {

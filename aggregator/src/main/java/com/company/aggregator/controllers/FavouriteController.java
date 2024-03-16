@@ -1,7 +1,6 @@
 package com.company.aggregator.controllers;
 
 import com.company.aggregator.dtos.FavouriteDto;
-import com.company.aggregator.exceptions.FavouriteNotFoundException;
 import com.company.aggregator.exceptions.FavouritesIsEmptyException;
 import com.company.aggregator.models.Favourite;
 import com.company.aggregator.models.User;
@@ -23,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Controller
 @RequiredArgsConstructor
@@ -72,35 +70,61 @@ public class FavouriteController {
 
     @PostMapping("/{id}")
     public String deleteFromFavourites(@AuthenticationPrincipal User user, @PathVariable Long id, RedirectAttributes redirectAttributes) {
-        try {
-            favouriteService.deleteFromFavouritesAsync(user, id);
-            redirectAttributes.addFlashAttribute("success", "Вакансия успешно удалена!");
-        } catch (FavouriteNotFoundException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
+        CompletableFuture<Void> future = favouriteService.deleteFromFavouritesAsync(user, id);
+        future.handle((res, ex) -> {
+            if (ex != null) {
+                log.info(ex.getMessage());
+                redirectAttributes.addFlashAttribute("error", ex.getMessage());
+            } else {
+                redirectAttributes.addFlashAttribute("success", "Вакансия успешно удалена!");
+            }
+            return null;
+        }).join();
         return "redirect:/favourites";
     }
 
     @PostMapping("/clear")
     public String deleteFavourites(@AuthenticationPrincipal User user) {
-        favouriteService.deleteFavouritesAsync(user);
+        favouriteService.deleteFavouritesAsync(user).join();
         return "redirect:/favourites";
     }
 
     @PostMapping("/generate-pdf")
-    public String generatePdf(@AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
-        String message;
+    public String generatePdfAndSendToEmail(@AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
         String pdfPath = System.getProperty("user.home") + "/Downloads/report-" + UUID.randomUUID() + ".pdf";
-        try {
-            List<Favourite> favourites = favouriteService.findByUser(user).join();
-            pdfGeneratorService.generatePdf(favourites, pdfPath);
-//            emailSenderService.sendEmailWithAttachment(user.getEmail(), "Избранные вакансии", "", pdfPath);
-            emailSenderService.sendEmailWithAttachment("shadaev2001@icloud.com", "Избранные вакансии", "", pdfPath);
-            message = "Pdf успешно сгенерирован и отправлен на почту!";
-        } catch (MessagingException | FileNotFoundException | FavouritesIsEmptyException e) {
-            message = e.getMessage();
-        }
-        redirectAttributes.addFlashAttribute("success", message);
+
+        CompletableFuture.supplyAsync(() -> {
+                    List<Favourite> favourites = null;
+                    try {
+                        favourites = favouriteService.findByUser(user);
+                    } catch (FavouritesIsEmptyException e) {
+                        future.completeExceptionally(e);
+                    }
+
+                    return favourites;
+                })
+                .thenAccept((favourites) -> pdfGeneratorService
+                        .generatePdf(favourites, pdfPath))
+                .thenRun(() -> {
+                    try {
+                        emailSenderService.sendEmailWithAttachment("shadaev2001@icloud.com", "Избранные вакансии", "", pdfPath);
+                        future.complete(null);
+                    } catch (MessagingException | FileNotFoundException e) {
+                        future.completeExceptionally(e);
+                    }
+                });
+
+
+        future.handle((res, ex) -> {
+            if (ex != null) {
+                redirectAttributes.addFlashAttribute("error", ex.getMessage());
+            } else {
+                redirectAttributes.addFlashAttribute("success", "Pdf успешно сгенерирован и отправлен на почту!");
+            }
+            return null;
+        }).join();
+
         return "redirect:/favourites";
     }
 }

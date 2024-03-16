@@ -53,8 +53,8 @@ public class VacancyController {
         if (success != null) {
             model.addAttribute("success", success);
         }
-        CompletableFuture<Page<Vacancy>> vacancies = vacancyService.findVacanciesAsync(user, PageRequest.of(page, size));
-        model.addAttribute("vacancies", vacancies.join());
+        Page<Vacancy> vacancies = vacancyService.findVacanciesAsync(user, PageRequest.of(page, size)).join();
+        model.addAttribute("vacancies", vacancies);
         return "vacancies/vacancies";
     }
 

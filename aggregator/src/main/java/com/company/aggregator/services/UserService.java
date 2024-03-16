@@ -54,11 +54,11 @@ public class UserService implements UserDetailsService {
 
     @Async("asyncExecutor")
     @Transactional
-    public void saveUserAsync(User user) {
+    public CompletableFuture<User> saveUserAsync(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(Role.USER));
         user.setAccountNonLocked(true);
-        userRepository.save(user);
+        return CompletableFuture.completedFuture(userRepository.save(user));
     }
 
     @Async("asyncExecutor")
@@ -91,9 +91,9 @@ public class UserService implements UserDetailsService {
 
     @Async("asyncExecutor")
     @Transactional
-    public void changePassword(User user, ChangePasswordDto changePasswordDto) {
+    public CompletableFuture<User> changePassword(User user, ChangePasswordDto changePasswordDto) {
         user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
-        userRepository.save(user);
+        return CompletableFuture.completedFuture(userRepository.save(user));
     }
 
     @Async("asyncExecutor")

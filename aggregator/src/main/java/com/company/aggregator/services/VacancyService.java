@@ -4,7 +4,7 @@ import com.company.aggregator.exceptions.VacancyNotFoundException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.models.Vacancy;
 import com.company.aggregator.rabbitmq.dtos.ReceiveMessageDto;
-import com.company.aggregator.repositories.AggregatorRepository;
+import com.company.aggregator.repositories.VacancyRepository;
 import com.company.aggregator.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,56 +20,56 @@ import java.util.concurrent.CompletableFuture;
 @Service
 @RequiredArgsConstructor
 public class VacancyService {
-    private final AggregatorRepository aggregatorRepository;
+    private final VacancyRepository vacancyRepository;
     private final UserRepository userRepository;
 
     @Async("asyncExecutor")
     @Transactional
     public void saveMessage(ReceiveMessageDto receiveMessageDto) {
-        aggregatorRepository.save(ReceiveMessageDto.toVacancy(receiveMessageDto));
+        vacancyRepository.save(ReceiveMessageDto.toVacancy(receiveMessageDto));
     }
 
 
     @Async("asyncExecutor")
     @Transactional
-    public void saveMessageListAsync(List<ReceiveMessageDto> receiveMessageDtoList, User user) {
+    public CompletableFuture<List<Vacancy>> saveMessageListAsync(List<ReceiveMessageDto> receiveMessageDtoList, User user) {
         List<Vacancy> vacancies = ReceiveMessageDto.toVacancyList(receiveMessageDtoList);
         vacancies.forEach(vacancy -> vacancy.setUser(user));
-        aggregatorRepository.saveAll(vacancies);
+        return CompletableFuture.completedFuture(vacancyRepository.saveAll(vacancies));
     }
 
 
     @Async("asyncExecutor")
     @Transactional
     public CompletableFuture<List<Vacancy>> findVacanciesAsync() {
-        return CompletableFuture.completedFuture(aggregatorRepository.findAll());
+        return CompletableFuture.completedFuture(vacancyRepository.findAll());
     }
 
 
     @Async("asyncExecutor")
     @Transactional
     public CompletableFuture<Page<Vacancy>> findVacanciesAsync(User user, PageRequest pageRequest) {
-        return CompletableFuture.completedFuture(aggregatorRepository.findByUser(user, pageRequest));
+        return CompletableFuture.completedFuture(vacancyRepository.findByUser(user, pageRequest));
     }
 
     @Async("asyncExecutor")
     @Transactional
-    public void deleteVacanciesByUserAsync(User user) {
-        List<Vacancy> vacancies = aggregatorRepository.findByUser(user);
+    public CompletableFuture<User> deleteVacanciesByUserAsync(User user) {
+        List<Vacancy> vacancies = vacancyRepository.findByUser(user);
         vacancies.clear();
         user.setVacancies(vacancies);
-        userRepository.save(user);
+        return CompletableFuture.completedFuture(userRepository.save(user));
     }
 
     public Vacancy findById(Long id) throws VacancyNotFoundException {
-        Optional<Vacancy> vacancy = aggregatorRepository.findById(id);
+        Optional<Vacancy> vacancy = vacancyRepository.findById(id);
         if (vacancy.isEmpty()) {
             throw new VacancyNotFoundException("Вакансия не найдена!");
         }
-        return aggregatorRepository.findById(id).get();
+        return vacancyRepository.findById(id).get();
     }
 
     public Vacancy findBySource(String source) {
-        return aggregatorRepository.findBySource(source);
+        return vacancyRepository.findBySource(source);
     }
 }

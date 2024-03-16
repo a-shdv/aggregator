@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
 import java.io.FileNotFoundException;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
@@ -28,7 +29,6 @@ public class EmailSenderService {
         this.emailSender = emailSender;
     }
 
-    @Async("asyncExecutor")
     public void sendSimpleEmail(String toAddress, String subject, String message) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(fromAddress);
@@ -39,6 +39,16 @@ public class EmailSenderService {
     }
 
     @Async("asyncExecutor")
+    public CompletableFuture<Void> sendSimpleEmailAsync(String toAddress, String subject, String message) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom(fromAddress);
+        simpleMailMessage.setTo(toAddress);
+        simpleMailMessage.setSubject(subject);
+        simpleMailMessage.setText(message);
+        emailSender.send(simpleMailMessage);
+        return CompletableFuture.completedFuture(null);
+    }
+
     public void sendEmailWithAttachment(String toAddress, String subject, String message, String attachment) throws MessagingException, FileNotFoundException {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -49,5 +59,19 @@ public class EmailSenderService {
         FileSystemResource file = new FileSystemResource(ResourceUtils.getFile(attachment));
         messageHelper.addAttachment(attachment, file);
         emailSender.send(mimeMessage);
+    }
+
+    @Async("asyncExecutor")
+    public CompletableFuture<Void> sendEmailWithAttachmentAsync(String toAddress, String subject, String message, String attachment) throws MessagingException, FileNotFoundException {
+        MimeMessage mimeMessage = emailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+        messageHelper.setFrom(fromAddress);
+        messageHelper.setTo(toAddress);
+        messageHelper.setSubject(subject);
+        messageHelper.setText(message);
+        FileSystemResource file = new FileSystemResource(ResourceUtils.getFile(attachment));
+        messageHelper.addAttachment(attachment, file);
+        emailSender.send(mimeMessage);
+        return CompletableFuture.completedFuture(null);
     }
 }

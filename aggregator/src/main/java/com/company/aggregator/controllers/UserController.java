@@ -126,7 +126,7 @@ public class UserController {
             if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmNewPassword())) {
                 throw new PasswordsDoNotMatchException("Пароли не совпадают!");
             }
-            userService.changePassword(user, changePasswordDto);
+            userService.changePassword(user, changePasswordDto).join();
             redirectAttributes.addFlashAttribute("success", "Пароль был успешно изменен!");
         } catch (OldPasswordIsWrongException | PasswordsDoNotMatchException e) {
             log.error(e.getMessage());

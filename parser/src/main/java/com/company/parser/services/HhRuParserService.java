@@ -88,7 +88,7 @@ public class HhRuParserService {
         } else {
             log.error("Could not parse elements");
         }
-        return null;
+        return CompletableFuture.completedFuture(null);
     }
 
     private int parseCityId(int cityId) {

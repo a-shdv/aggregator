@@ -102,7 +102,7 @@ public class RabotaRuParserService {
         } else {
             log.error("Could not parse elements");
         }
-        return null;
+        return CompletableFuture.completedFuture(null);
     }
 
     private String parseExperience(Integer experience) {

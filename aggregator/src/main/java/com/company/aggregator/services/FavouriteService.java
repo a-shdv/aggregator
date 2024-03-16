@@ -51,25 +51,32 @@ public class FavouriteService {
 
     @Async("asyncExecutor")
     @Transactional
-    public void deleteFavouritesAsync(User user) {
+    public CompletableFuture<User> deleteFavouritesAsync(User user) {
         List<Favourite> favourites = favouriteRepository.findListByUser(user);
         favourites.clear();
         user.setFavourites(favourites);
-        userRepository.save(user);
+        return CompletableFuture.completedFuture(userRepository.save(user));
     }
 
     @Async("asyncExecutor")
     @Transactional
-    public void deleteFromFavouritesAsync(User user, Long id) throws FavouriteNotFoundException {
-        Optional<Favourite> favourite = favouriteRepository.findById(id);
-        if (favourite.isEmpty()) {
-            throw new FavouriteNotFoundException("Вакансия не найдена!");
+    public CompletableFuture<Void> deleteFromFavouritesAsync(User user, Long id) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        try {
+            Optional<Favourite> favourite = favouriteRepository.findById(id);
+            if (favourite.isEmpty()) {
+                throw new FavouriteNotFoundException("Вакансия не найдена!");
+            }
+            List<Favourite> favourites = favouriteRepository.findListByUser(user);
+            favourites.remove(favourite.get());
+            user.setFavourites(favourites);
+            userRepository.save(user);
+            favouriteRepository.deleteById(id);
+            future.complete(null);
+        } catch (FavouriteNotFoundException e) {
+            future.completeExceptionally(e);
         }
-        List<Favourite> favourites = favouriteRepository.findListByUser(user);
-        favourites.remove(favourite.get());
-        user.setFavourites(favourites);
-        userRepository.save(user);
-        favouriteRepository.deleteById(id);
+        return CompletableFuture.completedFuture(null);
     }
 
     @Async("asyncExecutor")
@@ -80,9 +87,18 @@ public class FavouriteService {
 
     @Async("asyncExecutor")
     @Transactional
-    public CompletableFuture<List<Favourite>> findByUser(User user) throws FavouritesIsEmptyException {
+    public CompletableFuture<List<Favourite>> findByUserAsync(User user) throws FavouritesIsEmptyException {
         CompletableFuture<List<Favourite>> favourites = CompletableFuture.completedFuture(favouriteRepository.findListByUser(user));
         if (favourites.join().isEmpty()) {
+            throw new FavouritesIsEmptyException("Список избранных вакансий пуст!");
+        }
+        return favourites;
+    }
+
+    @Transactional
+    public List<Favourite> findByUser(User user) throws FavouritesIsEmptyException {
+        List<Favourite> favourites = favouriteRepository.findListByUser(user);
+        if (favourites.isEmpty()) {
             throw new FavouritesIsEmptyException("Список избранных вакансий пуст!");
         }
         return favourites;
