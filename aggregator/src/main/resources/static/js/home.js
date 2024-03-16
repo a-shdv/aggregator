@@ -77,7 +77,7 @@ function onMessageReceived(payload) {
                 counter.textContent = 'Готово!'
                 progressbarLoader.style.width = '100%'
                 disconnect()
-                window.removeEventListener('unload', disconnect)
+                // window.removeEventListener('unload', disconnect)
             }
             break
     }
