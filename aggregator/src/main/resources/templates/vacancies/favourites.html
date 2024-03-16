@@ -141,13 +141,10 @@
     </div>
 
     <!--Кнопка "Очистить"-->
-    <form class="mt-5" th:action="@{/favourites/clear}" th:method="post">
-        <input class="btn btn-danger btn-md mb-5" onclick="confirm()" type="submit" value="Очистить">
+    <form class="mt-5" th:action="@{/favourites/clear}" th:method="post" onsubmit="confirm()">
+        <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить">
     </form>
 </div>
 <div th:insert="~{/partials/footer :: footer}"></div>
-
-<script th:inline="javascript" th:src="@{/js/favourites.js}">
-</script>
 </body>
 </html>
