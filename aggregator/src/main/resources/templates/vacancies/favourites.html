@@ -33,7 +33,8 @@
 </style>
 <body>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
-<div class="row justify-content-center" style="display: flex; justify-content: center; align-items: center; height: 100vh;"
+<div class="row justify-content-center"
+     style="display: flex; justify-content: center; align-items: center; height: 100vh;"
      th:if="${favourites.isEmpty()}">
     <div class="alert alert-warning col-6" role="alert">
         Список избранных вакансий пуст!
@@ -65,7 +66,8 @@
                 </div>
 
                 <div style="color: red; display: none;" id="error">При формировании отчета произошла ошибка!</div>
-                <div style="color: green; display: none;" id="success">Отчет успешно сформирован и отправлен на почту!</div>
+                <div style="color: green; display: none;" id="success">Отчет успешно сформирован и отправлен на почту!
+                </div>
             </div>
 
             <tr style=" border-bottom: transparent" th:each="favourite : ${favourites}"
@@ -107,7 +109,8 @@
             <form th:action="@{/favourites/generate-pdf-and-send-to-email}" th:method="post">
                 <input id="username" th:value="${#authentication.principal.username}" type="hidden">
 
-                <button id="pdfEmailButton" class="btn btn-md btn-warning" th:text="'Сформировать PDF'" type="submit"></button>
+                <button id="pdfEmailButton" class="btn btn-md btn-warning" th:text="'Сформировать PDF'"
+                        type="submit"></button>
             </form>
         </div>
     </div>
@@ -154,9 +157,10 @@
     </div>
 
     <!--Кнопка "Очистить"-->
-    <form class="mt-5" th:action="@{/favourites/clear}" th:method="post" onsubmit="confirm()">
+    <form id="clearFavouritesForm" class="mt-5" th:action="@{/favourites/clear}" th:method="post" onsubmit="return confirmClearFavouritesForm()">
         <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить">
     </form>
+
 </div>
 <div th:insert="~{/partials/footer :: footer}"></div>
 <script th:inline="javascript" th:src="@{/js/favourites.js}"></script>

@@ -46,7 +46,7 @@
     <div class="row align-items-center vh-100 mt-3" id="vacanciesList" th:if="${!vacancies.isEmpty()}">
         <div class="col-12 mx-auto">
             <div class="row">
-                <h2 class="text-center">Все вакансии</h2>
+                <h2 class="text-center mb-5">Все вакансии</h2>
                 <div class="col-lg-3" th:each="vacancy : ${vacancies}">
                     <div class="card mb-4" style="width: 18rem; height: 25rem;">
                         <!--Заголовок-->
@@ -111,7 +111,7 @@
         <!--Кнопка "Очистить"-->
         <div id="clearButton">
             <form class="mt-5" th:action="@{/vacancies/clear}" th:method="post">
-                <input class="btn btn-danger btn-md mb-5" onclick="confirm('Вы уверены, что хотите очистить список вакансий?')" type="submit"
+                <input class="btn btn-danger btn-md mb-5" type="submit"
                        value="Очистить">
             </form>
         </div>

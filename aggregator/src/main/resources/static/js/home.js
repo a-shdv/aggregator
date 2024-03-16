@@ -29,7 +29,6 @@ function disconnect() {
         stompClient.disconnect();
     }
     console.log("Disconnected");
-    window.removeEventListener('unload', disconnect);
 }
 
 function onConnected() {
@@ -78,6 +77,7 @@ function onMessageReceived(payload) {
                 counter.textContent = 'Готово!'
                 progressbarLoader.style.width = '100%'
                 disconnect()
+                window.removeEventListener('unload', disconnect)
             }
             break
     }
@@ -103,12 +103,6 @@ function sendMessage() {
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message));
     }
 }
-
-// function sendLeaveMessage() {
-//     if (stompClient) {
-//         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify('LEAVE'));
-//     }
-// }
 
 window.addEventListener('unload', disconnect);
 searchVacanciesButton.addEventListener('click', connect)

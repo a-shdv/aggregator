@@ -2,6 +2,7 @@ const spinner = document.querySelector('#spinner')
 const pdfEmailButton = document.querySelector('#pdfEmailButton')
 const error = document.querySelector('#error')
 const success = document.querySelector('#success')
+const clearFavouritesForm = document.querySelector('#clearFavouritesForm')
 
 let stompClient = null;
 let username = null;
@@ -24,7 +25,6 @@ function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
-    // window.removeEventListener('unload')
     console.log("Disconnected");
 }
 
@@ -76,31 +76,15 @@ function sendMessage() {
     if (stompClient) {
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(''));
     }
-    // window.onbeforeunload = () => "You have attempted to leave this page.  If you have made any changes to the fields without clicking the Save button, your changes will be lost.  Are you sure you want to exit this page?";
-    //
-    // const title = document.querySelector("#title").value
-    // const salary = document.querySelector('#salary').value
-    // const onlyWithSalary = document.querySelector('#onlyWithSalary').checked
-    // const experience = parseInt(document.querySelector('input[name="experience"]:checked').value)
-    // const cityId = parseInt(document.querySelector('#cityId').value)
-    // const isRemoteAvailable = document.querySelector('#isRemoteAvailable').checked
-    // const type = 'CHAT'
-    // const message = {username, title, salary, onlyWithSalary, experience, cityId, isRemoteAvailable, type}
-    // if (message && stompClient) {
-    //     // hide vacancy form and show progressbar, counter
-    //     vacancy.style.display = 'none'
-    //     progressbar.style.display = ''
-    //     counter.style.display = ''
-    //
-    //     stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message));
-    // }
 }
 
-// function sendLeaveMessage() {
-//     if (stompClient) {
-//         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify('LEAVE'));
-//     }
-// }
-//
+function confirmClearFavouritesForm() {
+    if (confirm('Вы уверены, что хотите очистить список вакансий?')) {
+        clearFavouritesForm.submit();
+    } else {
+        return false;
+    }
+}
+
 window.addEventListener('unload', disconnect);
 pdfEmailButton.addEventListener('click', connect)
