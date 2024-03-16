@@ -42,11 +42,14 @@
     <div class="alert alert-warning" role="alert" th:if="${vacancies.isEmpty()}">
         Список вакансий пуст!
     </div>
+    <div id="alertSuccess" style="display: none" class="alert alert-success" role="alert">
+        Список вакансий очищен!
+    </div>
 
-    <div class="row align-items-center vh-100 mt-3" id="vacanciesList" th:if="${!vacancies.isEmpty()}">
+    <div class="row align-items-center vh-100 mt-3" id="allVacanciesList" th:if="${!vacancies.isEmpty()}">
         <div class="col-12 mx-auto">
             <div class="row">
-                <h2 class="text-center mb-5">Все вакансии</h2>
+                <h2 id="allVacanciesHeader" class="text-center mb-5">Все вакансии</h2>
                 <div class="col-lg-3" th:each="vacancy : ${vacancies}">
                     <div class="card mb-4" style="width: 18rem; height: 25rem;">
                         <!--Заголовок-->
@@ -81,7 +84,8 @@
                         <!--Картинка-->
                         <div class="card-body d-flex justify-content-center align-items-center"
                              style="height: 12rem; width: inherit;">
-                            <img class="card-img-top" style="max-height: 100%; max-width: 75%;" th:if="${vacancy.logo != null}"
+                            <img class="card-img-top" style="max-height: 100%; max-width: 75%;"
+                                 th:if="${vacancy.logo != null}"
                                  th:src="${vacancy.logo}">
                             <img class="card-img-top" style="max-height: 100%; max-width: 75%;"
                                  th:if="${vacancy.logo == null}"
@@ -98,7 +102,8 @@
                         <!-- Подробнее кнопка -->
                         <div class="d-flex justify-content-between p-2">
                             <a target="_blank"
-                               th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}" th:text="${#strings.arraySplit(vacancy.source, '/')[1]}"></a>
+                               th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
+                               th:text="${#strings.arraySplit(vacancy.source, '/')[1]}"></a>
 
                             <a class="btn btn-warning mb-2" style="max-width: 10rem;"
                                th:href="@{/{id}(id=${vacancy.id})}">Подробнее</a>
@@ -109,15 +114,13 @@
         </div>
 
         <!--Кнопка "Очистить"-->
-        <div id="">
-            <form id="clearVacanciesForm" onsubmit="return confirmClearVacanciesForm()" class="mt-5" th:action="@{/vacancies/clear}" th:method="post">
-                <input class="btn btn-danger btn-md mb-5" type="submit"
-                       value="Очистить">
-            </form>
-        </div>
+        <form id="clearVacanciesForm" class="mt-5" th:action="@{/vacancies/clear}" th:method="post">
+            <input id="clearVacanciesButton" class="btn btn-danger btn-md mb-5" type="submit"
+                   value="Очистить">
+        </form>
 
         <!--Пагинация-->
-        <div>
+        <div id="pagination">
             <nav aria-label="...">
                 <ul class="pagination justify-content-center mt-5 mb-5">
                     <!-- Previous -->

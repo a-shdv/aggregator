@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,34 +59,11 @@ public class VacancyController {
         return "vacancies/vacancies";
     }
 
-
-//    @PostMapping
-//    public String findVacancies(@AuthenticationPrincipal User user, String title, BigDecimal salary, boolean onlyWithSalary,
-//                                int experience, int cityId, boolean isRemoteAvailable) {
-//        rabbitMqService.send(SendMessageDto.builder()
-//                .username(user.getUsername())
-//                .title(title)
-//                .salary(salary)
-//                .onlyWithSalary(onlyWithSalary)
-//                .experience(experience)
-//                .cityId(cityId)
-//                .isRemoteAvailable(isRemoteAvailable)
-//                .build());
-//        return "redirect:/vacancies";
-//    }
-
-
     @PostMapping("/clear")
-    public String deleteVacancies(@AuthenticationPrincipal User user) {
+    public ResponseEntity<String> deleteVacancies(@AuthenticationPrincipal User user) {
         vacancyService.deleteVacanciesByUserAsync(user);
-        return "redirect:/vacancies";
+        return ResponseEntity.ok().body("Vacancies cleared successfully");
     }
 
-//    @PostMapping("/stop-consuming-messages")
-//    public String stopConsumingMessages(@RequestParam("isConsumingCancelled") Boolean isConsumingCancelled, RedirectAttributes redirectAttributes) {
-//        SendMessageDto dto = SendMessageDto.builder().isConsumingCancelled(isConsumingCancelled).build();
-//        rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), dto);
-//        log.info("SENT: {}", dto);
-//        return "redirect:/";
-//    }
+
 }
