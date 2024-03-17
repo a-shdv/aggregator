@@ -115,7 +115,7 @@
                                    th:text="${#strings.arraySplit(vacancy.source, '/')[1]}"></a>
 
                                 <a class="btn btn-warning mb-2" style="max-width: 10rem;"
-                                   th:href="@{/{id}(id=${vacancy.id})}">Подробнее</a>
+                                   th:href="@{/vacancies/{id}(id=${vacancy.id})}">Подробнее</a>
                             </div>
                         </div>
                     </div>
