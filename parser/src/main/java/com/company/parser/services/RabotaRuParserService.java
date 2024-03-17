@@ -7,23 +7,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class RabotaRuParserService {
+    private static final Integer amount = 30;
     private final RabbitMqSenderService rabbitMqSenderService;
-    private static final Integer amount = 33;
 
-    //    @Async("jobExecutor")
-    public void findVacancies(String username, String query, BigDecimal salary, Boolean onlyWithSalary,
-                              Integer experience, Integer cityId, Boolean isRemoteAvailable) {
+    @Async
+    public CompletableFuture<Void> findVacancies(String username, String query, BigDecimal salary, Boolean onlyWithSalary,
+                                                 Integer experience, Integer cityId, Boolean isRemoteAvailable) {
         int prevPage;
         int currPage = 1;
         StringBuilder url = new StringBuilder(
@@ -45,7 +47,7 @@ public class RabotaRuParserService {
         if (doc != null) {
             elements = doc.getElementsByClass("r-serp__item r-serp__item_vacancy");
         }
-        if (elements != null) {
+        if (elements != null && !elements.isEmpty()) {
             List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
             while (currPage <= amount / elements.size()) {
@@ -100,6 +102,7 @@ public class RabotaRuParserService {
         } else {
             log.error("Could not parse elements");
         }
+        return CompletableFuture.completedFuture(null);
     }
 
     private String parseExperience(Integer experience) {

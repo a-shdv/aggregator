@@ -17,10 +17,10 @@ public class SendMessageDto implements Serializable {
     String title;
     //    int amount;
     BigDecimal salary;
-    boolean onlyWithSalary;
-    int experience;
-    int cityId;
-    boolean isRemoteAvailable;
+    Boolean onlyWithSalary;
+    Integer experience;
+    Integer cityId;
+    Boolean isRemoteAvailable;
 
     @Override
     public String toString() {

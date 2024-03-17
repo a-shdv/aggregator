@@ -28,13 +28,13 @@ public class AdminController {
 
     @PostMapping("/block")
     public String block(@ModelAttribute UserLockStatusDto userLockStatusDto) {
-        userService.block(userLockStatusDto);
+        userService.block(userLockStatusDto).join();
         return "redirect:/admin";
     }
 
     @PostMapping("/unblock")
     public String unblock(@ModelAttribute UserLockStatusDto userLockStatusDto) {
-        userService.unblock(userLockStatusDto);
+        userService.unblock(userLockStatusDto).join();
         return "redirect:/admin";
     }
 }

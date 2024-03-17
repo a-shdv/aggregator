@@ -1,8 +1,6 @@
 package com.company.aggregator.controllers;
 
 import com.company.aggregator.dtos.FavouriteDto;
-import com.company.aggregator.exceptions.FavouriteAlreadyExistsException;
-import com.company.aggregator.exceptions.FavouriteNotFoundException;
 import com.company.aggregator.exceptions.FavouritesIsEmptyException;
 import com.company.aggregator.models.Favourite;
 import com.company.aggregator.models.User;
@@ -47,60 +45,86 @@ public class FavouriteController {
         if (success != null) {
             model.addAttribute("success", success);
         }
-        CompletableFuture<Page<Favourite>> favourites = favouriteService.findFavouritesAsync(user, PageRequest.of(page, size)); // TODO вылетает
-        model.addAttribute("favourites", favourites.join());
-        return "users/favourites";
+        Page<Favourite> favourites = favouriteService.findFavouritesAsync(user, PageRequest.of(page, size)).join();
+        model.addAttribute("favourites", favourites);
+        return "vacancies/favourites";
     }
 
     @PostMapping
     public String addToFavourites(@AuthenticationPrincipal User user,
                                   @ModelAttribute("favouriteDto") FavouriteDto favouriteDto,
                                   RedirectAttributes redirectAttributes) {
-        try {
-            if (favouriteService.findBySourceAsync(favouriteDto.getSource()).join() != null) {
-                throw new FavouriteAlreadyExistsException("Вакансия уже существует в избранном " + favouriteDto.getSource());
+        CompletableFuture<Void> future = favouriteService.addToFavouritesAsync(user, FavouriteDto.toFavourite(favouriteDto));
+        future.handle((res, ex) -> {
+            if (ex != null) {
+                log.info(ex.getMessage());
+                redirectAttributes.addFlashAttribute("error", ex.getMessage());
+            } else {
+                redirectAttributes.addFlashAttribute("success", "Вакансия была успешно добавлена в избранное!");
             }
-            favouriteService.addToFavouritesAsync(user, FavouriteDto.toFavourite(favouriteDto));
-        } catch (FavouriteAlreadyExistsException e) {
-            log.info(e.getMessage());
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/";
-        }
-        redirectAttributes.addFlashAttribute("success", "Вакансия была добавлена в избранное " + favouriteDto.getSource());
-        return "redirect:/";
+            return null;
+        }).join();
+        return "redirect:/vacancies";
     }
+
 
     @PostMapping("/{id}")
     public String deleteFromFavourites(@AuthenticationPrincipal User user, @PathVariable Long id, RedirectAttributes redirectAttributes) {
-        try {
-            favouriteService.deleteFromFavourites(user, id);
-            redirectAttributes.addFlashAttribute("success", "Вакансия успешно удалена!");
-        } catch (FavouriteNotFoundException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
+        CompletableFuture<Void> future = favouriteService.deleteFromFavouritesAsync(user, id);
+        future.handle((res, ex) -> {
+            if (ex != null) {
+                log.info(ex.getMessage());
+                redirectAttributes.addFlashAttribute("error", ex.getMessage());
+            } else {
+                redirectAttributes.addFlashAttribute("success", "Вакансия успешно удалена!");
+            }
+            return null;
+        }).join();
         return "redirect:/favourites";
     }
 
     @PostMapping("/clear")
     public String deleteFavourites(@AuthenticationPrincipal User user) {
-        favouriteService.deleteFavourites(user);
+        favouriteService.deleteFavouritesAsync(user).join();
         return "redirect:/favourites";
     }
 
-    @PostMapping("/generate-pdf")
-    public String generatePdf(@AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
-        String message;
-        String pdfPath = System.getProperty("user.home") + "/Downloads/report-" + UUID.randomUUID() + ".pdf";
-        try {
-            List<Favourite> favourites = favouriteService.findByUser(user).join();
-            pdfGeneratorService.generatePdf(favourites, pdfPath);
-//            emailSenderService.sendEmailWithAttachment(user.getEmail(), "Избранные вакансии", "", pdfPath);
-            emailSenderService.sendEmailWithAttachment("shadaev2001@icloud.com", "Избранные вакансии", "", pdfPath);
-            message = "Pdf успешно сгенерирован и отправлен на почту!";
-        } catch (MessagingException | FileNotFoundException | FavouritesIsEmptyException e) {
-            message = e.getMessage();
-        }
-        redirectAttributes.addFlashAttribute("success", message);
-        return "redirect:/favourites";
-    }
+//    @PostMapping("/generate-pdf-and-send-to-email")
+//    public String generatePdfAndSendToEmail(@AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
+//        CompletableFuture<Void> future = new CompletableFuture<>();
+//        String pdfPath = System.getProperty("user.home") + "/Downloads/report-" + UUID.randomUUID() + ".pdf";
+//
+//        CompletableFuture.supplyAsync(() -> {
+//                    List<Favourite> favourites = null;
+//                    try {
+//                        favourites = favouriteService.findByUser(user);
+//                    } catch (FavouritesIsEmptyException e) {
+//                        future.completeExceptionally(e);
+//                    }
+//
+//                    return favourites;
+//                })
+//                .thenAccept((favourites) -> pdfGeneratorService
+//                        .generatePdf(favourites, pdfPath))
+//                .thenRun(() -> {
+//                    try {
+//                        emailSenderService.sendEmailWithAttachment("shadaev2001@icloud.com", "Избранные вакансии", "", pdfPath);
+//                        future.complete(null);
+//                    } catch (MessagingException | FileNotFoundException e) {
+//                        future.completeExceptionally(e);
+//                    }
+//                });
+//
+//
+//        future.handle((res, ex) -> {
+//            if (ex != null) {
+//                redirectAttributes.addFlashAttribute("error", ex.getMessage());
+//            } else {
+//                redirectAttributes.addFlashAttribute("success", "Pdf успешно сгенерирован и отправлен на почту!");
+//            }
+//            return null;
+//        }).join();
+//
+//        return "redirect:/favourites";
+//    }
 }

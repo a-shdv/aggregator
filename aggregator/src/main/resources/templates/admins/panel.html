@@ -1,6 +1,37 @@
 <!doctype html>
 <html lang="en">
 <div th:insert="~{/partials/head :: head}"></div>
+<style>
+    ::selection {
+        background: #ffc107;
+        color: #fff
+    }
+
+    form .form-control:focus {
+        box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        -o-box-shadow: none !important;
+        border-color: #ffc107;
+    }
+
+    input[type=radio], input[type=checkbox] {
+        accent-color: #ffc107;
+    }
+
+    .page-link {
+        color: #ffc107
+    }
+
+    .page-link:hover {
+        color: #ffc107
+    }
+
+    input[type=radio], input[type=checkbox] {
+        accent-color: #ffc107;
+    }
+
+</style>
 <body>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 <style>
@@ -30,31 +61,31 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:if="${!#lists.isEmpty(users)}" th:each="user : ${users}" th:object="${user}">
+            <tr th:each="user : ${users}" th:if="${!#lists.isEmpty(users)}" th:object="${user}">
                 <th scope="row" th:text="*{id}"></th>
                 <td th:text="*{email}"></td>
                 <td th:text="*{username}"></td>
                 <td>
                     <th:block th:switch="*{isAccountNonLocked()}">
-                        <div th:case="true" th:text="'Активен'" style="color: green"></div>
-                        <div th:case="false" th:text="'Заблокирован'" style="color: red"></div>
+                        <div style="color: green" th:case="true" th:text="'Активен'"></div>
+                        <div style="color: red" th:case="false" th:text="'Заблокирован'"></div>
                     </th:block>
                 </td>
                 <!--Разблокировать-->
                 <td>
                     <form th:action="@{/admin/unblock}" th:method="post" th:object="${userLockStatusDto}">
-                        <input type="hidden" name="id" th:value="${user.id}">
-                        <input type="hidden" name="email" th:value="${user.getEmail()}">
-                        <input type="hidden" name="username" th:value="${user.getUsername()}">
+                        <input name="id" th:value="${user.id}" type="hidden">
+                        <input name="email" th:value="${user.getEmail()}" type="hidden">
+                        <input name="username" th:value="${user.getUsername()}" type="hidden">
                         <input class="btn btn-success btn-sm" type="submit" value="Разблокировать">
                     </form>
                 </td>
                 <!--Заблокировать-->
                 <td>
                     <form th:action="@{/admin/block}" th:method="post" th:object="${userLockStatusDto}">
-                        <input type="hidden" name="id" th:value="${user.id}">
-                        <input type="hidden" name="email" th:value="${user.getEmail()}">
-                        <input type="hidden" name="username" th:value="${user.getUsername()}">
+                        <input name="id" th:value="${user.id}" type="hidden">
+                        <input name="email" th:value="${user.getEmail()}" type="hidden">
+                        <input name="username" th:value="${user.getUsername()}" type="hidden">
                         <input class="btn btn-sm btn-danger" type="submit" value="Заблокировать">
                     </form>
                 </td>

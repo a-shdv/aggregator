@@ -1,8 +1,36 @@
 <!doctype html>
 <html lang="en">
 <div th:insert="~{/partials/head :: head}"></div>
-<body>
 <style>
+    ::selection {
+        background: #ffc107;
+        color: #fff
+    }
+
+    form .form-control:focus {
+        box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        -o-box-shadow: none !important;
+        border-color: #ffc107;
+    }
+
+    input[type=radio], input[type=checkbox] {
+        accent-color: #ffc107;
+    }
+
+    .page-link {
+        color: #ffc107
+    }
+
+    .page-link:hover {
+        color: #ffc107
+    }
+
+    input[type=radio], input[type=checkbox] {
+        accent-color: #ffc107;
+    }
+
     .centered-form {
         display: flex;
         justify-content: center;
@@ -10,12 +38,13 @@
         height: 100vh;
     }
 </style>
+<body>
 
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 <div class="centered-form">
     <form th:action="@{/sign-in}" th:method="post">
-        <div th:if="${success}" th:text="${success}" style="color: green"></div>
-        <div th:if="${param.error}" style="color: red">
+        <div style="color: green" th:if="${success}" th:text="${success}"></div>
+        <div style="color: red" th:if="${param.error}">
             <th:block th:switch="${param.error.get(0)}">
                 <div th:case="|LockedException|" th:text="'Учетная запись заблокирована!'"></div>
                 <div th:case="|BadCredentialsException|" th:text="'Неправильное имя пользователя или пароль!'"></div>
@@ -26,22 +55,23 @@
             <!--Username-->
             <div class="form-group col-lg-12">
                 <label for="username">Имя пользователя</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="test">
+                <input class="form-control" id="username" name="username" placeholder="test" type="text">
             </div>
         </div>
         <div class="form-row mb-3">
             <!--Password-->
             <div class="form-group col-lg-12">
                 <label for="password">Пароль</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="12345678">
+                <input class="form-control" id="password" name="password" placeholder="12345678" type="password">
             </div>
         </div>
 
         <div class="form-row mb-3">
-            <button type="submit" class="btn btn-dark">Войти</button>
+            <button class="btn btn-dark" type="submit">Войти</button>
         </div>
     </form>
 </div>
 <div th:insert="~{/partials/footer :: footer}"></div>
+<!--<script th:inline="javascript" th:src="@{/js/sign-in.js}"></script>-->
 </body>
 </html>

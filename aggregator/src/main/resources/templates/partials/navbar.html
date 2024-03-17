@@ -14,17 +14,17 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">JobHunter</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
-                    aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <button aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                    data-bs-target="#navbarText" data-bs-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" th:href="@{/}">Главная</a>
+                        <a aria-current="page" class="nav-link active" th:href="@{/}">Главная</a>
                     </li>
-                    <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link active" aria-current="page" th:href="@{/favourites}">Избранное</a>
+                    <li class="nav-item">
+                        <a aria-current="page" class="nav-link active" th:href="@{/vacancies}">Вакансии</a>
                     </li>
                 </ul>
 
@@ -33,37 +33,41 @@
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item dropdown">
 
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-                               aria-expanded="false">Личный кабинет</a>
+                            <a aria-expanded="false" class="nav-link dropdown-toggle"
+                               data-bs-toggle="dropdown">Личный кабинет</a>
 
                             <ul class="dropdown-menu">
                                 <!--Профиль-->
-                                <li><a class="dropdown-item" th:href="@{/account-info}"
-                                       style="text-decoration: none">Профиль</a></li>
+                                <li><a class="dropdown-item" style="text-decoration: none"
+                                       th:href="@{/account-info}">Профиль</a></li>
+
+                                <!--Избранное-->
+                                <li>
+                                    <a class="dropdown-item" style="text-decoration: none" th:href="@{/favourites}">Избранное</a>
+                                </li>
 
                                 <!--Сменить имя пользователя-->
                                 <!--                                <li><a class="dropdown-item" th:href="@{/change-username}"-->
                                 <!--                                       style="text-decoration: none">Сменить имя пользователя</a></li>-->
 
                                 <!--Сменить пароль-->
-                                <li><a class="dropdown-item" th:href="@{/change-password}"
-                                       style="text-decoration: none">Сменить пароль</a></li>
+                                <li><a class="dropdown-item" style="text-decoration: none"
+                                       th:href="@{/change-password}">Сменить пароль</a></li>
 
                                 <!--Панель администратора-->
                                 <div sec:authorize="hasAuthority('ADMIN')">
-                                    <li><a class="dropdown-item" th:href="@{/admin}"
-                                           style="text-decoration: none; color: dimgrey">Панель администратора</a></li>
+                                    <li><a class="dropdown-item" style="text-decoration: none; color: dimgrey"
+                                           th:href="@{/admin}">Панель администратора</a></li>
                                 </div>
 
                                 <!--Выйти-->
                                 <li>
                                     <form class="dropdown-item navbar-text pe-3" th:action="@{/logout}"
                                           th:method="post">
-                                        <input type="submit" value="Выйти"
-                                               style="background: none;	border: none;"/>
+                                        <input style="background: none;	border: none;" type="submit"
+                                               value="Выйти"/>
                                     </form>
                                 </li>
-
                             </ul>
 
                         </li>
@@ -76,9 +80,9 @@
                 </div>
 
                 <div sec:authorize="!isAuthenticated()">
-                    <span class="navbar-text pe-3"><a th:href="@{/sign-up}" style="text-decoration: none">Зарегистрироваться</a></span>
-                    <span class="navbar-text pe-3"><a th:href="@{sign-in}"
-                                                      style="text-decoration: none">Войти</a></span>
+                    <span class="navbar-text pe-3"><a style="text-decoration: none" th:href="@{/sign-up}">Зарегистрироваться</a></span>
+                    <span class="navbar-text pe-3"><a style="text-decoration: none"
+                                                      th:href="@{sign-in}">Войти</a></span>
                 </div>
             </div>
         </div>

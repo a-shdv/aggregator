@@ -17,10 +17,10 @@ public class ReceiveMessageDto implements Serializable {
     String title;
     //    int amount;
     BigDecimal salary;
-    boolean onlyWithSalary;
-    int experience;
-    int cityId;
-    boolean isRemoteAvailable;
+    Boolean isOnlyWithSalary;
+    Integer experience;
+    Integer cityId;
+    Boolean isRemoteAvailable;
 
     @Override
     public String toString() {
@@ -29,7 +29,7 @@ public class ReceiveMessageDto implements Serializable {
                 "title='" + title + '\'' +
 //                "amount='" + amount + '\'' +
                 "salary='" + salary + '\'' +
-                "onlyWithSalary='" + onlyWithSalary + '\'' +
+                "onlyWithSalary='" + isOnlyWithSalary + '\'' +
                 "experience='" + experience + '\'' +
                 "cityId='" + cityId + '\'' +
                 "isRemoteAvailable='" + isRemoteAvailable + '\'' +

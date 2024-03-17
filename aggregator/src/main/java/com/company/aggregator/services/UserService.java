@@ -52,16 +52,16 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    @Async
+    @Async("asyncExecutor")
     @Transactional
-    public void saveUserAsync(User user) {
+    public CompletableFuture<User> saveUserAsync(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(Role.USER));
         user.setAccountNonLocked(true);
-        userRepository.save(user);
+        return CompletableFuture.completedFuture(userRepository.save(user));
     }
 
-    @Async
+    @Async("asyncExecutor")
     @Transactional
     public CompletableFuture<List<User>> findUsersAsync(PageRequest pageRequest) {
         return CompletableFuture.completedFuture(userRepository
@@ -70,7 +70,7 @@ public class UserService implements UserDetailsService {
                 .filter(el -> el.getRoles().stream().findFirst().get().getAuthority().equals("USER")).collect(Collectors.toList()));
     }
 
-    @Async
+    @Async("asyncExecutor")
     @Transactional
     public CompletableFuture<User> findUserByUsernameAsync(String username) {
         return CompletableFuture.completedFuture((User) loadUserByUsername(username));
@@ -89,27 +89,27 @@ public class UserService implements UserDetailsService {
 //        userRepository.save(user);
 //    }
 
-    @Async
+    @Async("asyncExecutor")
     @Transactional
-    public void changePassword(User user, ChangePasswordDto changePasswordDto) {
+    public CompletableFuture<User> changePassword(User user, ChangePasswordDto changePasswordDto) {
         user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
-        userRepository.save(user);
+        return CompletableFuture.completedFuture(userRepository.save(user));
     }
 
-    @Async
+    @Async("asyncExecutor")
     @Transactional
-    public void block(UserLockStatusDto userLockStatusDto) {
+    public CompletableFuture<User> block(UserLockStatusDto userLockStatusDto) {
         User user = (User) loadUserByUsername(userLockStatusDto.getUsername());
         user.setAccountNonLocked(false);
-        userRepository.save(user);
+        return CompletableFuture.completedFuture(userRepository.save(user));
     }
 
-    @Async
+    @Async("asyncExecutor")
     @Transactional
-    public void unblock(UserLockStatusDto userLockStatusDto) {
+    public CompletableFuture<User> unblock(UserLockStatusDto userLockStatusDto) {
         User user = (User) loadUserByUsername(userLockStatusDto.getUsername());
         user.setAccountNonLocked(true);
-        userRepository.save(user);
+        return CompletableFuture.completedFuture(userRepository.save(user));
     }
 
     @Override

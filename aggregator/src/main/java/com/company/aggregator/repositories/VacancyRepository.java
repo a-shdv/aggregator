@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AggregatorRepository extends JpaRepository<Vacancy, Long> {
+public interface VacancyRepository extends JpaRepository<Vacancy, Long> {
     Vacancy findBySource(String source);
 
     Page<Vacancy> findByUser(User user, PageRequest pageRequest);
