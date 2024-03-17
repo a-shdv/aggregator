@@ -52,7 +52,7 @@
 
 <div class="fixed-content">
     <div th:if="${isParserAvailable == true}">
-        <!--Вакансия-->
+        <!--Прогресс бар-->
         <div class="container justify-content-center align-items-center">
             <div id="spaceBefore" style="height: 40vh; display: none"></div>
             <p class="text-warning text-center" id="counter" style="display: none">0%</p>
@@ -69,8 +69,9 @@
             <div id="spaceAfter" style="height: 40vh; display: none"></div>
         </div>
 
-        <!--Прогресс бар-->
-        <div class="container mt-5 5" id="vacancy">
+        <!--Вакансия-->
+        <div class="container" id="vacancy">
+            <div style="height: 15vh"></div>
             <div class="row justify-content-center">
                 <form class="col-lg-4" id="vacancyForm" th:action="@{/vacancies}" th:method="post">
                     <h2>Вакансия</h2>
@@ -165,6 +166,7 @@
                     <input class="btn btn-md btn-warning mt-3" id="searchVacanciesButton" type="submit" value="Найти">
                 </form>
             </div>
+            <div style="height: 15vh"></div>
         </div>
 
 
