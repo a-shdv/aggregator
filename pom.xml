@@ -17,7 +17,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>parser</module>
+        <module>vacancies-parser</module>
         <module>aggregator</module>
     </modules>
 

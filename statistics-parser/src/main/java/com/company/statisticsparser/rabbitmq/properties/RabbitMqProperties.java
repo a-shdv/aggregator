@@ -1,4 +1,4 @@
-package com.company.aggregator.rabbitmq.properties;
+package com.company.statisticsparser.rabbitmq.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -42,8 +42,7 @@ public class RabbitMqProperties {
     /**
      * Наименование очереди для отправки в RabbitMQ.
      */
-    private String queueToSend0;
-    private String queueToSend1;
+    private String queueToSend;
 
     /**
      * Наименование очереди для приема в RabbitMQ.

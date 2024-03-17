@@ -1,7 +1,7 @@
-package com.company.aggregator.rabbitmq.configs;
+package com.company.statisticsparser.rabbitmq.configurations;
 
-import com.company.aggregator.rabbitmq.exceptions.RabbitMqException;
-import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
+import com.company.statisticsparser.rabbitmq.exceptions.RabbitException;
+import com.company.statisticsparser.rabbitmq.properties.RabbitMqProperties;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Binding;
@@ -31,23 +31,18 @@ import java.util.stream.Collectors;
 public class RabbitMqConfiguration {
 
     private final RabbitMqProperties rabbitMqProperties;
-    private Map<String, Object> rabbitArgs = new HashMap<>() {{
+    private Map<String, Object> rabbiteArgs = new HashMap<>() {{
         put("x-message-ttl", 1000L);
     }};
 
     @Bean
-    public Queue queueToSend0() {
-        return new Queue(rabbitMqProperties.getQueueToSend0(), true, false, false, rabbitArgs);
-    }
-
-    @Bean
-    public Queue queueToSen1() {
-        return new Queue(rabbitMqProperties.getQueueToSend1(), true, false, false, rabbitArgs);
+    public Queue queueToSend() {
+        return new Queue(rabbitMqProperties.getQueueToSend(), true, false, false, rabbiteArgs);
     }
 
     @Bean
     public Queue queueToReceive() {
-        return new Queue(rabbitMqProperties.getQueueToReceive(), true, false, false, rabbitArgs);
+        return new Queue(rabbitMqProperties.getQueueToReceive(), true, false, false, rabbiteArgs);
     }
 
     @Bean
@@ -57,7 +52,7 @@ public class RabbitMqConfiguration {
 
     @Bean
     public Binding bindingToSend(TopicExchange exchange) {
-        return BindingBuilder.bind(queueToSend0()).to(exchange).with(rabbitMqProperties.getRoutingKeyToSend());
+        return BindingBuilder.bind(queueToSend()).to(exchange).with(rabbitMqProperties.getRoutingKeyToSend());
     }
 
     @Bean
@@ -68,7 +63,7 @@ public class RabbitMqConfiguration {
     @Bean
     public ConnectionFactory connectionFactory(ExecutorService coreExecutor) {
         if (rabbitMqProperties.getServices() == null || rabbitMqProperties.getServices().isEmpty()) {
-            throw new RabbitMqException("Не указаны параметры подключения к кластеру RabbitMq");
+            throw new RabbitException("Не указаны параметры подключения к кластеру RabbitMq");
         }
 
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
