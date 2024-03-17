@@ -54,6 +54,7 @@ public class VacancyController {
         if (success != null) {
             model.addAttribute("success", success);
         }
+        // TODO
         Page<Vacancy> vacancies = vacancyService.findVacanciesAsync(user, PageRequest.of(page, size)).join();
         model.addAttribute("vacancies", vacancies);
         return "vacancies/vacancies";
