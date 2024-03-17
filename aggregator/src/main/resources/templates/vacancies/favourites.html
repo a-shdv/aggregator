@@ -33,6 +33,12 @@
 </style>
 <body>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
+<div id="rowSuccess" class="row justify-content-center" style="display: none; justify-content: center; align-items: center; height: 100vh;">
+    <div id="alertSuccess" style="display: none" class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Успех!</h4>
+        <p>Список избранных вакансий очищен!</p>
+    </div>
+</div>
 <div class="row justify-content-center"
      style="display: flex; justify-content: center; align-items: center; height: 100vh;"
      th:if="${favourites.isEmpty()}">
@@ -41,10 +47,10 @@
     </div>
 </div>
 
-<div class="container mt-5" th:if="${!favourites.isEmpty()}">
+<div id="favouritesTable" class="container mt-5" th:if="${!favourites.isEmpty()}">
     <div class="row justify-content-center mt-9 col-lg-12">
         <table class="table table-hover">
-            <h2>Избранное</h2>
+            <h2 id="favouritesHeader">Избранное</h2>
             <thead>
             <tr class="table-dark">
                 <td></td>
@@ -116,7 +122,7 @@
     </div>
 
     <!--Пагинация-->
-    <div>
+    <div id="pagination">
         <nav aria-label="...">
             <ul class="pagination justify-content-center mt-5 mb-5">
                 <!-- Previous -->
@@ -157,7 +163,7 @@
     </div>
 
     <!--Кнопка "Очистить"-->
-    <form id="clearFavouritesForm" class="mt-5" th:action="@{/favourites/clear}" th:method="post" onsubmit="return confirmClearFavouritesForm()">
+    <form id="clearFavouritesForm" class="mt-5" th:action="@{/favourites/clear}" th:method="post">
         <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить">
     </form>
 

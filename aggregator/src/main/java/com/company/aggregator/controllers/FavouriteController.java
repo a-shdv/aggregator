@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -83,10 +84,16 @@ public class FavouriteController {
         return "redirect:/favourites";
     }
 
+//    @PostMapping("/clear")
+//    public String deleteFavourites(@AuthenticationPrincipal User user) {
+//        favouriteService.deleteFavouritesAsync(user).join();
+//        return "redirect:/favourites";
+//    }
+
     @PostMapping("/clear")
-    public String deleteFavourites(@AuthenticationPrincipal User user) {
+    public ResponseEntity<String> deleteVacancies(@AuthenticationPrincipal User user) {
         favouriteService.deleteFavouritesAsync(user).join();
-        return "redirect:/favourites";
+        return ResponseEntity.ok().body("Vacancies cleared successfully");
     }
 
 //    @PostMapping("/generate-pdf-and-send-to-email")

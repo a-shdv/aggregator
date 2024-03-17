@@ -4,6 +4,11 @@ const error = document.querySelector('#error')
 const success = document.querySelector('#success')
 const clearFavouritesForm = document.querySelector('#clearFavouritesForm')
 
+const favouritesTable = document.querySelector('#favouritesTable')
+const pagination = document.querySelector('#pagination')
+const alertSuccess = document.querySelector('#alertSuccess')
+const rowSuccess =document.querySelector('#rowSuccess')
+
 let stompClient = null;
 let username = null;
 
@@ -78,13 +83,28 @@ function sendMessage() {
     }
 }
 
-function confirmClearFavouritesForm() {
-    if (confirm('Вы уверены, что хотите очистить список вакансий?')) {
-        clearFavouritesForm.submit();
+function confirmClearFavouritesForm(event) {
+    event.preventDefault()
+    if (confirm('Вы уверены, что хотите очистить список вакансий?') === true) {
+        favouritesTable.style.display = 'none'
+        pagination.style.display = 'none'
+        alertSuccess.style.display = ''
+        rowSuccess.style.display = 'flex'
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/favourites/clear", true);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                console.log(xhr.responseText);
+            }
+        };
+        xhr.send();
+
+
     } else {
         return false;
     }
 }
-
+clearFavouritesForm.addEventListener("submit", confirmClearFavouritesForm);
 window.addEventListener('unload', disconnect);
 pdfEmailButton.addEventListener('click', connect)

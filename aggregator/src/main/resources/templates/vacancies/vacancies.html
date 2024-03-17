@@ -38,12 +38,12 @@
 <div class="container mt-5">
     <div style="color: red" th:if="${error}" th:text="${error}"></div>
     <div style="color: green" th:if="${success}" th:text="${success}"></div>
-    <div style="height: 10vh;"></div>
     <div class="alert alert-warning" role="alert" th:if="${vacancies.isEmpty()}">
         Список вакансий пуст!
     </div>
     <div id="alertSuccess" style="display: none" class="alert alert-success" role="alert">
-        Список вакансий очищен!
+        <h4 class="alert-heading">Успех!</h4>
+        <p>Список вакансий очищен!</p>
     </div>
 
     <div class="row align-items-center vh-100 mt-3" id="allVacanciesList" th:if="${!vacancies.isEmpty()}">

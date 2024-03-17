@@ -55,7 +55,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
         log.info("SENT: {}", sendMessageDto);
     }
 
-    @Scheduled(fixedDelay = 10_000)
+    @Scheduled(initialDelay = 15_000, fixedDelay = 10_000)
     public void checkProgressbarLoaderCounter() {
         if (previousProgressbarLoaderCounter == progressbarLoaderCounter ) {
             progressbarLoaderCounter = 0;
