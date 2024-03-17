@@ -84,12 +84,6 @@ public class FavouriteController {
         return "redirect:/favourites";
     }
 
-//    @PostMapping("/clear")
-//    public String deleteFavourites(@AuthenticationPrincipal User user) {
-//        favouriteService.deleteFavouritesAsync(user).join();
-//        return "redirect:/favourites";
-//    }
-
     @PostMapping("/clear")
     public ResponseEntity<String> deleteVacancies(@AuthenticationPrincipal User user) {
         favouriteService.deleteFavouritesAsync(user).join();

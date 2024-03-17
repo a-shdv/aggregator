@@ -37,7 +37,7 @@ public class FavouriteService {
     public CompletableFuture<Void> addToFavouritesAsync(User user, Favourite favourite) {
         CompletableFuture<Void> future = new CompletableFuture<>();
         try {
-            if (favouriteRepository.findBySource(favourite.getSource()) != null) {
+            if (favouriteRepository.findByUserAndSource(user, favourite.getSource()) != null) {
                 throw new FavouriteAlreadyExistsException("Вакансия уже существует в избранном " + favourite.getSource());
             }
             favourite.setUser(user);

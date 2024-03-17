@@ -40,17 +40,22 @@
     <div style="color: red" th:if="${error}" th:text="${error}"></div>
     <div style="color: green" th:if="${success}" th:text="${success}"></div>
     <div>
-        <div class="alert alert-warning" style="margin-top: 50vh; margin-bottom: -50vh" role="alert"
-             th:if="${vacancies.isEmpty()}">
-            Список вакансий пуст!
+        <div class="row justify-content-center" >
+            <div class="alert alert-warning col-6" th:if="${vacancies.isEmpty()}" style="margin-top: 25vh; margin-bottom: -25vh" role="alert"
+                 >
+                Список вакансий пуст!
+            </div>
         </div>
-        <div id="alertSuccess" style="display: none; margin-top: 50vh; margin-bottom: -50vh" class="alert alert-success"
-             role="alert">
-            <h4 class="alert-heading">Успех!</h4>
-            <p>Список вакансий очищен!</p>
+        <div class="row justify-content-center" >
+            <div id="alertSuccess" style="display: none; margin-top: 25vh; margin-bottom: -25vh" class="alert alert-success"
+                 role="alert">
+                <h4 class="alert-heading">Успех!</h4>
+                <p>Список вакансий очищен!</p>
+            </div>
         </div>
+        <div id="spaceTest" style="height: 100vh; display: none"></div>
 
-        <div class="row align-items-center vh-100 mt-3" id="allVacanciesList" th:if="${!vacancies.isEmpty()}">
+        <div class="row align-items-center mt-3" id="allVacanciesList" th:if="${!vacancies.isEmpty()}">
             <div class="col-12 mx-auto">
                 <div class="row">
                     <h2 id="allVacanciesHeader" class="text-center mb-5 mt-5">Все вакансии</h2>
@@ -125,7 +130,7 @@
 
 
         </div>
-        <div style="height: 120vh"></div>
+        <div style="height: 120vh" th:if="${vacancies.isEmpty()}"></div>
         <!--Пагинация-->
         <div id="pagination" th:if="${!vacancies.isEmpty()}">
             <nav aria-label="...">
