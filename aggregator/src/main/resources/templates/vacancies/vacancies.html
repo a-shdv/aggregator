@@ -30,6 +30,7 @@
     input[type=radio], input[type=checkbox] {
         accent-color: #ffc107;
     }
+
 </style>
 <body>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
@@ -49,7 +50,7 @@
     <div class="row align-items-center vh-100 mt-3" id="allVacanciesList" th:if="${!vacancies.isEmpty()}">
         <div class="col-12 mx-auto">
             <div class="row">
-                <h2 id="allVacanciesHeader" class="text-center mb-5">Все вакансии</h2>
+                <h2 id="allVacanciesHeader" class="text-center mb-5 mt-5">Все вакансии</h2>
                 <div class="col-lg-3" th:each="vacancy : ${vacancies}">
                     <div class="card mb-4" style="width: 18rem; height: 25rem;">
                         <!--Заголовок-->
@@ -119,52 +120,51 @@
                    value="Очистить">
         </form>
 
-        <!--Пагинация-->
-        <div id="pagination">
-            <nav aria-label="...">
-                <ul class="pagination justify-content-center mt-5 mb-5">
-                    <!-- Previous -->
-                    <li class="page-item" th:if="${vacancies.hasPrevious()}">
-                        <form method="get" th:action="@{/vacancies}">
-                            <input name="page" th:value="${vacancies.previousPageable().pageNumber}" type="hidden"/>
-                            <input name="size" th:value="${vacancies.previousPageable().pageSize}" type="hidden"/>
-                            <button aria-label="Пред" class="page-link" type="submit">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Пред</span>
-                            </button>
-                        </form>
-                    </li>
 
-                    <!-- Pages -->
-                    <li class="page-item" th:class="${i == vacancies.number + 1} ? 'page-item active' : 'page-item'"
-                        th:each="i : ${#numbers.sequence(1, vacancies.totalPages)}">
-                        <form method="get" th:action="@{/vacancies}">
-                            <input name="page" th:value="${i - 1}" type="hidden"/>
-                            <input name="size" th:value="${vacancies.size}" type="hidden"/>
-                            <button class="page-link" th:text="${i}" type="submit"></button>
-                        </form>
-                    </li>
-
-                    <!-- Next -->
-                    <li class="page-item" th:if="${vacancies.hasNext()}">
-                        <form method="get" th:action="@{/vacancies}">
-                            <input name="page" th:value="${vacancies.nextPageable().pageNumber}" type="hidden"/>
-                            <input name="size" th:value="${vacancies.nextPageable().pageSize}" type="hidden"/>
-                            <button aria-label="След" class="page-link" type="submit">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">След</span>
-                            </button>
-                        </form>
-                    </li>
-                </ul>
-            </nav>
-        </div>
     </div>
-    <div style="height: 25vh;"></div>
+    <div style="height: 120vh"></div>
+    <!--Пагинация-->
+    <div id="pagination">
+        <nav aria-label="...">
+            <ul class="pagination justify-content-center mt-5 mb-5">
+                <!-- Previous -->
+                <li class="page-item" th:if="${vacancies.hasPrevious()}">
+                    <form method="get" th:action="@{/vacancies}">
+                        <input name="page" th:value="${vacancies.previousPageable().pageNumber}" type="hidden"/>
+                        <input name="size" th:value="${vacancies.previousPageable().pageSize}" type="hidden"/>
+                        <button aria-label="Пред" class="page-link" type="submit">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Пред</span>
+                        </button>
+                    </form>
+                </li>
+
+                <!-- Pages -->
+                <li class="page-item" th:class="${i == vacancies.number + 1} ? 'page-item active' : 'page-item'"
+                    th:each="i : ${#numbers.sequence(1, vacancies.totalPages)}">
+                    <form method="get" th:action="@{/vacancies}">
+                        <input name="page" th:value="${i - 1}" type="hidden"/>
+                        <input name="size" th:value="${vacancies.size}" type="hidden"/>
+                        <button class="page-link" th:text="${i}" type="submit"></button>
+                    </form>
+                </li>
+
+                <!-- Next -->
+                <li class="page-item" th:if="${vacancies.hasNext()}">
+                    <form method="get" th:action="@{/vacancies}">
+                        <input name="page" th:value="${vacancies.nextPageable().pageNumber}" type="hidden"/>
+                        <input name="size" th:value="${vacancies.nextPageable().pageSize}" type="hidden"/>
+                        <button aria-label="След" class="page-link" type="submit">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">След</span>
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
-
 <div th:insert="~{/partials/footer :: footer}"></div>
-
 <script th:inline="javascript" th:src="@{/js/vacancies.js}"></script>
 </body>
 </html>
