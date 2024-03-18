@@ -2,8 +2,7 @@ package com.company.aggregator.rabbitmq.services;
 
 
 import com.company.aggregator.models.User;
-import com.company.aggregator.rabbitmq.dtos.ReceiveMessageDto;
-import com.company.aggregator.rabbitmq.dtos.SendMessageDto;
+import com.company.aggregator.rabbitmq.dtos.vacancies.ReceiveMessageDto;
 import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
 import com.company.aggregator.services.UserService;
 import com.company.aggregator.services.VacancyService;
@@ -48,11 +47,16 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     }
 
     @Override
-    public void send(SendMessageDto sendMessageDto) {
+    public void sendToVacanciesParser(com.company.aggregator.rabbitmq.dtos.vacancies.SendMessageDto sendMessageDto) {
         vacancyService.deleteVacanciesByUserAsync(userService.findUserByUsername(sendMessageDto.getUsername()));
-        rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), sendMessageDto);
+        rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend0(), sendMessageDto);
         messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(0)).type("RECEIVE").build());
         log.info("SENT: {}", sendMessageDto);
+    }
+
+    @Override
+    public void sendToStatisticsParser(com.company.aggregator.rabbitmq.dtos.statistics.SendMessageDto message) {
+
     }
 
     @Scheduled(initialDelay = 15_000, fixedDelay = 10_000)

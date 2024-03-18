@@ -53,7 +53,9 @@ public class RabbitMqProperties {
     /**
      * Наименование routingKey для отправки в RabbitMQ.
      */
-    private String routingKeyToSend;
+    private String routingKeyToSend0;
+
+    private String routingKeyToSend1;
 
     /**
      * Наименование routingKey для приема в RabbitMQ.

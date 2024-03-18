@@ -4,7 +4,7 @@ import com.company.aggregator.dtos.VacancyDto;
 import com.company.aggregator.exceptions.FavouritesIsEmptyException;
 import com.company.aggregator.models.Favourite;
 import com.company.aggregator.models.User;
-import com.company.aggregator.rabbitmq.dtos.SendMessageDto;
+import com.company.aggregator.rabbitmq.dtos.vacancies.SendMessageDto;
 import com.company.aggregator.rabbitmq.services.RabbitMqService;
 import com.company.aggregator.services.EmailSenderService;
 import com.company.aggregator.services.FavouriteService;
@@ -45,7 +45,7 @@ public class WebsocketController {
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
     public VacancyDto receiveMessageFromWs(@RequestBody VacancyDto vacancyDto) {
-        rabbitMqService.send(SendMessageDto.builder()
+        rabbitMqService.sendToVacanciesParser(SendMessageDto.builder()
                 .username(vacancyDto.getUsername())
                 .title(vacancyDto.getTitle())
                 .salary(vacancyDto.getSalary())

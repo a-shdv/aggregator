@@ -1,4 +1,4 @@
-package com.company.aggregator.rabbitmq.dtos;
+package com.company.aggregator.rabbitmq.dtos.statistics;
 
 import com.company.aggregator.models.Vacancy;
 import lombok.AllArgsConstructor;

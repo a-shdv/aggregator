@@ -1,4 +1,4 @@
-package com.company.aggregator.rabbitmq.dtos;
+package com.company.aggregator.rabbitmq.dtos.statistics;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

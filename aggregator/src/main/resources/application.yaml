@@ -16,10 +16,11 @@ rabbitmq:
   username: guest
   password: guest
   topic: jh-topic-exchange
-  queue-to-send0: jh-queue-to-parser
+  queue-to-send0: jh-queue-to-vacancies
   queue-to-send1: jh-queue-to-statistics
   queue-to-receive: jh-queue-to-aggregator
-  routing-key-to-send: jh-routing-key-to-parser
+  routing-key-to-send0: jh-routing-key-to-vacancies
+  routing-key-to-send1: jh-routing-key-to-statistics
   routing-key-to-receive: jh-routing-key-to-aggregator
 
 spring:
