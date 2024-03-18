@@ -12,28 +12,28 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/statistics")
 @RequiredArgsConstructor
 @Slf4j
-public class HomeController {
+public class StatisticsController {
     private final RestTemplate restTemplate;
-    @Value("${constants.vacancies-heartbeat-url}")
-    private String vacanciesHeartbeatUrl;
-    private boolean isVacanciesParserAvailable;
+    @Value("${constants.statistics-heartbeat-url}")
+    private String statisticsHeartbeatUrl;
+    private boolean isStatisticsParserAvailable;
 
     @GetMapping
-    public String home(Model model) {
-        model.addAttribute("isParserAvailable", isVacanciesParserAvailable);
-        return "home";
+    public String statistics(Model model) {
+        model.addAttribute("isParserAvailable", isStatisticsParserAvailable);
+        return "statistics/statistics";
     }
 
     @Scheduled(initialDelay = 2_000, fixedDelay = 10_000)
     public void sendHeartBeat() {
         try {
-            restTemplate.getForEntity(vacanciesHeartbeatUrl, String.class).getStatusCode().is2xxSuccessful();
-            isVacanciesParserAvailable = true;
+            restTemplate.getForEntity(statisticsHeartbeatUrl, String.class).getStatusCode().is2xxSuccessful();
+            isStatisticsParserAvailable = true;
         } catch (ResourceAccessException ex) {
-            isVacanciesParserAvailable = false;
+            isStatisticsParserAvailable = false;
         }
     }
 }
