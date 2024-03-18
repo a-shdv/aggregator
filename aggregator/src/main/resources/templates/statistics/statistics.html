@@ -1,8 +1,119 @@
 <!doctype html>
 <html lang="en">
 <div th:insert="~{/partials/head :: head}"></div>
+<style>
+    ::selection {
+        background: #ffc107;
+        color: #fff
+    }
+
+    form .form-control:focus {
+        box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        -o-box-shadow: none !important;
+        border-color: #ffc107;
+    }
+
+    .page-link {
+        color: #ffc107
+    }
+
+    .page-link:hover {
+        color: #ffc107
+    }
+
+    input[type=radio], input[type=checkbox] {
+        outline: none;
+        box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        -o-box-shadow: none !important;
+    }
+
+    input[type=radio]:checked, input[type=checkbox]:checked {
+        background-color: #ffc107;
+        border-color: rgb(205, 143, 7);
+        outline: none;
+        box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        -webkit-box-shadow: none !important;
+        -o-box-shadow: none !important;
+    }
+
+    /*.fixed-content {*/
+    /*    max-width: 800px; !* Adjust the width as per your requirement *!*/
+    /*    margin: 0 auto; !* Center the container horizontally *!*/
+    /*    padding: 20px; !* Add padding for spacing *!*/
+    /*}*/
+</style>
 <body>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
+
+<!--Город-->
+<div style="height: 50vh"></div>
+<div class="container">
+    <div class="row justify-content-center">
+        <form class="col-lg-4" id="vacancyForm" th:action="@{/vacancies}" th:method="post">
+            <h2>Статистика</h2>
+            <!--Профессия-->
+            <div class="form-group">
+                <label for="profession">Название профессии</label>
+                <input id="profession" name="profession" type="text" placeholder="Профессия">
+            </div>
+
+            <!--Город-->
+            <div class="form-group mt-3">
+                <label for="city">Название профессии</label>
+                <input id="city" name="city" type="text" placeholder="Город">
+            </div>
+
+            <!--Год-->
+            <div class="form-group mt-3">
+                <label for="year">Год</label>
+                <select id="year" name="year" required>
+                    <option disabled value="">Выберите год</option>
+                    <option selected value="0">2024</option>
+                    <option value="1">2023</option>
+                    <option value="2">2022</option>
+                    <option value="3">2021</option>
+                    <option value="4">2020</option>
+                    <option value="5">2019</option>
+                    <option value="6">2018</option>
+                    <option value="7">2017</option>
+                </select>
+            </div>
+
+            <!--Валюта-->
+            <div class="form-group">
+                <label class="form-check-label" for="statisticsCurrency">Валюта</label>
+                <div class="form-check" id="statisticsCurrency">
+                    <!--Не имеет значения-->
+                    <input checked class="form-check-input" id="0" name="currency" type="radio" value="0">
+                    <label class="form-check-label" for="0">USD, $</label>
+                    <br>
+
+                    <!--Нет опыта-->
+                    <input class="form-check-input" id="1" name="currency" type="radio" value="1">
+                    <label class="form-check-label" for="1">EUR, €</label>
+                    <br>
+
+                    <!--От 1 года до 3 лет-->
+                    <input class="form-check-input" id="2" name="currency" type="radio" value="2">
+                    <label class="form-check-label" for="2">RUB, ₽</label>
+                    <br>
+                </div>
+            </div>
+
+            <div class="form-group mt-5">
+                <input class="btn btn-md btn-warning" type="submit" value="Отправить">
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div style="height: 50vh"></div>
 
 <div th:insert="~{/partials/footer :: footer}"></div>
 </body>
