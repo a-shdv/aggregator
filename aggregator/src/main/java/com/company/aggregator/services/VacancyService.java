@@ -3,7 +3,7 @@ package com.company.aggregator.services;
 import com.company.aggregator.exceptions.VacancyNotFoundException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.models.Vacancy;
-import com.company.aggregator.rabbitmq.dtos.ReceiveMessageDto;
+import com.company.aggregator.rabbitmq.dtos.vacancies.ReceiveMessageDto;
 import com.company.aggregator.repositories.VacancyRepository;
 import com.company.aggregator.repositories.UserRepository;
 import jakarta.transaction.Transactional;

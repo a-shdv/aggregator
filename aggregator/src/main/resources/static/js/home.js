@@ -4,10 +4,12 @@ const vacancy = document.querySelector('#vacancy')
 const vacancyForm = document.querySelector('#vacancyForm')
 const searchVacanciesButton = document.querySelector('#searchVacanciesButton')
 
+const spaceBefore = document.querySelector('#spaceBefore')
 const counter = document.querySelector('#counter')
 const progressbar = document.querySelector('#progressbar')
 const progressbarLoader = document.querySelector('#progressbar-loader')
 const okButton = document.querySelector('#okButton')
+const spaceAfter = document.querySelector('#spaceAfter')
 
 let stompClient = null;
 let username = null;
@@ -96,9 +98,11 @@ function sendMessage() {
     const message = {username, title, salary, onlyWithSalary, experience, cityId, isRemoteAvailable, type}
     if (message && stompClient) {
         // hide vacancy form and show progressbar, counter
+        spaceBefore.style.display = ''
         vacancy.style.display = 'none'
         progressbar.style.display = ''
         counter.style.display = ''
+        spaceAfter.style.display = ''
 
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message));
     }

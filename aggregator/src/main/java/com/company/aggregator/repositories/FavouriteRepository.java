@@ -15,5 +15,5 @@ public interface FavouriteRepository extends JpaRepository<Favourite, Long> {
 
     Page<Favourite> findListByUser(User user, PageRequest pageRequest);
 
-    Favourite findByUser(User user);
+    Favourite findByUserAndSource(User user, String source);
 }

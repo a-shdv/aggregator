@@ -30,137 +30,153 @@
     input[type=radio], input[type=checkbox] {
         accent-color: #ffc107;
     }
+    .fixed-content {
+        max-width: 1600px; /* Adjust the width as per your requirement */
+        margin: 0 auto; /* Center the container horizontally */
+        padding: 20px; /* Add padding for spacing */
+    }
 </style>
 <body>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
-<div class="row justify-content-center"
-     style="display: flex; justify-content: center; align-items: center; height: 100vh;"
-     th:if="${favourites.isEmpty()}">
-    <div class="alert alert-warning col-6" role="alert">
-        Список избранных вакансий пуст!
-    </div>
-</div>
-
-<div class="container mt-5" th:if="${!favourites.isEmpty()}">
-    <div class="row justify-content-center mt-9 col-lg-12">
-        <table class="table table-hover">
-            <h2>Избранное</h2>
-            <thead>
-            <tr class="table-dark">
-                <td></td>
-                <td>Название</td>
-                <td>Дата публикации</td>
-                <td>Компания</td>
-                <td>График работы</td>
-                <td></td>
-            </tr>
-            </thead>
-            <tbody>
-            <div class="mb-3 mt-3">
-
-                <div id="spinner" style="display: none">
-                    <div class="spinner-border text-warning" role="status">
-                        <span class="sr-only"></span>
-                    </div>
-                    <p class="text-warning">Пожалуйста, подождите. Идет формирование отчета...</p>
-                </div>
-
-                <div style="color: red; display: none;" id="error">При формировании отчета произошла ошибка!</div>
-                <div style="color: green; display: none;" id="success">Отчет успешно сформирован и отправлен на почту!
-                </div>
-            </div>
-
-            <tr style=" border-bottom: transparent" th:each="favourite : ${favourites}"
-                th:unless="${#lists.isEmpty(favourites)}">
-                <!--Картинка-->
-                <td class="d-flex justify-content-center align-items-center">
-                    <img alt="Не удалось загрузить изображение" style="max-height: 50%; max-width: 50%;"
-                         th:src="${favourite.logo}">
-                </td>
-                <!--Название-->
-                <td>
-                    <a target="_blank" th:href="${favourite.source}"
-                       th:text="${#strings.abbreviate(favourite.title, 20)}"></a>
-                </td>
-                <!--Дата публикации-->
-                <td th:text="${favourite.date}"></td>
-                <!--Компания-->
-                <td th:text="${favourite.company}"></td>
-                <!--График работы-->
-                <td th:text="${#strings.abbreviate(favourite.schedule, 20)}"></td>
-                <!--Ссылка на вакансию-->
-                <td>
-                    <!--Картинка-->
-                    <form th:action="@{/favourites/{id}(id=${favourite.id})}" th:method="post">
-
-                        <button style="background: none; border: none" type="submit">
-                            <img alt="Не удалось загрузить изображение" class="card-img-top"
-                                 style="color: white; max-height: 5%; max-width: 5%;"
-                                 th:src="@{/images/red-cross.png}">
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row mb-2">
-        <div>
-            <form th:action="@{/favourites/generate-pdf-and-send-to-email}" th:method="post">
-                <input id="username" th:value="${#authentication.principal.username}" type="hidden">
-
-                <button id="pdfEmailButton" class="btn btn-md btn-warning" th:text="'Сформировать PDF'"
-                        type="submit"></button>
-            </form>
+<div class="fixed-content">
+    <div class="row justify-content-center"
+         style="display: flex; justify-content: center; align-items: center;">
+        <div th:if="${favourites.isEmpty()}" style="height: 35vh"></div>
+        <div class="alert alert-warning col-6" role="alert" th:if="${favourites.isEmpty()}">
+            Список избранных вакансий пуст!
         </div>
+        <div id="rowSuccess" class="row justify-content-center" style="display: none;">
+            <div style="height: 35vh"></div>
+            <div id="alertSuccess" style="display: none" class="alert alert-success col-6" role="alert">
+                <h4 class="alert-heading">Успех!</h4>
+                <p>Список избранных вакансий очищен!</p>
+            </div>
+            <div style="height: 35vh"></div>
+        </div>
+        <div th:if="${favourites.isEmpty()}" style="height: 35vh"></div>
     </div>
 
-    <!--Пагинация-->
-    <div>
-        <nav aria-label="...">
-            <ul class="pagination justify-content-center mt-5 mb-5">
-                <!-- Previous -->
-                <li class="page-item" th:if="${favourites.hasPrevious()}">
-                    <form method="get" th:action="@{/vacancies}">
-                        <input name="page" th:value="${favourites.previousPageable().pageNumber}" type="hidden"/>
-                        <input name="size" th:value="${favourites.previousPageable().pageSize}" type="hidden"/>
-                        <button aria-label="Пред" class="page-link" type="submit">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Пред</span>
-                        </button>
-                    </form>
-                </li>
+    <div id="favouritesTable" class="container mt-5" th:if="${!favourites.isEmpty()}">
+        <div class="row justify-content-center mt-9 col-lg-12">
+            <table class="table table-hover">
+                <h2 id="favouritesHeader">Избранное</h2>
+                <thead>
+                <tr class="table-dark">
+                    <td></td>
+                    <td>Название</td>
+                    <td>Дата публикации</td>
+                    <td>Компания</td>
+                    <td>График работы</td>
+                    <td></td>
+                </tr>
+                </thead>
+                <tbody>
+                <div class="mb-3 mt-3">
 
-                <!-- Pages -->
-                <li class="page-item" th:class="${i == favourites.number + 1} ? 'page-item active' : 'page-item'"
-                    th:each="i : ${#numbers.sequence(1, favourites.totalPages)}">
-                    <form method="get" th:action="@{/favourites}">
-                        <input name="page" th:value="${i - 1}" type="hidden"/>
-                        <input name="size" th:value="${favourites.size}" type="hidden"/>
-                        <button class="page-link" th:text="${i}" type="submit"></button>
-                    </form>
-                </li>
+                    <div id="spinner" style="display: none">
+                        <div class="spinner-border text-warning" role="status">
+                            <span class="sr-only"></span>
+                        </div>
+                        <p class="text-warning">Пожалуйста, подождите. Идет формирование отчета...</p>
+                    </div>
 
-                <!-- Next -->
-                <li class="page-item" th:if="${favourites.hasNext()}">
-                    <form method="get" th:action="@{/favourites}">
-                        <input name="page" th:value="${favourites.nextPageable().pageNumber}" type="hidden"/>
-                        <input name="size" th:value="${favourites.nextPageable().pageSize}" type="hidden"/>
-                        <button aria-label="След" class="page-link" type="submit">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">След</span>
-                        </button>
-                    </form>
-                </li>
-            </ul>
-        </nav>
+                    <div style="color: red; display: none;" id="error">При формировании отчета произошла ошибка!</div>
+                    <div style="color: green; display: none;" id="success">Отчет успешно сформирован и отправлен на почту!
+                    </div>
+                </div>
+
+                <tr style=" border-bottom: transparent" th:each="favourite : ${favourites}"
+                    th:unless="${#lists.isEmpty(favourites)}">
+                    <!--Картинка-->
+                    <td class="d-flex justify-content-center align-items-center">
+                        <img alt="Не удалось загрузить изображение" style="max-height: 50%; max-width: 50%;"
+                             th:src="${favourite.logo}">
+                    </td>
+                    <!--Название-->
+                    <td>
+                        <a target="_blank" th:href="${favourite.source}"
+                           th:text="${#strings.abbreviate(favourite.title, 20)}"></a>
+                    </td>
+                    <!--Дата публикации-->
+                    <td th:text="${favourite.date}"></td>
+                    <!--Компания-->
+                    <td th:text="${favourite.company}"></td>
+                    <!--График работы-->
+                    <td th:text="${#strings.abbreviate(favourite.schedule, 20)}"></td>
+                    <!--Ссылка на вакансию-->
+                    <td>
+                        <!--Картинка-->
+                        <form th:action="@{/favourites/{id}(id=${favourite.id})}" th:method="post">
+
+                            <button style="background: none; border: none" type="submit">
+                                <img alt="Не удалось загрузить изображение" class="card-img-top"
+                                     style="color: white; max-height: 5%; max-width: 5%;"
+                                     th:src="@{/images/red-cross.png}">
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row mb-2">
+            <div>
+                <form th:action="@{/favourites/generate-pdf-and-send-to-email}" th:method="post">
+                    <input id="username" th:value="${#authentication.principal.username}" type="hidden">
+
+                    <button id="pdfEmailButton" class="btn btn-md btn-warning" th:text="'Сформировать PDF'"
+                            type="submit"></button>
+                </form>
+            </div>
+        </div>
+
+        <!--Пагинация-->
+        <div id="pagination">
+            <nav aria-label="...">
+                <ul class="pagination justify-content-center mt-5 mb-5">
+                    <!-- Previous -->
+                    <li class="page-item" th:if="${favourites.hasPrevious()}">
+                        <form method="get" th:action="@{/vacancies}">
+                            <input name="page" th:value="${favourites.previousPageable().pageNumber}" type="hidden"/>
+                            <input name="size" th:value="${favourites.previousPageable().pageSize}" type="hidden"/>
+                            <button aria-label="Пред" class="page-link" type="submit">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Пред</span>
+                            </button>
+                        </form>
+                    </li>
+
+                    <!-- Pages -->
+                    <li class="page-item" th:class="${i == favourites.number + 1} ? 'page-item active' : 'page-item'"
+                        th:each="i : ${#numbers.sequence(1, favourites.totalPages)}">
+                        <form method="get" th:action="@{/favourites}">
+                            <input name="page" th:value="${i - 1}" type="hidden"/>
+                            <input name="size" th:value="${favourites.size}" type="hidden"/>
+                            <button class="page-link" th:text="${i}" type="submit"></button>
+                        </form>
+                    </li>
+
+                    <!-- Next -->
+                    <li class="page-item" th:if="${favourites.hasNext()}">
+                        <form method="get" th:action="@{/favourites}">
+                            <input name="page" th:value="${favourites.nextPageable().pageNumber}" type="hidden"/>
+                            <input name="size" th:value="${favourites.nextPageable().pageSize}" type="hidden"/>
+                            <button aria-label="След" class="page-link" type="submit">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">След</span>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!--Кнопка "Очистить"-->
+        <form id="clearFavouritesForm" class="mt-5" th:action="@{/favourites/clear}" th:method="post">
+            <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить">
+        </form>
+
     </div>
-
-    <!--Кнопка "Очистить"-->
-    <form id="clearFavouritesForm" class="mt-5" th:action="@{/favourites/clear}" th:method="post" onsubmit="return confirmClearFavouritesForm()">
-        <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить">
-    </form>
-
 </div>
 <div th:insert="~{/partials/footer :: footer}"></div>
 <script th:inline="javascript" th:src="@{/js/favourites.js}"></script>

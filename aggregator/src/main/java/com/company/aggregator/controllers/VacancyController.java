@@ -62,6 +62,10 @@ public class VacancyController {
 
     @PostMapping("/clear")
     public ResponseEntity<String> deleteVacancies(@AuthenticationPrincipal User user) {
+        // todo java.util.concurrent.RejectedExecutionException: Task java.util.concurrent.CompletableFuture$AsyncSupply@11d540a rejected from org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor$1@441fda4d[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 9]
+        //	at java.base/java.util.concurrent.ThreadPoolExecutor$AbortPolicy.rejectedExecution(ThreadPoolExecutor.java:2065) ~[na:na]
+        //	at java.base/java.util.concurrent.ThreadPoolExecutor.reject(ThreadPoolExecutor.java:833) ~[na:na]
+        //	at java.base/java.util.concurrent.ThreadPoolExecutor.execute(ThreadPoolExecutor.java:1365) ~[na:na]
         vacancyService.deleteVacanciesByUserAsync(user);
         return ResponseEntity.ok().body("Vacancies cleared successfully");
     }

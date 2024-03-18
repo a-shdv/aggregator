@@ -17,23 +17,23 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class HomeController {
     private final RestTemplate restTemplate;
-    @Value("${constants.heartbeat-url}")
-    private String heartbeatUrl;
-    private boolean isParserAvailable;
+    @Value("${constants.vacancies-heartbeat-url}")
+    private String vacanciesHeartbeatUrl;
+    private boolean isVacanciesParserAvailable;
 
     @GetMapping
     public String home(Model model) {
-        model.addAttribute("isParserAvailable", isParserAvailable);
+        model.addAttribute("isParserAvailable", isVacanciesParserAvailable);
         return "home";
     }
 
-    @Scheduled(initialDelay = 2_000, fixedDelay = 10_000) // TODO поменять fixedDelay
+    @Scheduled(initialDelay = 2_000, fixedDelay = 10_000)
     public void sendHeartBeat() {
         try {
-            restTemplate.getForEntity(heartbeatUrl, String.class).getStatusCode().is2xxSuccessful();
-            isParserAvailable = true;
+            restTemplate.getForEntity(vacanciesHeartbeatUrl, String.class).getStatusCode().is2xxSuccessful();
+            isVacanciesParserAvailable = true;
         } catch (ResourceAccessException ex) {
-            isParserAvailable = false;
+            isVacanciesParserAvailable = false;
         }
     }
 }

@@ -1,0 +1,14 @@
+server:
+  port: 8081
+
+rabbitmq:
+  services:
+    - host: localhost
+      port: 5672
+  username: guest
+  password: guest
+  topic: jh-topic-exchange
+  queue-to-send: jh-queue-to-aggregator
+  queue-to-receive: jh-queue-to-vacancies
+  routing-key-to-send: jh-routing-key-to-aggregator
+  routing-key-to-receive: jh-routing-key-to-vacancies
