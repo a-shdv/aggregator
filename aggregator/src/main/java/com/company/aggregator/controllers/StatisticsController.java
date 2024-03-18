@@ -1,6 +1,7 @@
 package com.company.aggregator.controllers;
 
 import com.company.aggregator.dtos.StatisticsDto;
+import com.company.aggregator.rabbitmq.services.RabbitMqService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,7 @@ public class StatisticsController {
     @Value("${constants.statistics-heartbeat-url}")
     private String statisticsHeartbeatUrl;
     private boolean isStatisticsParserAvailable;
+    private final RabbitMqService rabbitMqService;
 
     @GetMapping
     public String findStatistics(Model model) {
@@ -32,7 +34,7 @@ public class StatisticsController {
 
     @PostMapping
     public String findStatistics(@ModelAttribute("statisticsDto") StatisticsDto statisticsDto, Model model) {
-        System.out.println(statisticsDto);
+        rabbitMqService.sendToStatisticsParser(StatisticsDto.toSendMessageDto(statisticsDto));
         return "redirect:/statistics";
     }
 
