@@ -1,4 +1,4 @@
-package com.company.parser.rabbitmq.dtos;
+package com.company.vacanciesparser.rabbitmq.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

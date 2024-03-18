@@ -1,6 +1,6 @@
-package com.company.parser.rabbitmq.configurations;
+package com.company.vacanciesparser.rabbitmq.configurations;
 
-import com.company.parser.rabbitmq.properties.ExecutorsProperties;
+import com.company.vacanciesparser.rabbitmq.properties.ExecutorsProperties;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

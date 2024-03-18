@@ -1,7 +1,7 @@
-package com.company.parser.services;
+package com.company.vacanciesparser.services;
 
-import com.company.parser.rabbitmq.dtos.SendMessageDto;
-import com.company.parser.rabbitmq.services.RabbitMqSenderService;
+import com.company.vacanciesparser.rabbitmq.dtos.SendMessageDto;
+import com.company.vacanciesparser.rabbitmq.services.RabbitMqSenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;

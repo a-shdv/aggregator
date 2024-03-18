@@ -18,6 +18,7 @@
 
     <modules>
         <module>vacancies-parser</module>
+        <module>statistics-parser</module>
         <module>aggregator</module>
     </modules>
 

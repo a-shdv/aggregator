@@ -1,7 +1,7 @@
-package com.company.parser.rabbitmq.configurations;
+package com.company.vacanciesparser.rabbitmq.configurations;
 
-import com.company.parser.rabbitmq.exceptions.RabbitException;
-import com.company.parser.rabbitmq.properties.RabbitMqProperties;
+import com.company.vacanciesparser.rabbitmq.exceptions.RabbitException;
+import com.company.vacanciesparser.rabbitmq.properties.RabbitMqProperties;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.Binding;

@@ -1,4 +1,4 @@
-package com.company.parser.rabbitmq.exceptions;
+package com.company.vacanciesparser.rabbitmq.exceptions;
 
 public class RabbitException extends RuntimeException {
 

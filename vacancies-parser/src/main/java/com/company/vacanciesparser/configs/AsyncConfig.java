@@ -1,4 +1,4 @@
-package com.company.parser.configs;
+package com.company.vacanciesparser.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

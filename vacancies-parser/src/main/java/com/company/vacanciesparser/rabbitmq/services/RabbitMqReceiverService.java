@@ -1,9 +1,9 @@
-package com.company.parser.rabbitmq.services;
+package com.company.vacanciesparser.rabbitmq.services;
 
-import com.company.parser.rabbitmq.dtos.ReceiveMessageDto;
-import com.company.parser.services.HabrParserService;
-import com.company.parser.services.HhRuParserService;
-import com.company.parser.services.RabotaRuParserService;
+import com.company.vacanciesparser.rabbitmq.dtos.ReceiveMessageDto;
+import com.company.vacanciesparser.services.HabrParserService;
+import com.company.vacanciesparser.services.HhRuParserService;
+import com.company.vacanciesparser.services.RabotaRuParserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
