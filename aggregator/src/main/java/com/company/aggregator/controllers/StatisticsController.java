@@ -1,5 +1,6 @@
 package com.company.aggregator.controllers;
 
+import com.company.aggregator.dtos.StatisticsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,6 +8,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
@@ -22,9 +25,15 @@ public class StatisticsController {
     private boolean isStatisticsParserAvailable;
 
     @GetMapping
-    public String statistics(Model model) {
+    public String findStatistics(Model model) {
         model.addAttribute("isParserAvailable", isStatisticsParserAvailable);
         return "statistics/statistics";
+    }
+
+    @PostMapping
+    public String findStatistics(@ModelAttribute("statisticsDto") StatisticsDto statisticsDto, Model model) {
+        System.out.println(statisticsDto);
+        return "redirect:/statistics";
     }
 
     @Scheduled(initialDelay = 2_000, fixedDelay = 10_000)
