@@ -56,8 +56,6 @@ public class StatisticsService {
         AtomicReference<String> medianSalaryDesc = new AtomicReference<>();
         AtomicReference<String> modalSalaryTitle = new AtomicReference<>();
         AtomicReference<String> modalSalaryDesc = new AtomicReference<>();
-        AtomicReference<String> pictureDiagrams = new AtomicReference<>();
-        AtomicReference<String> pictureCharts = new AtomicReference<>();
         if (elements != null) {
             elements.forEach(el -> {
                 el.getElementsByClass("chart-section__info").forEach(info -> {
@@ -76,10 +74,6 @@ public class StatisticsService {
                 });
 
 
-//                el.getElementsByClass("chart-section__download-img").forEach(picture -> {
-//                    picture.getElementsByClass("link link_active").first();
-//                    picture0.set(doc.getElementsByClass("chart-section__download-img").text());
-//                });
 
             });
             rabbitMqSenderService.send(SendMessageDto.builder()

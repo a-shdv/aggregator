@@ -19,6 +19,4 @@ public class SendMessageDto implements Serializable {
     String medianSalaryDescription;
     String modalSalaryTitle;
     String modalSalaryDescription;
-    String pictureDiagrams;
-    String pictureCharts;
 }

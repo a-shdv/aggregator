@@ -23,7 +23,5 @@ public class Statistics {
     String medianSalaryDescription;
     String modalSalaryTitle;
     String modalSalaryDescription;
-    String pictureDiagrams;
-    String pictureCharts;
     @OneToOne(mappedBy = "statistics", cascade = CascadeType.ALL) private User user;
 }
