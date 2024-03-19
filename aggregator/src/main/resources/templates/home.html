@@ -52,6 +52,7 @@
 
 <div class="fixed-content">
     <div th:if="${isParserAvailable == true}">
+
         <!--Прогресс бар-->
         <div class="container justify-content-center align-items-center text-center">
             <div id="spaceBefore" style="height: 40vh; display: none"></div>
@@ -78,6 +79,23 @@
         <!--Вакансия-->
         <div class="container" id="vacancy">
             <div style="height: 15vh"></div>
+
+
+            <div class="row justify-content-center text-center">
+                <div class="form-group">
+                    <div class="form-check d-flex" id="switchForms">
+                        <!--Не имеет значения-->
+                        <input checked class="form-check-input" id="vac" name="switchForm" type="radio" value="0">
+                        <label class="form-check-label" for="vac">Вакансия</label>
+
+                        <!--Нет опыта-->
+                        <input class="form-check-input" id="stat" name="switchForm" type="radio" value="1">
+                        <label class="form-check-label" for="stat">Статистика</label>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="row justify-content-center">
                 <form class="col-lg-4" id="vacancyForm" th:action="@{/vacancies}" th:method="post">
                     <h2>Вакансия</h2>
@@ -172,6 +190,71 @@
                     <input class="btn btn-md btn-warning mt-3" id="searchVacanciesButton" type="submit" value="Найти">
                 </form>
             </div>
+            <div class="row justify-content-center">
+                <form class="col-lg-4" id="statisticsForm" th:action="@{/statistics}" th:method="post"
+                      th:object="${statisticsDto}">
+                    <h2>Статистика</h2>
+                    <!--Профессия-->
+                    <div class="form-group">
+                        <label for="profession">Название профессии</label>
+                        <br>
+                        <input id="profession" class="form-control" name="profession" type="text" placeholder="Профессия"
+                               required>
+                    </div>
+
+                    <!--Город-->
+                    <div class="form-group mt-3">
+                        <label for="city">Месторасположение</label>
+                        <br>
+                        <input id="city" class="form-control" name="city" type="text" placeholder="Город">
+                    </div>
+
+                    <!--Год-->
+                    <div class="form-group mt-3">
+                        <label for="year">Год</label>
+                        <br>
+                        <select id="year" name="year" required>
+                            <option disabled value="">Выберите год</option>
+                            <option selected value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                        </select>
+                    </div>
+                    <br>
+
+                    <!--Валюта-->
+                    <div class="form-group">
+                        <label class="form-check-label" for="statisticsCurrency">Валюта</label>
+                        <div class="form-check" id="statisticsCurrency">
+                            <!--Не имеет значения-->
+                            <input checked class="form-check-input" name="currency" type="radio" value="0">
+                            <label class="form-check-label" for="0">USD, $</label>
+                            <br>
+
+                            <!--Нет опыта-->
+                            <input class="form-check-input"  name="currency" type="radio" value="1">
+                            <label class="form-check-label" for="1">EUR, €</label>
+                            <br>
+
+                            <!--От 1 года до 3 лет-->
+                            <input class="form-check-input"  name="currency" type="radio" value="2">
+                            <label class="form-check-label" for="2">RUB, ₽</label>
+                            <br>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-5">
+                        <input class="btn btn-md btn-warning" type="submit" value="Отправить">
+                    </div>
+                </form>
+            </div>
+
+
             <div style="height: 15vh"></div>
         </div>
 

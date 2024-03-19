@@ -115,3 +115,52 @@ function sendMessage() {
 
 window.addEventListener('unload', disconnect);
 searchVacanciesButton.addEventListener('click', connect)
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Получаем радиобоксы и формы
+    const vacancyRadio = document.getElementById("vac");
+    const statisticsRadio = document.getElementById("stat");
+    const vacancyForm = document.getElementById("vacancyForm");
+    const statisticsForm = document.getElementById("statisticsForm");
+
+    // Функция для скрытия формы вакансии и показа формы статистики
+    function showStatisticsForm() {
+        vacancyForm.style.display = "none";
+        statisticsForm.style.display = "block";
+    }
+
+    // Функция для скрытия формы статистики и показа формы вакансии
+    function showVacancyForm() {
+        statisticsForm.style.display = "none";
+        vacancyForm.style.display = "block";
+    }
+
+    // Обработчики событий для радиобоксов
+    vacancyRadio.addEventListener("change", function () {
+        if (vacancyRadio.checked) {
+            showVacancyForm();
+        }
+    });
+
+    statisticsRadio.addEventListener("change", function () {
+        if (statisticsRadio.checked) {
+            showStatisticsForm();
+        }
+    });
+
+    // Обработчик события для кнопки переключения форм
+    const switchFormsButton = document.getElementById("switchFormsButton");
+    switchFormsButton.addEventListener("click", function () {
+        if (vacancyForm.style.display === "none") {
+            showVacancyForm();
+            vacancyRadio.checked = true;
+        } else {
+            showStatisticsForm();
+            statisticsRadio.checked = true;
+        }
+    });
+
+    // По умолчанию показываем форму вакансии
+    showVacancyForm();
+});
