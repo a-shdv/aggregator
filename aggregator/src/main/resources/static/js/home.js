@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Функция для скрытия формы статистики и показа формы вакансии
     function showVacancyForm() {
         statisticsForm.style.display = "none";
-        vacancyForm.style.display = "block";
+        vacancyForm.style.display = "";
     }
 
     // Обработчики событий для радиобоксов
