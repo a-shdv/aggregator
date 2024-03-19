@@ -60,8 +60,8 @@ public class StatisticsService {
         AtomicReference<String> medianSalaryDesc = new AtomicReference<>();
         AtomicReference<String> modalSalaryTitle = new AtomicReference<>();
         AtomicReference<String> modalSalaryDesc = new AtomicReference<>();
-        AtomicReference<String> picture0 = new AtomicReference<>();
-        AtomicReference<String> picture1 = new AtomicReference<>();
+        AtomicReference<String> pictureDiagrams = new AtomicReference<>();
+        AtomicReference<String> pictureCharts = new AtomicReference<>();
         if (elements != null) {
             elements.forEach(el -> {
                 el.getElementsByClass("chart-section__info").forEach(info -> {

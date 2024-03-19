@@ -9,7 +9,9 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class SendMessageDto implements Serializable {
+    String username;
 
 }

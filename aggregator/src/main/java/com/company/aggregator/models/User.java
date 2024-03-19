@@ -10,10 +10,9 @@ import java.util.*;
 
 @Entity
 @Table(name = "users")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Builder
 public class User implements UserDetails {
     @Id
@@ -39,6 +38,10 @@ public class User implements UserDetails {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<Favourite> favourites = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "statistics_id", referencedColumnName = "id")
+    private Statistics statistics;
 
 
     @Override

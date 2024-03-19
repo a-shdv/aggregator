@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class ReceiveMessageDto implements Serializable {
+    String username;
     String profession;
     String city;
     String year;

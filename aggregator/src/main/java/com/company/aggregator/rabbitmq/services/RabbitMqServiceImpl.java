@@ -4,6 +4,7 @@ package com.company.aggregator.rabbitmq.services;
 import com.company.aggregator.models.User;
 import com.company.aggregator.rabbitmq.dtos.vacancies.ReceiveMessageDto;
 import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
+import com.company.aggregator.services.StatisticsService;
 import com.company.aggregator.services.UserService;
 import com.company.aggregator.services.VacancyService;
 import com.company.aggregator.websockets.dtos.WebSocketSendMessageDto;
@@ -13,7 +14,6 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,13 +30,23 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     private final RabbitMqProperties rabbitProperties;
     private final VacancyService vacancyService;
     private final UserService userService;
+    private final StatisticsService statisticsService;
     private final SimpMessageSendingOperations messageSendingOperations;
 
     @Override
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
+    public void receive(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
+        log.info("RECEIVED: {}", message);
+        User user = userService.findUserByUsername(message.getUsername());
+        statisticsService.saveStatisticsAsync(message);
+//        statisticsService.statistics(message);
+    }
+
+    @Override
+    @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(List<ReceiveMessageDto> receiveMessageDtoList) {
-        User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername());
         log.info("RECEIVED: {}", receiveMessageDtoList);
+        User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername());
         if (!receiveMessageDtoList.isEmpty()) {
             vacancyService.saveMessageList(receiveMessageDtoList, user);
         }
