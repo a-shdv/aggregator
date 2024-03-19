@@ -16,5 +16,5 @@ public class SendMessageDto implements Serializable {
     String profession;
     String city;
     String year;
-    Integer currency;
+    String currency;
 }

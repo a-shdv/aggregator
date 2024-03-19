@@ -3,8 +3,8 @@ package com.company.aggregator.dtos;
 import com.company.aggregator.rabbitmq.dtos.statistics.SendMessageDto;
 import lombok.Getter;
 
-public record StatisticsDto(@Getter String profession, @Getter String city, @Getter String year, @Getter Integer currency) {
-    public StatisticsDto(String profession, String city, String year, Integer currency) {
+public record StatisticsDto(@Getter String profession, @Getter String city, @Getter String year, @Getter String currency) {
+    public StatisticsDto(String profession, String city, String year, String currency) {
         this.profession = profession;
         this.city = city;
         this.year = year;
