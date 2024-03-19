@@ -34,17 +34,8 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     private final SimpMessageSendingOperations messageSendingOperations;
 
     @Override
-    @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
-    public void receive(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
-        log.info("RECEIVED: {}", message);
-        User user = userService.findUserByUsername(message.getUsername());
-        statisticsService.saveStatisticsAsync(message);
-//        statisticsService.statistics(message);
-    }
-
-    @Override
-    @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
-    public void receive(List<ReceiveMessageDto> receiveMessageDtoList) {
+    @RabbitListener(queues = "${rabbitmq.queue-to-receive0}")
+    public void receive(List<com.company.aggregator.rabbitmq.dtos.vacancies.ReceiveMessageDto> receiveMessageDtoList) {
         log.info("RECEIVED: {}", receiveMessageDtoList);
         User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername());
         if (!receiveMessageDtoList.isEmpty()) {
@@ -55,9 +46,17 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     }
 
     @Override
+    @RabbitListener(queues = "${rabbitmq.queue-to-receive1}")
+    public void receive(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
+        log.info("RECEIVED: {}", message);
+        User user = userService.findUserByUsername(message.getUsername());
+//        statisticsService.saveStatisticsAsync(message);
+//        statisticsService.statistics(message);
+    }
+
+    @Override
     public void sendToVacanciesParser(com.company.aggregator.rabbitmq.dtos.vacancies.SendMessageDto sendMessageDto) {
         vacancyService.deleteVacanciesByUserAsync(userService.findUserByUsername(sendMessageDto.getUsername()));
-
         rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend0(), sendMessageDto);
         progressbarLoaderCounter = 0;
         messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(progressbarLoaderCounter)).type("RECEIVE").build());

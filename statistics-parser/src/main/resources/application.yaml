@@ -12,7 +12,7 @@ rabbitmq:
   username: guest
   password: guest
   topic: jh-topic-exchange
-  queue-to-send: jh-queue-to-aggregator
+  queue-to-send: jh-queue-to-aggregator-statistics
   queue-to-receive: jh-queue-to-statistics
-  routing-key-to-send: jh-routing-key-to-aggregator
+  routing-key-to-send: jh-routing-key-to-aggregator-statistics
   routing-key-to-receive: jh-routing-key-to-statistics

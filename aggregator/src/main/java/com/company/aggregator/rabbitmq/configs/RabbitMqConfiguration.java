@@ -46,8 +46,13 @@ public class RabbitMqConfiguration {
     }
 
     @Bean
-    public Queue queueToReceive() {
-        return new Queue(rabbitMqProperties.getQueueToReceive(), true, false, false, rabbitArgs);
+    public Queue queueToReceive0() {
+        return new Queue(rabbitMqProperties.getQueueToReceive0(), true, false, false, rabbitArgs);
+    }
+
+    @Bean
+    public Queue queueToReceive1() {
+        return new Queue(rabbitMqProperties.getQueueToReceive1(), true, false, false, rabbitArgs);
     }
 
     @Bean
@@ -66,8 +71,13 @@ public class RabbitMqConfiguration {
     }
 
     @Bean
-    public Binding bindingToReceive(TopicExchange exchange) {
-        return BindingBuilder.bind(queueToReceive()).to(exchange).with(rabbitMqProperties.getRoutingKeyToReceive());
+    public Binding bindingToReceive0(TopicExchange exchange) {
+        return BindingBuilder.bind(queueToReceive0()).to(exchange).with(rabbitMqProperties.getRoutingKeyToReceive0());
+    }
+
+    @Bean
+    public Binding bindingToReceive1(TopicExchange exchange) {
+        return BindingBuilder.bind(queueToReceive1()).to(exchange).with(rabbitMqProperties.getRoutingKeyToReceive1());
     }
 
     @Bean

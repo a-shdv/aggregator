@@ -18,10 +18,12 @@ rabbitmq:
   topic: jh-topic-exchange
   queue-to-send0: jh-queue-to-vacancies
   queue-to-send1: jh-queue-to-statistics
-  queue-to-receive: jh-queue-to-aggregator
+  queue-to-receive0: jh-queue-to-aggregator-vacancies
+  queue-to-receive1: jh-queue-to-aggregator-statistics
   routing-key-to-send0: jh-routing-key-to-vacancies
   routing-key-to-send1: jh-routing-key-to-statistics
-  routing-key-to-receive: jh-routing-key-to-aggregator
+  routing-key-to-receive0: jh-routing-key-to-aggregator-vacancies
+  routing-key-to-receive1: jh-routing-key-to-aggregator-statistics
 
 spring:
   application:

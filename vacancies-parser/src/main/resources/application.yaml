@@ -8,7 +8,7 @@ rabbitmq:
   username: guest
   password: guest
   topic: jh-topic-exchange
-  queue-to-send: jh-queue-to-aggregator
+  queue-to-send: jh-queue-to-aggregator-vacancies
   queue-to-receive: jh-queue-to-vacancies
-  routing-key-to-send: jh-routing-key-to-aggregator
+  routing-key-to-send: jh-routing-key-to-aggregator-vacancies
   routing-key-to-receive: jh-routing-key-to-vacancies
