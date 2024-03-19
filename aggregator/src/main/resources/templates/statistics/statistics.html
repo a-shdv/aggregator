@@ -51,7 +51,15 @@
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 
 <!--Город-->
-<div style="height: 30vh"></div>
+<div style="height: 3vh"></div>
+
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;"
+     th:if="${isParserAvailable == false}">
+    <div class="alert alert-danger col-6" role="alert">
+        Извините, в данный момент сервис недоступен!
+    </div>
+</div>
+
 <div th:if="${isParserAvailable == true}">
     <div class="container">
         <div class="row justify-content-center">
@@ -61,14 +69,14 @@
                 <div class="form-group">
                     <label for="profession">Название профессии</label>
                     <br>
-                    <input id="profession" name="profession" type="text" placeholder="Профессия">
+                    <input id="profession" class="form-control" name="profession" type="text" placeholder="Профессия" required>
                 </div>
 
                 <!--Город-->
                 <div class="form-group mt-3">
-                    <label for="city">Название профессии</label>
+                    <label for="city">Месторасположение</label>
                     <br>
-                    <input id="city" name="city" type="text" placeholder="Город">
+                    <input id="city" class="form-control"  name="city" type="text" placeholder="Город">
                 </div>
 
                 <!--Год-->
@@ -94,7 +102,7 @@
                     <label class="form-check-label" for="statisticsCurrency">Валюта</label>
                     <div class="form-check" id="statisticsCurrency">
                         <!--Не имеет значения-->
-                        <input checked class="form-check-input" id="0" name="currency" type="radio" value="0">
+                        <input  checked class="form-check-input" id="0" name="currency" type="radio" value="0">
                         <label class="form-check-label" for="0">USD, $</label>
                         <br>
 
@@ -119,7 +127,7 @@
     </div>
 </div>
 
-<div style="height: 30vh"></div>
+<div style="height: 10vh"></div>
 
 <div th:insert="~{/partials/footer :: footer}"></div>
 </body>

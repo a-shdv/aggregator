@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 @Slf4j
 public class StatisticsService {
-    private final RabbitMqService rabbitMqService;
+//    private final RabbitMqService rabbitMqService;
 
     @Async
     public CompletableFuture<Void> test(ReceiveMessageDto receiveMessageDto) {
