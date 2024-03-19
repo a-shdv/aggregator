@@ -35,7 +35,7 @@ public class StatisticsController {
     @PostMapping
     public String findStatistics(@ModelAttribute("statisticsDto") StatisticsDto statisticsDto, Model model) {
         rabbitMqService.sendToStatisticsParser(StatisticsDto.toSendMessageDto(statisticsDto));
-        return "redirect:/statistics";
+        return "redirect:/";
     }
 
     @Scheduled(initialDelay = 2_000, fixedDelay = 10_000)

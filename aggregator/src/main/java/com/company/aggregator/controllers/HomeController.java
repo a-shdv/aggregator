@@ -17,9 +17,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class HomeController {
     @GetMapping
-    public String home(Model model) {
+    public String home() {
         return "home";
     }
-
-
 }
