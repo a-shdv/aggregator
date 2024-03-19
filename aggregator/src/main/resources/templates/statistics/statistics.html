@@ -63,20 +63,23 @@
 <div th:if="${isParserAvailable == true}">
     <div class="container">
         <div class="row justify-content-center">
-            <form class="col-lg-4" id="statisticsForm" th:action="@{/statistics}" th:method="post" th:object="${statisticsDto}">
+            <div style="height: 20vh"></div>
+            <form class="col-lg-4" id="statisticsForm" th:action="@{/statistics}" th:method="post"
+                  th:object="${statisticsDto}">
                 <h2>Статистика</h2>
                 <!--Профессия-->
                 <div class="form-group">
                     <label for="profession">Название профессии</label>
                     <br>
-                    <input id="profession" class="form-control" name="profession" type="text" placeholder="Профессия" required>
+                    <input id="profession" class="form-control" name="profession" type="text" placeholder="Профессия"
+                           required>
                 </div>
 
                 <!--Город-->
                 <div class="form-group mt-3">
                     <label for="city">Месторасположение</label>
                     <br>
-                    <input id="city" class="form-control"  name="city" type="text" placeholder="Город">
+                    <input id="city" class="form-control" name="city" type="text" placeholder="Город">
                 </div>
 
                 <!--Год-->
@@ -95,14 +98,14 @@
                         <option value="2017">2017</option>
                     </select>
                 </div>
-                    <br>
+                <br>
 
                 <!--Валюта-->
                 <div class="form-group">
                     <label class="form-check-label" for="statisticsCurrency">Валюта</label>
                     <div class="form-check" id="statisticsCurrency">
                         <!--Не имеет значения-->
-                        <input  checked class="form-check-input" id="0" name="currency" type="radio" value="0">
+                        <input checked class="form-check-input" id="0" name="currency" type="radio" value="0">
                         <label class="form-check-label" for="0">USD, $</label>
                         <br>
 
@@ -122,6 +125,7 @@
                     <input class="btn btn-md btn-warning" type="submit" value="Отправить">
                 </div>
             </form>
+            <div style="height: 20vh"></div>
 
         </div>
     </div>

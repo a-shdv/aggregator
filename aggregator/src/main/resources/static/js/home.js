@@ -6,8 +6,11 @@ const searchVacanciesButton = document.querySelector('#searchVacanciesButton')
 
 const spaceBefore = document.querySelector('#spaceBefore')
 const counter = document.querySelector('#counter')
-const progressbar = document.querySelector('#progressbar')
-const progressbarLoader = document.querySelector('#progressbar-loader')
+const spinner = document.querySelector('#spinner')
+const spinnerInner = document.querySelector('#spinner-inner')
+const waitParagraph = document.querySelector('#waitParagraph')
+// const progressbar = document.querySelector('#progressbar')
+// const progressbarLoader = document.querySelector('#progressbar-loader')
 const okButton = document.querySelector('#okButton')
 const spaceAfter = document.querySelector('#spaceAfter')
 
@@ -55,31 +58,32 @@ function onMessageReceived(payload) {
 
     switch (message.type) {
         case 'JOIN':
-            counter.textContent = '0%'
-            progressbarLoader.style.width = '0%'
+            counter.textContent = 'Найдено 0 шт.'
+            // progressbarLoader.style.width = '0%'
             sendMessage()
             break
         case 'LEAVE':
             console.log('left')
             break
         case 'RECEIVE':
-            let messageCounter = message.content + '%'
+            let messageCounter = 'Найдено ' + message.content + ' шт.'
             counter.textContent = messageCounter
-            progressbarLoader.style.width = messageCounter
-
-            if (parseInt(progressbarLoader.style.width) >= 12 && parseInt(progressbarLoader.style.width) < 60) {
+            // progressbarLoader.style.width = messageCounter
+            if (parseInt(message.content) >= 12) {
+                spinner.style.display = 'none'
+                waitParagraph.style.display = 'none'
+                counter.textContent = 'Готово!'
                 counter.classList.remove('text-warning')
                 counter.classList.add('text-success')
-
-                progressbarLoader.classList.remove('bg-warning')
-                progressbarLoader.classList.add('bg-success')
-
                 okButton.style.display = ''
-            } else if (parseInt(progressbarLoader.style.width) >= 100) {
-                counter.textContent = 'Готово!'
-                progressbarLoader.style.width = '100%'
                 disconnect()
-                // window.removeEventListener('unload', disconnect)
+                setTimeout(() => {
+                    counter.style.display = 'none'
+                    okButton.style.display = 'none'
+                    spaceAfter.style.display = 'none'
+                    spaceBefore.style.display = 'none'
+                    vacancy.style.display = ''
+                }, 5000);
             }
             break
     }
@@ -100,7 +104,8 @@ function sendMessage() {
         // hide vacancy form and show progressbar, counter
         spaceBefore.style.display = ''
         vacancy.style.display = 'none'
-        progressbar.style.display = ''
+        spinner.style.display = ''
+        // progressbar.style.display = ''
         counter.style.display = ''
         spaceAfter.style.display = ''
 

@@ -37,10 +37,10 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     public void receive(List<ReceiveMessageDto> receiveMessageDtoList) {
         User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername());
         log.info("RECEIVED: {}", receiveMessageDtoList);
-//        receiveMessageDtoList
-//                .removeIf(receiveMessageDto -> aggregatorService.findBySource(receiveMessageDto.getSource()) != null);
+        receiveMessageDtoList
+                .removeIf(receiveMessageDto -> vacancyService.findBySource(receiveMessageDto.getSource()) != null);
         if (!receiveMessageDtoList.isEmpty()) {
-            vacancyService.saveMessageListAsync(receiveMessageDtoList, user);
+            vacancyService.saveMessageList(receiveMessageDtoList, user);
         }
         progressbarLoaderCounter += receiveMessageDtoList.size();
         messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(progressbarLoaderCounter)).type("RECEIVE").build());
@@ -49,8 +49,10 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     @Override
     public void sendToVacanciesParser(com.company.aggregator.rabbitmq.dtos.vacancies.SendMessageDto sendMessageDto) {
         vacancyService.deleteVacanciesByUserAsync(userService.findUserByUsername(sendMessageDto.getUsername()));
+
         rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend0(), sendMessageDto);
-        messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(0)).type("RECEIVE").build());
+        progressbarLoaderCounter = 0;
+        messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(progressbarLoaderCounter)).type("RECEIVE").build());
         log.info("SENT (vacancies): {}", sendMessageDto);
     }
 
@@ -60,13 +62,13 @@ public class RabbitMqServiceImpl implements RabbitMqService {
         log.info("SENT (statistics): {}", sendMessageDto);
     }
 
-    @Scheduled(initialDelay = 15_000, fixedDelay = 10_000)
-    public void checkProgressbarLoaderCounter() {
-        if (previousProgressbarLoaderCounter == progressbarLoaderCounter ) {
-            progressbarLoaderCounter = 0;
-            messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(100)).type("RECEIVE").build());
-        }
-        previousProgressbarLoaderCounter = progressbarLoaderCounter;
-    }
+//    @Scheduled(initialDelay = 15_000, fixedDelay = 10_000)
+//    public void checkProgressbarLoaderCounter() {
+//        if (previousProgressbarLoaderCounter == progressbarLoaderCounter ) {
+//            progressbarLoaderCounter = 0;
+//            messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(100)).type("RECEIVE").build());
+//        }
+//        previousProgressbarLoaderCounter = progressbarLoaderCounter;
+//    }
 }
 

@@ -4,8 +4,8 @@ import com.company.aggregator.exceptions.VacancyNotFoundException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.models.Vacancy;
 import com.company.aggregator.rabbitmq.dtos.vacancies.ReceiveMessageDto;
-import com.company.aggregator.repositories.VacancyRepository;
 import com.company.aggregator.repositories.UserRepository;
+import com.company.aggregator.repositories.VacancyRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +29,13 @@ public class VacancyService {
         vacancyRepository.save(ReceiveMessageDto.toVacancy(receiveMessageDto));
     }
 
+
+    @Transactional
+    public List<Vacancy> saveMessageList(List<ReceiveMessageDto> receiveMessageDtoList, User user) {
+        List<Vacancy> vacancies = ReceiveMessageDto.toVacancyList(receiveMessageDtoList);
+        vacancies.forEach(vacancy -> vacancy.setUser(user));
+        return vacancyRepository.saveAll(vacancies);
+    }
 
     @Async("asyncExecutor")
     @Transactional

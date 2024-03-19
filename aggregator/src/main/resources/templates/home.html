@@ -53,19 +53,25 @@
 <div class="fixed-content">
     <div th:if="${isParserAvailable == true}">
         <!--Прогресс бар-->
-        <div class="container justify-content-center align-items-center">
+        <div class="container justify-content-center align-items-center text-center">
             <div id="spaceBefore" style="height: 40vh; display: none"></div>
-            <p class="text-warning text-center" id="counter" style="display: none">0%</p>
-            <div class="progress" id="progressbar" style="display: none">
-                <div valuemax="60" aria-valuemin="0" class="progress-bar bg-warning"
-                     id="progressbar-loader" role="progressbar" style="width: 0%; max-width: 100%">
+
+<!--            <img th:src="@{/images/check.png}" id="check" alt="Не удалось загрузить изображение" style="display: none">-->
+
+            <div id="spinner" style="display: none">
+                <div id="spinner-inner" class="spinner-border text-warning" role="status">
+                    <span class="sr-only"></span>
                 </div>
+                <p id="waitParagraph" class="text-warning">Пожалуйста, подождите...</p>
             </div>
+            <p class="text-warning text-center" id="counter" style="display: none"></p>
+
             <div style="text-align: center">
                 <a id="okButton" style="display: none" target="_blank" th:href="@{/vacancies}">
                     <input class="btn btn-md btn-success mt-3 text-center" type="button" value="Перейти">
                 </a>
             </div>
+
             <div id="spaceAfter" style="height: 40vh; display: none"></div>
         </div>
 
