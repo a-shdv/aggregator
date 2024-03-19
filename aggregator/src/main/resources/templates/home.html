@@ -57,7 +57,7 @@
         <div class="container justify-content-center align-items-center text-center">
             <div id="spaceBefore" style="height: 40vh; display: none"></div>
 
-<!--            <img th:src="@{/images/check.png}" id="check" alt="Не удалось загрузить изображение" style="display: none">-->
+            <!--            <img th:src="@{/images/check.png}" id="check" alt="Не удалось загрузить изображение" style="display: none">-->
 
             <div id="spinner" style="display: none">
                 <div id="spinner-inner" class="spinner-border text-warning" role="status">
@@ -72,25 +72,24 @@
                     <input class="btn btn-md btn-success mt-3 text-center" type="button" value="Перейти">
                 </a>
             </div>
-
             <div id="spaceAfter" style="height: 40vh; display: none"></div>
         </div>
 
         <!--Вакансия-->
         <div class="container" id="vacancy">
             <div style="height: 15vh"></div>
-
-
             <div class="row justify-content-center text-center">
-                <div class="form-group">
-                    <div class="form-check d-flex" id="switchForms">
-                        <!--Не имеет значения-->
-                        <input checked class="form-check-input" id="vac" name="switchForm" type="radio" value="0">
-                        <label class="form-check-label" for="vac">Вакансия</label>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <div class="form-check d-flex" id="switchForms">
+                            <!--Не имеет значения-->
+                            <input checked class="form-check-input" id="vac" name="switchForm" type="radio" value="0">
+                            <label class="form-check-label mr-3" for="vac" style="margin-right: 50px">Вакансия</label>
 
-                        <!--Нет опыта-->
-                        <input class="form-check-input" id="stat" name="switchForm" type="radio" value="1">
-                        <label class="form-check-label" for="stat">Статистика</label>
+                            <!--Нет опыта-->
+                            <input class="form-check-input" id="stat" name="switchForm" type="radio" value="1">
+                            <label class="form-check-label" for="stat">Статистика</label>
+                        </div>
                     </div>
                 </div>
             </div>
