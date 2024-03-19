@@ -13,5 +13,12 @@ import java.io.Serializable;
 @Builder
 public class SendMessageDto implements Serializable {
     String username;
-
+    String avgSalaryTitle;
+    String avgSalaryDescription;
+    String medianSalaryTitle;
+    String medianSalaryDescription;
+    String modalSalaryTitle;
+    String modalSalaryDescription;
+    String pictureDiagrams;
+    String pictureCharts;
 }

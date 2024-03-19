@@ -20,7 +20,7 @@ public class RabbitMqSenderService {
 
     private final RabbitMqProperties rabbitProperties;
 
-    public void send(List<SendMessageDto> sendMessageDtos) {
+    public void send(SendMessageDto sendMessageDtos) {
         rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend(), sendMessageDtos);
         log.info("SENT: {}", sendMessageDtos);
     }

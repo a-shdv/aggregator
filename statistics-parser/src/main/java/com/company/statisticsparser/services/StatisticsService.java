@@ -1,6 +1,8 @@
 package com.company.statisticsparser.services;
 
 import com.company.statisticsparser.rabbitmq.dtos.ReceiveMessageDto;
+import com.company.statisticsparser.rabbitmq.dtos.SendMessageDto;
+import com.company.statisticsparser.rabbitmq.services.RabbitMqSenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -15,15 +17,9 @@ import java.util.concurrent.atomic.AtomicReference;
 @RequiredArgsConstructor
 @Slf4j
 public class StatisticsService {
-//    private final RabbitMqService rabbitMqService;
+    private final RabbitMqSenderService rabbitMqSenderService;
 
     public void findStatistics(ReceiveMessageDto receiveMessageDto) {
-//        rabbitMqService.send(receiveMessageDto);
-//        StringBuilder url = new StringBuilder("https://gorodrabot.ru/salary"
-//        + "?p=" + receiveMessageDto.getProfession()
-//        + "&l=" + receiveMessageDto.getCity()
-//        + "&c=" + receiveMessageDto.getCurrency());
-
         StringBuilder url = new StringBuilder("https://gorodrabot.ru/salary");
 
         // Профессия
@@ -79,12 +75,21 @@ public class StatisticsService {
                     }
                 });
 
+
 //                el.getElementsByClass("chart-section__download-img").forEach(picture -> {
 //                    picture.getElementsByClass("link link_active").first();
 //                    picture0.set(doc.getElementsByClass("chart-section__download-img").text());
 //                });
 
             });
+            rabbitMqSenderService.send(SendMessageDto.builder()
+                            .avgSalaryTitle(avgSalaryTitle.toString())
+                            .avgSalaryDescription(avgSalaryDesc.toString())
+                            .medianSalaryTitle(medianSalaryTitle.toString())
+                            .medianSalaryDescription(medianSalaryDesc.toString())
+                            .modalSalaryTitle(modalSalaryTitle.toString())
+                            .modalSalaryDescription(modalSalaryDesc.toString())
+                    .build());
         } else {
             log.error("Could not parse elements!");
         }
