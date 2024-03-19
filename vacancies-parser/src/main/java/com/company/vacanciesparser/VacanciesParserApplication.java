@@ -9,8 +9,4 @@ public class VacanciesParserApplication {
     public static void main(String[] args) {
         SpringApplication.run(VacanciesParserApplication.class, args);
     }
-//    @Bean
-//    public Executor jobExecutor() {
-//        return Executors.newCachedThreadPool();
-//    }
 }

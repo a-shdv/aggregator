@@ -51,222 +51,211 @@
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 
 <div class="fixed-content">
-    <div th:if="${isParserAvailable == true}">
 
-        <!--Прогресс бар-->
-        <div class="container justify-content-center align-items-center text-center">
-            <div id="spaceBefore" style="height: 40vh; display: none"></div>
+    <!--Прогресс бар-->
+    <div class="container justify-content-center align-items-center text-center">
+        <div id="spaceBefore" style="height: 40vh; display: none"></div>
 
-            <!--            <img th:src="@{/images/check.png}" id="check" alt="Не удалось загрузить изображение" style="display: none">-->
+        <!--            <img th:src="@{/images/check.png}" id="check" alt="Не удалось загрузить изображение" style="display: none">-->
 
-            <div id="spinner" style="display: none">
-                <div id="spinner-inner" class="spinner-border text-warning" role="status">
-                    <span class="sr-only"></span>
-                </div>
-                <p id="waitParagraph" class="text-warning">Пожалуйста, подождите...</p>
+        <div id="spinner" style="display: none">
+            <div id="spinner-inner" class="spinner-border text-warning" role="status">
+                <span class="sr-only"></span>
             </div>
-            <p class="text-warning text-center" id="counter" style="display: none"></p>
-
-            <div style="text-align: center">
-                <a id="okButton" style="display: none" target="_blank" th:href="@{/vacancies}">
-                    <input class="btn btn-md btn-success mt-3 text-center" type="button" value="Перейти">
-                </a>
-            </div>
-            <div id="spaceAfter" style="height: 40vh; display: none"></div>
+            <p id="waitParagraph" class="text-warning">Пожалуйста, подождите...</p>
         </div>
+        <p class="text-warning text-center" id="counter" style="display: none"></p>
 
-        <!--Вакансия-->
-        <div class="container" id="vacancy">
-            <div style="height: 15vh"></div>
-            <div class="row justify-content-center text-center mb-4">
-                <div class="col-lg-4">
-                    <div class="form-group">
-                        <div class="form-check d-flex" id="switchForms">
-                            <!--Не имеет значения-->
-                            <input checked class="form-check-input" id="vac" name="switchForm" type="radio" value="0">
-                            <label class="form-check-label mr-3" for="vac" style="margin-left: 2px; margin-right: 30px">Вакансия</label>
-
-                            <!--Нет опыта-->
-                            <input class="form-check-input" id="stat" name="switchForm" type="radio" value="1">
-                            <label class="form-check-label" for="stat" style="margin-left: 2px;">Статистика</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!--Форма для заполнения вакансии-->
-            <div class="row justify-content-center">
-                <form class="col-lg-4" id="vacancyForm" th:action="@{/vacancies}" th:method="post">
-                    <h2>Вакансия</h2>
-                    <input id="username" th:value="${#authentication.principal.username}" type="hidden">
-
-                    <!--Название вакансии-->
-                    <div class="form-group">
-                        <label for="title">Название вакансии</label>
-                        <input class="form-control" id="title" name="title" placeholder="Программист" required
-                               type="text">
-                    </div>
-
-                    <!--Зарплата-->
-                    <div class="form-group">
-                        <label for="salary">Заработная плата (от ...)</label>
-                        <input class="form-control" id="salary" min="0" name="salary" type="number" value="0">
-                    </div>
-
-                    <!--Заработная плата указана-->
-                    <div class="form-group">
-                        <div class="form-check">
-                            <label class="form-check-label" for="onlyWithSalary"> Заработная плата указана</label>
-                            <input class="form-check-input" id="onlyWithSalary" name="onlyWithSalary" type="checkbox">
-                            <br><br>
-                        </div>
-                    </div>
-
-                    <!--Опыт работы-->
-                    <div class="form-group">
-                        <label class="form-check-label" for="workExperience">Опыт работы</label>
-                        <div class="form-check" id="workExperience">
-                            <!--Не имеет значения-->
-                            <input checked class="form-check-input" id="0" name="experience" type="radio" value="0">
-                            <label class="form-check-label" for="0">Не имеет значения</label>
-                            <br>
-                            <!--Нет опыта-->
-                            <input class="form-check-input" id="1" name="experience" type="radio" value="1">
-                            <label class="form-check-label" for="1">Нет опыта</label>
-                            <br>
-                            <!--От 1 года до 3 лет-->
-                            <input class="form-check-input" id="2" name="experience" type="radio" value="2">
-                            <label class="form-check-label" for="2">От 1 года до 3 лет</label>
-                            <br>
-                            <!--От 3 до 6 лет-->
-                            <input class="form-check-input" id="3" name="experience" type="radio" value="3">
-                            <label class="form-check-label" for="3">От 3 до 6 лет</label>
-                            <br>
-                            <!--Более 6 лет-->
-                            <input class="form-check-input" id="4" name="experience" type="radio" value="4">
-                            <label class="form-check-label" for="4">Более 6 лет</label>
-                            <br> <br>
-                        </div>
-                    </div>
-
-                    <!--Город-->
-                    <div class="form-group">
-                        <label>Город</label>
-                        <label>
-                            <select id="cityId" name="cityId" required>
-                                <option disabled value="">Выберите город</option>
-                                <option selected value="0">Москва</option>
-                                <option value="1">Санкт-Петербург</option>
-                                <option value="2">Екатеринбург</option>
-                                <option value="3">Новосибирск</option>
-                                <option value="4">Казань</option>
-                                <option value="5">Нижний Новгород</option>
-                                <option value="6">Ульяновск</option>
-                                <option value="7">Тольятти</option>
-                                <option value="8">Астрахань</option>
-                                <option value="9">Уфа</option>
-                            </select>
-                        </label>
-                        <br><br>
-                    </div>
-
-                    <div class="form-group">
-                        <!--'Можно удаленно'-->
-                        <div class="form-check">
-                            <label class="form-check-label" for="isRemoteAvailable">Только удаленно</label>
-                            <input class="form-check-input" id="isRemoteAvailable" name="isRemoteAvailable"
-                                   type="checkbox">
-                            <br><br>
-                        </div>
-                    </div>
-
-                    <!--isConsumingCancelled-->
-                    <!--                <div>-->
-                    <!--                    <input type="hidden" th:value="false" name="isConsumingCancelled">-->
-                    <!--                </div>-->
-
-                    <!--Отправка формы-->
-                    <input class="btn btn-md btn-warning mt-3" id="searchVacanciesButton" type="submit" value="Найти">
-                </form>
-            </div>
-
-            <!--Форма для заполнения статистики-->
-            <div class="row justify-content-center">
-                <form class="col-lg-4" id="statisticsForm" style="display: none" th:action="@{/statistics}" th:method="post"
-                      th:object="${statisticsDto}">
-                    <h2>Статистика</h2>
-                    <!--Профессия-->
-                    <div class="form-group">
-                        <label for="profession">Название профессии</label>
-                        <br>
-                        <input id="profession" class="form-control" name="profession" type="text" placeholder="Профессия"
-                               required>
-                    </div>
-
-                    <!--Город-->
-                    <div class="form-group mt-3">
-                        <label for="city">Месторасположение</label>
-                        <br>
-                        <input id="city" class="form-control" name="city" type="text" placeholder="Город">
-                    </div>
-
-                    <!--Год-->
-                    <div class="form-group mt-3">
-                        <label for="year">Год</label>
-                        <br>
-                        <select id="year" name="year" required>
-                            <option disabled value="">Выберите год</option>
-                            <option selected value="2024">2024</option>
-                            <option value="2023">2023</option>
-                            <option value="2022">2022</option>
-                            <option value="2021">2021</option>
-                            <option value="2020">2020</option>
-                            <option value="2019">2019</option>
-                            <option value="2018">2018</option>
-                            <option value="2017">2017</option>
-                        </select>
-                    </div>
-                    <br>
-
-                    <!--Валюта-->
-                    <div class="form-group">
-                        <label class="form-check-label" for="statisticsCurrency">Валюта</label>
-                        <div class="form-check" id="statisticsCurrency">
-                            <!--Не имеет значения-->
-                            <input checked class="form-check-input" name="currency" type="radio" value="USD">
-                            <label class="form-check-label" for="0">USD, $</label>
-                            <br>
-
-                            <!--Нет опыта-->
-                            <input class="form-check-input"  name="currency" type="radio" value="EUR">
-                            <label class="form-check-label" for="1">EUR, €</label>
-                            <br>
-
-                            <!--От 1 года до 3 лет-->
-                            <input class="form-check-input"  name="currency" type="radio" value="RUB">
-                            <label class="form-check-label" for="2">RUB, ₽</label>
-                            <br>
-                        </div>
-                    </div>
-
-                    <div class="form-group mt-5">
-                        <input class="btn btn-md btn-warning" type="submit" value="Отправить">
-                    </div>
-                </form>
-            </div>
-
-
-            <div style="height: 15vh"></div>
+        <div style="text-align: center">
+            <a id="okButton" style="display: none" target="_blank" th:href="@{/vacancies}">
+                <input class="btn btn-md btn-success mt-3 text-center" type="button" value="Перейти">
+            </a>
         </div>
-
-
+        <div id="spaceAfter" style="height: 40vh; display: none"></div>
     </div>
 
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;"
-         th:if="${isParserAvailable == false}">
-        <div class="alert alert-danger col-6 5 mt-5" role="alert">
-            Извините, в данный момент сервис недоступен!
+    <!--Вакансия-->
+    <div class="container" id="vacancy">
+        <div style="height: 15vh"></div>
+        <div class="row justify-content-center text-center mb-4">
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <div class="form-check d-flex" id="switchForms">
+                        <!--Не имеет значения-->
+                        <input checked class="form-check-input" id="vac" name="switchForm" type="radio" value="0">
+                        <label class="form-check-label mr-3" for="vac" style="margin-left: 2px; margin-right: 30px">Вакансия</label>
+
+                        <!--Нет опыта-->
+                        <input class="form-check-input" id="stat" name="switchForm" type="radio" value="1">
+                        <label class="form-check-label" for="stat" style="margin-left: 2px;">Статистика</label>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!--Форма для заполнения вакансии-->
+        <div class="row justify-content-center">
+            <form class="col-lg-4" id="vacancyForm" th:action="@{/vacancies}" th:method="post">
+                <h2>Вакансия</h2>
+                <input id="username" th:value="${#authentication.principal.username}" type="hidden">
+
+                <!--Название вакансии-->
+                <div class="form-group">
+                    <label for="title">Название вакансии</label>
+                    <input class="form-control" id="title" name="title" placeholder="Программист" required
+                           type="text">
+                </div>
+
+                <!--Зарплата-->
+                <div class="form-group">
+                    <label for="salary">Заработная плата (от ...)</label>
+                    <input class="form-control" id="salary" min="0" name="salary" type="number" value="0">
+                </div>
+
+                <!--Заработная плата указана-->
+                <div class="form-group">
+                    <div class="form-check">
+                        <label class="form-check-label" for="onlyWithSalary"> Заработная плата указана</label>
+                        <input class="form-check-input" id="onlyWithSalary" name="onlyWithSalary" type="checkbox">
+                        <br><br>
+                    </div>
+                </div>
+
+                <!--Опыт работы-->
+                <div class="form-group">
+                    <label class="form-check-label" for="workExperience">Опыт работы</label>
+                    <div class="form-check" id="workExperience">
+                        <!--Не имеет значения-->
+                        <input checked class="form-check-input" id="0" name="experience" type="radio" value="0">
+                        <label class="form-check-label" for="0">Не имеет значения</label>
+                        <br>
+                        <!--Нет опыта-->
+                        <input class="form-check-input" id="1" name="experience" type="radio" value="1">
+                        <label class="form-check-label" for="1">Нет опыта</label>
+                        <br>
+                        <!--От 1 года до 3 лет-->
+                        <input class="form-check-input" id="2" name="experience" type="radio" value="2">
+                        <label class="form-check-label" for="2">От 1 года до 3 лет</label>
+                        <br>
+                        <!--От 3 до 6 лет-->
+                        <input class="form-check-input" id="3" name="experience" type="radio" value="3">
+                        <label class="form-check-label" for="3">От 3 до 6 лет</label>
+                        <br>
+                        <!--Более 6 лет-->
+                        <input class="form-check-input" id="4" name="experience" type="radio" value="4">
+                        <label class="form-check-label" for="4">Более 6 лет</label>
+                        <br> <br>
+                    </div>
+                </div>
+
+                <!--Город-->
+                <div class="form-group">
+                    <label>Город</label>
+                    <label>
+                        <select id="cityId" name="cityId" required>
+                            <option disabled value="">Выберите город</option>
+                            <option selected value="0">Москва</option>
+                            <option value="1">Санкт-Петербург</option>
+                            <option value="2">Екатеринбург</option>
+                            <option value="3">Новосибирск</option>
+                            <option value="4">Казань</option>
+                            <option value="5">Нижний Новгород</option>
+                            <option value="6">Ульяновск</option>
+                            <option value="7">Тольятти</option>
+                            <option value="8">Астрахань</option>
+                            <option value="9">Уфа</option>
+                        </select>
+                    </label>
+                    <br><br>
+                </div>
+
+                <div class="form-group">
+                    <!--'Можно удаленно'-->
+                    <div class="form-check">
+                        <label class="form-check-label" for="isRemoteAvailable">Только удаленно</label>
+                        <input class="form-check-input" id="isRemoteAvailable" name="isRemoteAvailable"
+                               type="checkbox">
+                        <br><br>
+                    </div>
+                </div>
+
+                <!--isConsumingCancelled-->
+                <!--                <div>-->
+                <!--                    <input type="hidden" th:value="false" name="isConsumingCancelled">-->
+                <!--                </div>-->
+
+                <!--Отправка формы-->
+                <input class="btn btn-md btn-warning mt-3" id="searchVacanciesButton" type="submit" value="Найти">
+            </form>
+        </div>
+
+        <!--Форма для заполнения статистики-->
+        <div class="row justify-content-center">
+            <form class="col-lg-4" id="statisticsForm" style="display: none" th:action="@{/statistics}" th:method="post"
+                  th:object="${statisticsDto}">
+                <h2>Статистика</h2>
+                <!--Профессия-->
+                <div class="form-group">
+                    <label for="profession">Название профессии</label>
+                    <br>
+                    <input id="profession" class="form-control" name="profession" type="text" placeholder="Профессия"
+                           required>
+                </div>
+
+                <!--Город-->
+                <div class="form-group mt-3">
+                    <label for="city">Месторасположение</label>
+                    <br>
+                    <input id="city" class="form-control" name="city" type="text" placeholder="Город">
+                </div>
+
+                <!--Год-->
+                <div class="form-group mt-3">
+                    <label for="year">Год</label>
+                    <br>
+                    <select id="year" name="year" required>
+                        <option disabled value="">Выберите год</option>
+                        <option selected value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                    </select>
+                </div>
+                <br>
+
+                <!--Валюта-->
+                <div class="form-group">
+                    <label class="form-check-label" for="statisticsCurrency">Валюта</label>
+                    <div class="form-check" id="statisticsCurrency">
+                        <!--Не имеет значения-->
+                        <input checked class="form-check-input" name="currency" type="radio" value="USD">
+                        <label class="form-check-label" for="0">USD, $</label>
+                        <br>
+
+                        <!--Нет опыта-->
+                        <input class="form-check-input" name="currency" type="radio" value="EUR">
+                        <label class="form-check-label" for="1">EUR, €</label>
+                        <br>
+
+                        <!--От 1 года до 3 лет-->
+                        <input class="form-check-input" name="currency" type="radio" value="RUB">
+                        <label class="form-check-label" for="2">RUB, ₽</label>
+                        <br>
+                    </div>
+                </div>
+
+                <div class="form-group mt-5">
+                    <input class="btn btn-md btn-warning" type="submit" value="Отправить">
+                </div>
+            </form>
+        </div>
+
+
+        <div style="height: 15vh"></div>
     </div>
 </div>
 

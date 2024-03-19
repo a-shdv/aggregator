@@ -8,13 +8,17 @@ import com.company.aggregator.services.VacancyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.concurrent.CompletableFuture;
@@ -27,6 +31,11 @@ public class VacancyController {
     private final VacancyService vacancyService;
     private final RabbitTemplate rabbitTemplate;
     private final RabbitMqProperties rabbitProperties;
+    private final RestTemplate restTemplate;
+    @Value("${constants.vacancies-heartbeat-url}")
+    private String vacanciesHeartbeatUrl;
+    private boolean isVacanciesParserAvailable;
+
 
     @GetMapping("/{id}")
     public String findVacancy(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
@@ -57,18 +66,23 @@ public class VacancyController {
         // TODO
         Page<Vacancy> vacancies = vacancyService.findVacanciesAsync(user, PageRequest.of(page, size)).join();
         model.addAttribute("vacancies", vacancies);
+        model.addAttribute("isParserAvailable",isVacanciesParserAvailable);
         return "vacancies/vacancies";
     }
 
     @PostMapping("/clear")
     public ResponseEntity<String> deleteVacancies(@AuthenticationPrincipal User user) {
-        // todo java.util.concurrent.RejectedExecutionException: Task java.util.concurrent.CompletableFuture$AsyncSupply@11d540a rejected from org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor$1@441fda4d[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 9]
-        //	at java.base/java.util.concurrent.ThreadPoolExecutor$AbortPolicy.rejectedExecution(ThreadPoolExecutor.java:2065) ~[na:na]
-        //	at java.base/java.util.concurrent.ThreadPoolExecutor.reject(ThreadPoolExecutor.java:833) ~[na:na]
-        //	at java.base/java.util.concurrent.ThreadPoolExecutor.execute(ThreadPoolExecutor.java:1365) ~[na:na]
         vacancyService.deleteVacanciesByUserAsync(user);
         return ResponseEntity.ok().body("Vacancies cleared successfully");
     }
 
-
+    @Scheduled(initialDelay = 2_000, fixedDelay = 10_000)
+    public void sendHeartBeat() {
+        try {
+            restTemplate.getForEntity(vacanciesHeartbeatUrl, String.class).getStatusCode().is2xxSuccessful();
+            isVacanciesParserAvailable = true;
+        } catch (ResourceAccessException ex) {
+            isVacanciesParserAvailable = false;
+        }
+    }
 }
