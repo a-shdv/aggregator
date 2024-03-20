@@ -63,25 +63,29 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="container mt-5">
-
-                <div th:if="${user.statistics != null}" class="row justify-content-center">
-                    <div th:text="'Средняя заработная плата: ' + ${user.statistics.getAvgSalaryTitle()}"></div>
-                    <div th:text="${user.statistics.getAvgSalaryDescription()}"></div>
-                    <div th:text="'Медианная заработная плата' + ${user.statistics.getMedianSalaryTitle()}"></div>
-                    <div th:text="${user.statistics.getMedianSalaryDescription()}"></div>
-                    <div th:text="'Модальная заработная плата' + ${user.statistics.getModalSalaryTitle()}"></div>
-                    <div th:text="${user.statistics.getModalSalaryDescription()}"></div>
-                </div>
-
-                <div  th:if="${user.statistics == null}" id="isRequestEmpty" class="row justify-content-center">
-                    <div class="alert alert-warning col-6" role="alert">
-                        По вашему запросу ничего не найдено!
-                    </div>
-                </div>
-
                 <div class="row justify-content-center">
-                    <div>
+                    <div class="mb-5">
                         <canvas id="myChart"></canvas>
+                    </div>
+
+                    <div th:if="${user.statistics != null}" class="row justify-content-center">
+                        <h3 class="mb-2">Средняя заработная плата</h3>
+                        <div id="avgSalary" th:text="${user.statistics.getAvgSalaryTitle()}"></div>
+                        <div class="mb-4" th:text="${user.statistics.getAvgSalaryDescription()}"></div>
+
+                        <h3 class="mb-2">Медианная заработная плата</h3>
+                        <div id="medianSalary" th:text="${user.statistics.getMedianSalaryTitle()}"></div>
+                        <div class="mb-4" th:text="${user.statistics.getMedianSalaryDescription()}"></div>
+
+                        <h3 class="mb-2">Модальная заработная плата</h3>
+                        <div id="modalSalary" th:text="${user.statistics.getModalSalaryTitle()}"></div>
+                        <div class="mb-4" th:text="${user.statistics.getModalSalaryDescription()}"></div>
+                    </div>
+
+                    <div  th:if="${user.statistics == null}" id="isRequestEmpty" class="row justify-content-center">
+                        <div class="alert alert-warning col-6" role="alert">
+                            По вашему запросу ничего не найдено!
+                        </div>
                     </div>
 <!--                    <div class="alert alert-warning col-6" th:if="${vacancies.isEmpty()}"-->
 <!--                         style="margin-top: 25vh; margin-bottom: -25vh" role="alert">-->

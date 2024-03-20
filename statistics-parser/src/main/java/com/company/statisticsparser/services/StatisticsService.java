@@ -69,7 +69,7 @@ public class StatisticsService {
                         avgSalaryDesc.set(desc);
                     } else if (title.contains("Медианная заработная плата")) {
                         medianSalaryTitle.set(title);
-                        medianSalaryDesc.set(title);
+                        medianSalaryDesc.set(desc);
                     } else if (title.contains("Модальная заработная")) {
                         modalSalaryTitle.set(title);
                         modalSalaryDesc.set(desc);

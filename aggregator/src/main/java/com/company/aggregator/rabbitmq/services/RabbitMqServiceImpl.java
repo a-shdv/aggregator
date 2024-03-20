@@ -49,7 +49,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     public void receiveStatisticsParser(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
         log.info("RECEIVED: {}", message);
         User user = userService.findUserByUsernameAsync(message.getUsername()).join();
-        userService.saveUserStatisticsAsync(user, message);
+        userService.saveUserStatisticsAsync(user, message).join();
     }
 
     @Override
