@@ -47,6 +47,9 @@ public class StatisticsService {
         if (doc != null) {
             elements = doc
                     .getElementsByClass("chart-options chart-list");
+        } else {
+            rabbitMqSenderService.send(null);
+            return;
         }
 
 
@@ -61,29 +64,28 @@ public class StatisticsService {
                 el.getElementsByClass("chart-section__info").forEach(info -> {
                     String title = info.getElementsByClass("chart-section__info-title").text();
                     String desc = info.getElementsByClass("chart-section__info-desc").text();
-                    if (title.contains("Средняя заработная плата в России")) {
+                    if (title.contains("Средняя заработная плата")) {
                         avgSalaryTitle.set(title);
                         avgSalaryDesc.set(desc);
-                    } else if (title.contains("Медианная заработная плата в России")) {
+                    } else if (title.contains("Медианная заработная плата")) {
                         medianSalaryTitle.set(title);
                         medianSalaryDesc.set(title);
-                    } else if (title.contains("Модальная заработная плата в России")) {
+                    } else if (title.contains("Модальная заработная")) {
                         modalSalaryTitle.set(title);
                         modalSalaryDesc.set(desc);
                     }
                 });
-
-
-
+                rabbitMqSenderService.send(SendMessageDto.builder()
+                        .username(receiveMessageDto.getUsername())
+                        .avgSalaryTitle(avgSalaryTitle.toString())
+                        .avgSalaryDescription(avgSalaryDesc.toString())
+                        .medianSalaryTitle(medianSalaryTitle.toString())
+                        .medianSalaryDescription(medianSalaryDesc.toString())
+                        .modalSalaryTitle(modalSalaryTitle.toString())
+                        .modalSalaryDescription(modalSalaryDesc.toString())
+                        .build());
             });
-            rabbitMqSenderService.send(SendMessageDto.builder()
-                            .avgSalaryTitle(avgSalaryTitle.toString())
-                            .avgSalaryDescription(avgSalaryDesc.toString())
-                            .medianSalaryTitle(medianSalaryTitle.toString())
-                            .medianSalaryDescription(medianSalaryDesc.toString())
-                            .modalSalaryTitle(modalSalaryTitle.toString())
-                            .modalSalaryDescription(modalSalaryDesc.toString())
-                    .build());
+
         } else {
             log.error("Could not parse elements!");
         }

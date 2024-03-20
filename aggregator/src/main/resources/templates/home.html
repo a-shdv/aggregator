@@ -88,6 +88,8 @@
                         <!--Нет опыта-->
                         <input class="form-check-input" id="stat" name="switchForm" type="radio" value="1">
                         <label class="form-check-label" for="stat" style="margin-left: 2px;">Статистика</label>
+
+<!--                        <input id="username" th:value="${#authentication.principal.username}" type="hidden">-->
                     </div>
                 </div>
             </div>
@@ -97,7 +99,6 @@
         <div class="row justify-content-center">
             <form class="col-lg-4" id="vacancyForm" th:action="@{/vacancies}" th:method="post">
                 <h2>Вакансия</h2>
-                <input id="username" th:value="${#authentication.principal.username}" type="hidden">
 
                 <!--Название вакансии-->
                 <div class="form-group">
@@ -194,11 +195,15 @@
             <form class="col-lg-4" id="statisticsForm" style="display: none" th:action="@{/statistics}" th:method="post"
                   th:object="${statisticsDto}">
                 <h2>Статистика</h2>
+
+                <!--Username-->
+                <input id="username" name="username" th:value="${#authentication.principal.username}" type="hidden">
+
                 <!--Профессия-->
                 <div class="form-group">
                     <label for="profession">Название профессии</label>
                     <br>
-                    <input id="profession" class="form-control" name="profession" type="text" placeholder="Программист"
+                    <input id="profession" class="form-control" name="profession" type="text" placeholder="Программист" value="Программист"
                            required>
                 </div>
 
@@ -206,7 +211,7 @@
                 <div class="form-group mt-3">
                     <label for="city">Месторасположение</label>
                     <br>
-                    <input id="city" class="form-control" name="city" type="text" placeholder="Москва">
+                    <input id="city" class="form-control" name="city" type="text" placeholder="Москва" required value="Москва">
                 </div>
 
                 <!--Год-->

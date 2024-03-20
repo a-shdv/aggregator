@@ -35,7 +35,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
 
     @Override
     @RabbitListener(queues = "${rabbitmq.queue-to-receive0}")
-    public void receive(List<com.company.aggregator.rabbitmq.dtos.vacancies.ReceiveMessageDto> receiveMessageDtoList) {
+    public void receiveVacanciesParser(List<com.company.aggregator.rabbitmq.dtos.vacancies.ReceiveMessageDto> receiveMessageDtoList) {
         log.info("RECEIVED: {}", receiveMessageDtoList);
         User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername());
         if (!receiveMessageDtoList.isEmpty()) {
@@ -47,11 +47,12 @@ public class RabbitMqServiceImpl implements RabbitMqService {
 
     @Override
     @RabbitListener(queues = "${rabbitmq.queue-to-receive1}")
-    public void receive(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
+    public void receiveStatisticsParser(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
         log.info("RECEIVED: {}", message);
         User user = userService.findUserByUsername(message.getUsername());
-//        statisticsService.saveStatisticsAsync(message);
-//        statisticsService.statistics(message);
+        user.setStatistics(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto.toStatistics(message));
+        userService.saveUserAsync(user);
+//        statisticsService.saveStatisticsAsync(user, message).join();
     }
 
     @Override

@@ -4,4 +4,5 @@ import com.company.aggregator.models.Statistics;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StatisticsRepository extends JpaRepository<Statistics, Long> {
+    Statistics findStatisticsByUsername(String username);
 }
