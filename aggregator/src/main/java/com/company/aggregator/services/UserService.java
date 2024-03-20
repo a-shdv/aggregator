@@ -3,9 +3,11 @@ package com.company.aggregator.services;
 import com.company.aggregator.dtos.ChangePasswordDto;
 import com.company.aggregator.dtos.UserLockStatusDto;
 import com.company.aggregator.enums.Role;
+import com.company.aggregator.models.Image;
 import com.company.aggregator.models.Statistics;
 import com.company.aggregator.models.User;
 import com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto;
+import com.company.aggregator.repositories.ImageStorageRepository;
 import com.company.aggregator.repositories.UserRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final ImageStorageRepository imageStorageRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Value("${constants.admin.email}")
@@ -132,7 +135,18 @@ public class UserService implements UserDetailsService {
         return CompletableFuture.completedFuture(userRepository.save(user));
     }
 
+    @Async
+    @Transactional
+    public CompletableFuture<Void> uploadAvatarAsync(User user, Image avatar) {
+        avatar.setUser(user);
+        user.setAvatar(avatar);
+        userRepository.save(user);
+        imageStorageRepository.save(avatar);
+        return CompletableFuture.completedFuture(null);
+    }
+
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findUserByUsername(username);
     }

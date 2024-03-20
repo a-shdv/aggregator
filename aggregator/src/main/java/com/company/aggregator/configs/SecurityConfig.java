@@ -29,7 +29,7 @@ public class SecurityConfig {
                         requests
                                 .requestMatchers(new AntPathRequestMatcher("/sign-in")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/sign-up")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/vacancies/clear")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/images/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/admin")).hasAuthority(Role.ADMIN.getAuthority())
                                 .anyRequest().authenticated()
                 ).formLogin(form ->

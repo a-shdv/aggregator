@@ -12,7 +12,7 @@ import java.util.*;
 @Table(name = "users")
 @Getter
 @Setter
-@ToString(exclude = {"statistics", "vacancies", "favourites"})
+@ToString(exclude = {"statistics", "vacancies", "favourites", "avatar"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -44,6 +44,10 @@ public class User implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "statistics_id", referencedColumnName = "id")
     private Statistics statistics;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "avatar_id", referencedColumnName = "id")
+    private Image avatar;
 
 
     @Override

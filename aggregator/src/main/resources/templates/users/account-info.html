@@ -30,53 +30,56 @@
     input[type=radio], input[type=checkbox] {
         accent-color: #ffc107;
     }
-
-    .centered-text {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
 </style>
 <body>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
-
-<div class="centered-text" th:object="${user}">
-    <table>
-        <tbody>
-        <!--Картинка-->
-        <tr>
-            <td>
-                <form action=""></form>
-            </td>
-        </tr>
-        <!--Имя пользователя-->
-        <tr>
-            <td>
-                <span style="font-weight: bold">Имя пользователя: </span>
-                <span th:text="*{username}"></span>
-                <!--                <span th:text="*{username}"></span> (<a-->
-<!--                    th:href="@{/change-username}">Изменить</a>)-->
-            </td>
-        </tr>
-        <!--Электронный адрес-->
-        <tr>
-            <td>
-                <span style="font-weight: bold">Электронный адрес: </span>
-                <span th:text="*{email}"></span> <br>
-            </td>
-        </tr>
-        <!--Роль-->
-        <tr>
-            <td>
-                <span style="font-weight: bold">Роль: </span>
-                <span th:text="*{roles.stream().findFirst().get()}"></span> <br>
-            </td>
-        </tr>
-        </tbody>
-
-    </table>
+<div style="height: 25vh"></div>
+<div style="text-align: center; margin-top: 50px;">
+    <div th:object="${user}" style="display: inline-block; text-align: left;">
+        <table>
+            <tbody>
+            <!--Картинка-->
+            <tr>
+                <td style="text-align: center;">
+                    <img th:src="@{/images/{fileName}(fileName=*{avatar.name})}" alt="Could not load image"
+                         style="max-height: 30%; max-width: 30%">
+                </td>
+            </tr>
+            <!--Загрузка файла-->
+            <tr>
+                <td style="text-align: center;">
+                    <form th:method="post" th:action="@{/images/avatar}" enctype="multipart/form-data">
+                        <input type="file" size="50" name="image" accept="image/png, image/jpg, image/jpeg"/>
+                        <input type="submit" value="Загрузить" />
+                    </form>
+                </td>
+            </tr>
+            <!--Имя пользователя-->
+            <tr>
+                <td style="text-align: center;">
+                    <span style="font-weight: bold">Имя пользователя: </span>
+                    <span th:text="*{username}"></span>
+                </td>
+            </tr>
+            <!--Электронный адрес-->
+            <tr>
+                <td style="text-align: center;">
+                    <span style="font-weight: bold">Электронный адрес: </span>
+                    <span th:text="*{email}"></span> <br>
+                </td>
+            </tr>
+            <!--Роль-->
+            <tr>
+                <td style="text-align: center;">
+                    <span style="font-weight: bold">Роль: </span>
+                    <span th:text="*{roles.stream().findFirst().get()}"></span> <br>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+<div style="height: 75vh"></div>
 <div th:insert="~{/partials/footer :: footer}"></div>
 </body>
 </html>
