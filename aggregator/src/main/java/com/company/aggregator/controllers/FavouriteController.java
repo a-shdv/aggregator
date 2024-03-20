@@ -46,7 +46,7 @@ public class FavouriteController {
         if (success != null) {
             model.addAttribute("success", success);
         }
-        Page<Favourite> favourites = favouriteService.findFavouritesAsync(user, PageRequest.of(page, size)).join();
+        Page<Favourite> favourites = favouriteService.findFavourites(user, PageRequest.of(page, size));
         model.addAttribute("favourites", favourites);
         return "vacancies/favourites";
     }

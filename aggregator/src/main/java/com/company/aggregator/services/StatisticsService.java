@@ -53,16 +53,4 @@ public class StatisticsService {
         }
         return CompletableFuture.completedFuture(null);
     }
-
-    public User deleteStatisticsByUser(User user) {
-        Statistics statistics = statisticsRepository.findStatisticsByUsername(user.getUsername());
-        statisticsRepository.delete(statistics);
-        user.setStatistics(null);
-        return userRepository.save(user);
-    }
-
-    public CompletableFuture<Void> statistics() {
-
-        return CompletableFuture.completedFuture(null);
-    }
 }

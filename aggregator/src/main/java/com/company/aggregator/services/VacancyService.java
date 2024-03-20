@@ -59,6 +59,11 @@ public class VacancyService {
         return CompletableFuture.completedFuture(vacancyRepository.findByUser(user, pageRequest));
     }
 
+    @Transactional
+    public Page<Vacancy> findVacancies(User user, PageRequest pageRequest) {
+        return vacancyRepository.findByUser(user, pageRequest);
+    }
+
     @Async("asyncExecutor")
     @Transactional
     public CompletableFuture<User> deleteVacanciesByUserAsync(User user) {

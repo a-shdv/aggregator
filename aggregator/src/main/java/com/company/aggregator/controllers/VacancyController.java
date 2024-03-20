@@ -63,7 +63,9 @@ public class VacancyController {
         if (success != null) {
             model.addAttribute("success", success);
         }
-        Page<Vacancy> vacancies = vacancyService.findVacanciesAsync(user, PageRequest.of(page, size)).join();
+
+        //java.util.concurrent.RejectedExecutionException
+        Page<Vacancy> vacancies = vacancyService.findVacancies(user, PageRequest.of(page, size));
         model.addAttribute("vacancies", vacancies);
         model.addAttribute("isParserAvailable",isVacanciesParserAvailable);
         return "vacancies/vacancies";

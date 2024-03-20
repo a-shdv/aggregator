@@ -82,6 +82,14 @@ public class UserService implements UserDetailsService {
                 .filter(el -> el.getRoles().stream().findFirst().get().getAuthority().equals("USER")).collect(Collectors.toList()));
     }
 
+    @Transactional
+    public List<User> findUsers(PageRequest pageRequest) {
+        return userRepository
+                .findAll(pageRequest)
+                .stream()
+                .filter(el -> el.getRoles().stream().findFirst().get().getAuthority().equals("USER")).collect(Collectors.toList());
+    }
+
     @Async("asyncExecutor")
     @Transactional
     public CompletableFuture<User> findUserByUsernameAsync(String username) {

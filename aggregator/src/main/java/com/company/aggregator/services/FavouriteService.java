@@ -32,6 +32,11 @@ public class FavouriteService {
         return CompletableFuture.completedFuture(favouriteRepository.findListByUser(user, pageRequest));
     }
 
+    @Transactional
+    public Page<Favourite> findFavourites(User user, PageRequest pageRequest) {
+        return favouriteRepository.findListByUser(user, pageRequest);
+    }
+
     @Async("asyncExecutor")
     @Transactional
     public CompletableFuture<Void> addToFavouritesAsync(User user, Favourite favourite) {

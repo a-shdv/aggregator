@@ -22,7 +22,7 @@ public class AdminController {
     public String adminPanel(@RequestParam(required = false, defaultValue = "0") int page,
                              @RequestParam(required = false, defaultValue = "10") int size,
                              Model model) {
-        model.addAttribute("users", userService.findUsersAsync(PageRequest.of(page, size)).join());
+        model.addAttribute("users", userService.findUsers(PageRequest.of(page, size)));
         return "admins/panel";
     }
 
