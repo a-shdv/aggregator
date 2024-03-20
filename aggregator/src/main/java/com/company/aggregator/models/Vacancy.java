@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString(exclude = "user")
 @Builder
 public class Vacancy {
     @Id

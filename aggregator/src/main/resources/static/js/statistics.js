@@ -6,9 +6,28 @@ const medianSalary = document.querySelector('#medianSalary');
 const modalSalary = document.querySelector('#modalSalary');
 
 function updateChart() {
-    const avgSalaryData = parseInt(avgSalary.innerText.match(/\d+/g)[0] + avgSalary.innerText.match(/\d+/g)[1]);
-    const medianSalaryData = parseInt(medianSalary.innerText.match(/\d+/g)[0] + medianSalary.innerText.match(/\d+/g)[1]);
-    const modalSalaryData = parseInt(modalSalary.innerText.match(/\d+/g)[0] + modalSalary.innerText.match(/\d+/g)[1]);
+    let avgSalaryData
+    let medianSalaryData
+    let modalSalaryData
+
+    if (avgSalary === null) {
+        avgSalaryData = 0
+    } else {
+        avgSalaryData = parseInt(avgSalary.innerText.match(/\d+/g)[0] + avgSalary.innerText.match(/\d+/g)[1]);
+    }
+
+    if (medianSalary === null) {
+        medianSalaryData = 0
+    } else {
+        medianSalaryData = parseInt(medianSalary.innerText.match(/\d+/g)[0] + medianSalary.innerText.match(/\d+/g)[1]);
+    }
+
+    if (modalSalary === null) {
+        modalSalaryData = 0
+    } else {
+        modalSalaryData = parseInt(modalSalary.innerText.match(/\d+/g)[0] + modalSalary.innerText.match(/\d+/g)[1]);
+    }
+
 
     if (myChart) {
         myChart.destroy(); // Уничтожаем старый график, чтобы создать новый

@@ -3,6 +3,7 @@ package com.company.aggregator.services;
 import com.company.aggregator.dtos.ChangePasswordDto;
 import com.company.aggregator.dtos.UserLockStatusDto;
 import com.company.aggregator.enums.Role;
+import com.company.aggregator.models.Statistics;
 import com.company.aggregator.models.User;
 import com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto;
 import com.company.aggregator.repositories.UserRepository;
@@ -65,7 +66,8 @@ public class UserService implements UserDetailsService {
     @Async("asyncExecutor")
     @Transactional
     public CompletableFuture<User> saveUserStatisticsAsync(User user, ReceiveMessageDto message) {
-        user.setStatistics(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto.toStatistics(message));
+        Statistics statistics = com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto.toStatistics(message);
+        user.setStatistics(statistics);
         return CompletableFuture.completedFuture(userRepository.save(user));
     }
 

@@ -1,6 +1,7 @@
 package com.company.aggregator.controllers;
 
 import com.company.aggregator.dtos.StatisticsDto;
+import com.company.aggregator.models.Statistics;
 import com.company.aggregator.models.User;
 import com.company.aggregator.rabbitmq.services.RabbitMqService;
 import com.company.aggregator.services.StatisticsService;
@@ -34,17 +35,15 @@ public class StatisticsController {
 
     @GetMapping
     public String findStatistics(@AuthenticationPrincipal User user, Model model) {
+        Statistics statistics = statisticsService.findStatisticsByUsernameAsync(user.getUsername()).join();
         model.addAttribute("isParserAvailable", isStatisticsParserAvailable);
-        model.addAttribute("statistics", user.getStatistics());
+        model.addAttribute("statistics", statistics);
         return "statistics/statistics";
     }
 
     @PostMapping
     public String findStatistics(@ModelAttribute("statisticsDto") StatisticsDto statisticsDto) {
-        User user = userService.findUserByUsernameAsync(statisticsDto.getUsername()).join();
-        if (user.getStatistics() != null) {
-            statisticsService.deleteStatisticsByUserAsync(user);
-        }
+        statisticsService.deleteStatisticsAsync(statisticsDto).join();
         rabbitMqService.sendToStatisticsParser(StatisticsDto.toSendMessageDto(statisticsDto));
         return "redirect:/";
     }

@@ -1,14 +1,13 @@
 package com.company.aggregator.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table
-@Data
+@Getter
+@Setter
+@ToString(exclude = "user")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -23,5 +22,5 @@ public class Statistics {
     String medianSalaryDescription;
     String modalSalaryTitle;
     String modalSalaryDescription;
-    @OneToOne(mappedBy = "statistics", cascade = CascadeType.ALL) private User user;
+    @OneToOne(mappedBy = "statistics") private User user;
 }

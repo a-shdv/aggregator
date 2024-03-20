@@ -48,8 +48,10 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     @RabbitListener(queues = "${rabbitmq.queue-to-receive1}")
     public void receiveStatisticsParser(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
         log.info("RECEIVED: {}", message);
+
         User user = userService.findUserByUsernameAsync(message.getUsername()).join();
-        userService.saveUserStatisticsAsync(user, message).join();
+//        statisticsService.saveStatisticsAsync(user, message);
+        statisticsService.saveStatisticsAsync(user, message).join();
     }
 
     @Override
