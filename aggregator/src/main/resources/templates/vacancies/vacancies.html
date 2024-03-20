@@ -84,7 +84,7 @@
                                                 <input name="logo" th:value="${vacancy.logo}" type="hidden">
 
                                                 <button style="background: none; border: none;" type="submit">
-                                                    <img alt="" id="starImage" src="/images/star-light.png"
+                                                    <img alt="" id="starImage" th:src="@{/img/star-light.png}"
                                                          style="max-width: 100%; max-height: 100%"
                                                          title="Добавить в избранное">
                                                 </button>
@@ -101,7 +101,7 @@
                                          th:src="${vacancy.logo}">
                                     <img class="card-img-top" style="max-height: 100%; max-width: 75%;"
                                          th:if="${vacancy.logo == null}"
-                                         th:src="@{/images/no-image.png}">
+                                         th:src="@{img}">
                                 </div>
 
                                 <!--Описание вакансии-->

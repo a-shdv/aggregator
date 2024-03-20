@@ -30,6 +30,7 @@ spring:
     name: aggregator
 
   datasource:
+
     url: jdbc:postgresql://localhost:5432/test
     username: postgres
     password: postgres

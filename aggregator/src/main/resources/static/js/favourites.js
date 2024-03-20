@@ -108,3 +108,7 @@ function confirmClearFavouritesForm(event) {
 clearFavouritesForm.addEventListener("submit", confirmClearFavouritesForm);
 window.addEventListener('unload', disconnect);
 pdfEmailButton.addEventListener('click', connect)
+
+document.getElementById('deleteFavouriteButton').addEventListener('click', () => {
+
+})

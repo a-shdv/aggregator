@@ -62,6 +62,7 @@
 <div th:if="${isParserAvailable == true}">
     <div class="container">
         <div class="row justify-content-center">
+            <h1 class="text-center">Статистика</h1>
             <div class="container mt-5" th:if="${statistics == null}">
                 <div class="row justify-content-center">
                     <div class="alert alert-warning col-6" role="alert">
@@ -92,7 +93,7 @@
                         </p>
                     </div>
 
-                    <div class="mb-5">
+                    <div class="mb-5" style="max-width: 75%; max-height: 75%">
                         <canvas id="myChart"></canvas>
                     </div>
 

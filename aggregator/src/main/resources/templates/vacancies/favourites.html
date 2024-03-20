@@ -108,10 +108,10 @@
                         <!--Картинка-->
                         <form th:action="@{/favourites/{id}(id=${favourite.id})}" th:method="post">
 
-                            <button style="background: none; border: none" type="submit">
+                            <button id="deleteFavouriteButton" style="background: none; border: none" type="submit">
                                 <img alt="Не удалось загрузить изображение" class="card-img-top"
                                      style="color: white; max-height: 5%; max-width: 5%;"
-                                     th:src="@{/images/red-cross.png}">
+                                     th:src="@{img/red-cross.png}">
                             </button>
                         </form>
                     </td>
