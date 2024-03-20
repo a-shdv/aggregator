@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Функция для скрытия формы вакансии и показа формы статистики
     function showStatisticsForm() {
         vacancyForm.style.display = "none";
-        statisticsForm.style.display = "block";
+        statisticsForm.style.display = "";
     }
 
     // Функция для скрытия формы статистики и показа формы вакансии
@@ -148,38 +148,45 @@ document.addEventListener("DOMContentLoaded", () => {
             showStatisticsForm();
         }
     });
-
-    // Обработчик события для кнопки переключения форм
-    const switchFormsButton = document.getElementById("switchFormsButton");
-    switchFormsButton.addEventListener("click", function () {
-        if (vacancyForm.style.display === "none") {
-            showVacancyForm();
-            vacancyRadio.checked = true;
-        } else {
-            showStatisticsForm();
-            statisticsRadio.checked = true;
-        }
-    });
-
     // По умолчанию показываем форму вакансии
     showVacancyForm();
 });
 
-document.getElementById('statisticsFormSubmit').addEventListener('click', function(event) {
+document.getElementById('statisticsFormSubmit').addEventListener('click', (event) => {
     event.preventDefault(); // Prevent form submission
+
+    var form = document.getElementById('statisticsForm');
+    var formData = new FormData(form); // Создаем объект FormData из формы
+
+    var xhr = new XMLHttpRequest(); // Создаем объект XMLHttpRequest
+    xhr.open('POST', form.action, true); // Настраиваем запрос
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) { // Проверяем, завершен ли запрос
+            if (xhr.status === 200) { // Проверяем успешность запроса
+                console.log('Данные успешно отправлены на сервер');
+                // Дополнительные действия при успешной отправке данных
+            } else {
+                console.error('Произошла ошибка при отправке данных:', xhr.statusText);
+            }
+        }
+    };
+    xhr.send(formData); // Отправляем данные формы на сервер
 
     // Скрыть форму статистики
     document.getElementById('statisticsForm').style.display = 'none';
+    document.getElementById('switchForms').style.display = 'none'
 
     // Показать сообщение об успешной отправке
-    document.getElementById('alertSuccess').style.display = 'block';
+    document.getElementById('spaceAfterAlertSuccess').style.display = '';
+    document.getElementById('alertSuccess').style.display = '';
 
     // Установить таймер на 2 секунды для скрытия сообщения об успехе и возврата формы
-    setTimeout(function() {
+    setTimeout(() => {
         // Скрыть сообщение об успешной отправке
         document.getElementById('alertSuccess').style.display = 'none';
-
+        document.getElementById('spaceAfterAlertSuccess').style.display = 'none';
         // Вернуть форму статистики
-        document.getElementById('statisticsForm').style.display = 'block';
+        document.getElementById('switchForms').style.display = ''
+        document.getElementById('statisticsForm').style.display = '';
     }, 2000);
 });
