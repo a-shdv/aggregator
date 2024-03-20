@@ -48,7 +48,7 @@ public class StatisticsService {
             elements = doc
                     .getElementsByClass("chart-options chart-list");
         } else {
-            rabbitMqSenderService.send(null);
+            rabbitMqSenderService.send(SendMessageDto.builder().build());
             return;
         }
 

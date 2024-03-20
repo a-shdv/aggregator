@@ -63,26 +63,27 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="container mt-5">
+                <h1 class="mb-3">Заработная плата</h1>
                 <div class="row justify-content-center">
                     <div class="mb-5">
                         <canvas id="myChart"></canvas>
                     </div>
 
-                    <div th:if="${user.statistics != null}" class="row justify-content-center">
+                    <div th:if="${statistics != null}" class="row justify-content-center">
                         <h3 class="mb-2">Средняя заработная плата</h3>
-                        <div id="avgSalary" th:text="${user.statistics.getAvgSalaryTitle()}"></div>
-                        <div class="mb-4" th:text="${user.statistics.getAvgSalaryDescription()}"></div>
+                        <div id="avgSalary" th:text="${statistics.getAvgSalaryTitle()}"></div>
+                        <div class="mb-4" th:text="${statistics.getAvgSalaryDescription()}"></div>
 
                         <h3 class="mb-2">Медианная заработная плата</h3>
-                        <div id="medianSalary" th:text="${user.statistics.getMedianSalaryTitle()}"></div>
-                        <div class="mb-4" th:text="${user.statistics.getMedianSalaryDescription()}"></div>
+                        <div id="medianSalary" th:text="${statistics.getMedianSalaryTitle()}"></div>
+                        <div class="mb-4" th:text="${statistics.getMedianSalaryDescription()}"></div>
 
                         <h3 class="mb-2">Модальная заработная плата</h3>
-                        <div id="modalSalary" th:text="${user.statistics.getModalSalaryTitle()}"></div>
-                        <div class="mb-4" th:text="${user.statistics.getModalSalaryDescription()}"></div>
+                        <div id="modalSalary" th:text="${statistics.getModalSalaryTitle()}"></div>
+                        <div class="mb-4" th:text="${statistics.getModalSalaryDescription()}"></div>
                     </div>
 
-                    <div  th:if="${user.statistics == null}" id="isRequestEmpty" class="row justify-content-center">
+                    <div  th:if="${statistics == null}" id="isRequestEmpty" class="row justify-content-center">
                         <div class="alert alert-warning col-6" role="alert">
                             По вашему запросу ничего не найдено!
                         </div>

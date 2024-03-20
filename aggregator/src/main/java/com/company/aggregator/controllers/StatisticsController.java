@@ -35,7 +35,7 @@ public class StatisticsController {
     @GetMapping
     public String findStatistics(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("isParserAvailable", isStatisticsParserAvailable);
-        model.addAttribute("user", user);
+        model.addAttribute("statistics", user.getStatistics());
         return "statistics/statistics";
     }
 

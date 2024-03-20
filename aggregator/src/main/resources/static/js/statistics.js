@@ -1,45 +1,52 @@
 const ctx = document.getElementById('myChart');
+let myChart;
 
-avgSalary = document.querySelector('#avgSalary')
-medianSalary = document.querySelector('#medianSalary')
-modalSalary = document.querySelector('#modalSalary')
-new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ['Статистика'],
-        datasets: [
-            {
-                label: 'Средняя ЗП',
-                data: [1],
-                borderColor: '#36A2EB',
-                backgroundColor: '#9BD0F5',
-            },
-            {
-                label: 'Медианная ЗП',
-                data: [2],
-                borderColor: '#ffce56',
-                backgroundColor: '#ffdc6c',
-            },
-            {
-                label: 'Модальная ЗП',
-                data: [3],
-                borderColor: '#ff9f40',
-                backgroundColor: '#ffbc80',
-            }
+const avgSalary = document.querySelector('#avgSalary');
+const medianSalary = document.querySelector('#medianSalary');
+const modalSalary = document.querySelector('#modalSalary');
+
+function updateChart() {
+    const avgSalaryData = parseInt(avgSalary.innerText.match(/\d+/g)[0] + avgSalary.innerText.match(/\d+/g)[1]);
+    const medianSalaryData = parseInt(medianSalary.innerText.match(/\d+/g)[0] + medianSalary.innerText.match(/\d+/g)[1]);
+    const modalSalaryData = parseInt(modalSalary.innerText.match(/\d+/g)[0] + modalSalary.innerText.match(/\d+/g)[1]);
+
+    if (myChart) {
+        myChart.destroy(); // Уничтожаем старый график, чтобы создать новый
+    }
+
+    myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Статистика'],
+            datasets: [
+                {
+                    label: 'Средняя ЗП',
+                    data: [avgSalaryData],
+                    borderColor: '#ffce56',
+                    backgroundColor: '#ffdc6c',
+                },
+                {
+                    label: 'Медианная ЗП',
+                    data: [medianSalaryData],
+                    borderColor: '#ff9f40',
+                    backgroundColor: '#ffbc80',
+                },
+                {
+                    label: 'Модальная ЗП',
+                    data: [modalSalaryData],
+                    borderColor: '#dc5363',
+                    backgroundColor: '#dc7181',
+                }
             ]
-    },
-
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
         }
-    }
-});
-
-myChart = document.querySelector('#myChart')
-isRequestEmpty = document.querySelector('#isRequestEmpty')
-if (isRequestEmpty != null) {
-    myChart.style.display = 'none'
+    });
 }
+
+window.addEventListener('load', updateChart)
