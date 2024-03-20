@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +36,7 @@ public class StatisticsService {
 
         // Валюта
         if (receiveMessageDto.getCurrency() != null) {
-            url.append("&с=").append(receiveMessageDto.getCurrency());
+            url.append("&c=").append(receiveMessageDto.getCurrency());
         }
 
         // Год
@@ -77,12 +79,16 @@ public class StatisticsService {
                 });
                 rabbitMqSenderService.send(SendMessageDto.builder()
                         .username(receiveMessageDto.getUsername())
-                        .avgSalaryTitle(avgSalaryTitle.toString())
+                        .avgSalaryTitle(replaceNumbersAftersDots(avgSalaryTitle.toString()))
                         .avgSalaryDescription(avgSalaryDesc.toString())
-                        .medianSalaryTitle(medianSalaryTitle.toString())
+                        .medianSalaryTitle(replaceNumbersAftersDots(medianSalaryTitle.toString()))
                         .medianSalaryDescription(medianSalaryDesc.toString())
-                        .modalSalaryTitle(modalSalaryTitle.toString())
+                        .modalSalaryTitle(replaceNumbersAftersDots(modalSalaryTitle.toString()))
                         .modalSalaryDescription(modalSalaryDesc.toString())
+                        .profession(receiveMessageDto.getProfession())
+                        .city(receiveMessageDto.getCity())
+                        .year(receiveMessageDto.getYear())
+                        .currency(switchCurrency(receiveMessageDto.getCurrency()))
                         .build());
             });
 
@@ -99,5 +105,27 @@ public class StatisticsService {
             log.error(e.getMessage());
         }
         return null;
+    }
+
+    private static String replaceNumbersAftersDots(String input) {
+        // Replace digits after dots with empty string
+        String pattern = "(\\.\\d{2})";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(input);
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            m.appendReplacement(sb, "");
+        }
+        m.appendTail(sb);
+        return sb.toString();
+    }
+
+    private static String switchCurrency(String currency) {
+        return switch (currency) {
+            case "" -> "RUB, ₽";
+            case "eur" -> "EUR, €";
+            case "usd" -> "USD, $";
+            default -> "";
+        };
     }
 }

@@ -24,6 +24,10 @@ public class ReceiveMessageDto implements Serializable {
     String medianSalaryDescription;
     String modalSalaryTitle;
     String modalSalaryDescription;
+    String profession;
+    String city;
+    String year;
+    String currency;
 
     public static Statistics toStatistics(ReceiveMessageDto dto) {
         return Statistics.builder()
@@ -34,6 +38,10 @@ public class ReceiveMessageDto implements Serializable {
                 .medianSalaryDescription(dto.medianSalaryDescription)
                 .modalSalaryTitle(dto.modalSalaryTitle)
                 .modalSalaryDescription(dto.modalSalaryDescription)
+                .profession(dto.profession)
+                .city(dto.city)
+                .year(dto.year)
+                .currency(dto.currency)
                 .build();
     }
 }

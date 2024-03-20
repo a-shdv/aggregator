@@ -22,5 +22,9 @@ public class Statistics {
     String medianSalaryDescription;
     String modalSalaryTitle;
     String modalSalaryDescription;
+    String profession;
+    String city;
+    String year;
+    String currency;
     @OneToOne(mappedBy = "statistics") private User user;
 }

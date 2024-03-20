@@ -62,9 +62,36 @@
 <div th:if="${isParserAvailable == true}">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="container mt-5">
-                <h1 th:if="${statistics != null}" class="mb-3">Заработная плата</h1>
+            <div class="container mt-5" th:if="${statistics == null}">
                 <div class="row justify-content-center">
+                    <div class="alert alert-warning col-6" role="alert">
+                        По вашему запросу ничего не найдено. Пожалуйста, сделайте запрос <a href="/">повторно</a>.
+                    </div>
+                    <div style="height: 30vh"></div>
+                </div>
+            </div>
+            <div th:if="${statistics != null}" class="container mt-5">
+                <h1 class="mb-3">Заработная плата</h1>
+                <div class="row justify-content-center">
+                    <div class="row mb-3">
+                        <p>
+                            <span class="fw-bold">Профессия: </span>
+                            <span th:text="${statistics.getProfession()}"></span>
+                        </p>
+                        <p>
+                            <span class="fw-bold">Город: </span>
+                            <span th:text="${statistics.getCity()}"></span>
+                        </p>
+                        <p>
+                            <span class="fw-bold">Год: </span>
+                            <span th:text="${statistics.getYear()}"></span>
+                        </p>
+                        <p>
+                            <span class="fw-bold">Валюта: </span>
+                            <span th:text="${statistics.getCurrency()}"></span>
+                        </p>
+                    </div>
+
                     <div class="mb-5">
                         <canvas id="myChart"></canvas>
                     </div>
@@ -88,16 +115,6 @@
                             <div class="mb-4" th:text="${statistics.getModalSalaryDescription()}"></div>
                         </div>
                     </div>
-
-                    <!--                    <div  th:if="${statistics == null}" id="isRequestEmpty" class="row justify-content-center">-->
-                    <!--                        <div class="alert alert-warning col-6" role="alert">-->
-                    <!--                            По вашему запросу ничего не найдено!-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-                    <!--                    <div class="alert alert-warning col-6" th:if="${vacancies.isEmpty()}"-->
-                    <!--                         style="margin-top: 25vh; margin-bottom: -25vh" role="alert">-->
-                    <!--                        Список вакансий пуст!-->
-                    <!--                    </div>-->
                 </div>
             </div>
             <div style="height: 20vh"></div>

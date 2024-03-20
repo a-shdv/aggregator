@@ -203,7 +203,7 @@
                 <div class="form-group">
                     <label for="profession">Название профессии</label>
                     <br>
-                    <input id="profession" class="form-control" name="profession" type="text" placeholder="Программист" value="Программист"
+                    <input id="profession" class="form-control" name="profession" type="text" placeholder="Программист"
                            required>
                 </div>
 
@@ -211,7 +211,7 @@
                 <div class="form-group mt-3">
                     <label for="city">Месторасположение</label>
                     <br>
-                    <input id="city" class="form-control" name="city" type="text" placeholder="Москва" required value="Москва">
+                    <input id="city" class="form-control" name="city" type="text" placeholder="Москва" required>
                 </div>
 
                 <!--Год-->
@@ -236,19 +236,19 @@
                 <div class="form-group">
                     <label class="form-check-label" for="statisticsCurrency">Валюта</label>
                     <div class="form-check" id="statisticsCurrency">
+                        <!--Рубль-->
+                        <input id="rub" checked class="form-check-input" name="currency" type="radio" value="">
+                        <label class="form-check-label" for="rub">RUB, ₽</label>
+                        <br>
+
                         <!--Доллар-->
-                        <input id="usd" checked class="form-check-input" name="currency" type="radio" value="USD">
+                        <input id="usd" class="form-check-input" name="currency" type="radio" value="usd">
                         <label class="form-check-label" for="usd">USD, $</label>
                         <br>
 
                         <!--Евро-->
-                        <input id="eur" class="form-check-input" name="currency" type="radio" value="EUR">
+                        <input id="eur" class="form-check-input" name="currency" type="radio" value="eur">
                         <label class="form-check-label" for="eur">EUR, €</label>
-                        <br>
-
-                        <!---->
-                        <input id="rub" class="form-check-input" name="currency" type="radio" value="RUB">
-                        <label class="form-check-label" for="rub">RUB, ₽</label>
                         <br>
                     </div>
                 </div>
