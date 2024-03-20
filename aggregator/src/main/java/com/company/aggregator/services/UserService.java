@@ -4,6 +4,7 @@ import com.company.aggregator.dtos.ChangePasswordDto;
 import com.company.aggregator.dtos.UserLockStatusDto;
 import com.company.aggregator.enums.Role;
 import com.company.aggregator.models.User;
+import com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto;
 import com.company.aggregator.repositories.UserRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
@@ -58,6 +59,13 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(Role.USER));
         user.setAccountNonLocked(true);
+        return CompletableFuture.completedFuture(userRepository.save(user));
+    }
+
+    @Async("asyncExecutor")
+    @Transactional
+    public CompletableFuture<User> saveUserStatisticsAsync(User user, ReceiveMessageDto message) {
+        user.setStatistics(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto.toStatistics(message));
         return CompletableFuture.completedFuture(userRepository.save(user));
     }
 

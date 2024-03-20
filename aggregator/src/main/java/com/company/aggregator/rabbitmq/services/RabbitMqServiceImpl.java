@@ -2,7 +2,6 @@ package com.company.aggregator.rabbitmq.services;
 
 
 import com.company.aggregator.models.User;
-import com.company.aggregator.rabbitmq.dtos.vacancies.ReceiveMessageDto;
 import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
 import com.company.aggregator.services.StatisticsService;
 import com.company.aggregator.services.UserService;
@@ -49,10 +48,8 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     @RabbitListener(queues = "${rabbitmq.queue-to-receive1}")
     public void receiveStatisticsParser(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
         log.info("RECEIVED: {}", message);
-        User user = userService.findUserByUsername(message.getUsername());
-        user.setStatistics(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto.toStatistics(message));
-        userService.saveUserAsync(user);
-//        statisticsService.saveStatisticsAsync(user, message).join();
+        User user = userService.findUserByUsernameAsync(message.getUsername()).join();
+        userService.saveUserStatisticsAsync(user, message);
     }
 
     @Override
@@ -69,14 +66,5 @@ public class RabbitMqServiceImpl implements RabbitMqService {
         rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend1(), sendMessageDto);
         log.info("SENT (statistics): {}", sendMessageDto);
     }
-
-//    @Scheduled(initialDelay = 15_000, fixedDelay = 10_000)
-//    public void checkProgressbarLoaderCounter() {
-//        if (previousProgressbarLoaderCounter == progressbarLoaderCounter ) {
-//            progressbarLoaderCounter = 0;
-//            messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(100)).type("RECEIVE").build());
-//        }
-//        previousProgressbarLoaderCounter = progressbarLoaderCounter;
-//    }
 }
 
