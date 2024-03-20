@@ -164,3 +164,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // По умолчанию показываем форму вакансии
     showVacancyForm();
 });
+
+document.getElementById('statisticsFormSubmit').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    // Скрыть форму статистики
+    document.getElementById('statisticsForm').style.display = 'none';
+
+    // Показать сообщение об успешной отправке
+    document.getElementById('alertSuccess').style.display = 'block';
+
+    // Установить таймер на 2 секунды для скрытия сообщения об успехе и возврата формы
+    setTimeout(function() {
+        // Скрыть сообщение об успешной отправке
+        document.getElementById('alertSuccess').style.display = 'none';
+
+        // Вернуть форму статистики
+        document.getElementById('statisticsForm').style.display = 'block';
+    }, 2000);
+});

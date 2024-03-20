@@ -89,7 +89,7 @@
                         <input class="form-check-input" id="stat" name="switchForm" type="radio" value="1">
                         <label class="form-check-label" for="stat" style="margin-left: 2px;">Статистика</label>
 
-<!--                        <input id="username" th:value="${#authentication.principal.username}" type="hidden">-->
+                        <!--                        <input id="username" th:value="${#authentication.principal.username}" type="hidden">-->
                     </div>
                 </div>
             </div>
@@ -192,6 +192,11 @@
 
         <!--Форма для заполнения статистики-->
         <div class="row justify-content-center">
+            <div id="alertSuccess" style="display: none" class="alert alert-success col-6" role="alert">
+                <h4 class="alert-heading">Успех!</h4>
+                <p>Запрос отправлен.</p>
+            </div>
+
             <form class="col-lg-4" id="statisticsForm" style="display: none" th:action="@{/statistics}" th:method="post"
                   th:object="${statisticsDto}">
                 <h2>Статистика</h2>
@@ -254,7 +259,7 @@
                 </div>
 
                 <div class="form-group mt-5">
-                    <input class="btn btn-md btn-warning" type="submit" value="Отправить">
+                    <input id="statisticsFormSubmit" class="btn btn-md btn-warning" type="submit" value="Отправить">
                 </div>
             </form>
         </div>

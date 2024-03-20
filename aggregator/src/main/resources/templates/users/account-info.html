@@ -44,12 +44,19 @@
 <div class="centered-text" th:object="${user}">
     <table>
         <tbody>
+        <!--Картинка-->
+        <tr>
+            <td>
+                <form action=""></form>
+            </td>
+        </tr>
         <!--Имя пользователя-->
         <tr>
             <td>
                 <span style="font-weight: bold">Имя пользователя: </span>
-                <span th:text="*{username}"></span> (<a
-                    th:href="@{/change-username}">Изменить</a>)
+                <span th:text="*{username}"></span>
+                <!--                <span th:text="*{username}"></span> (<a-->
+<!--                    th:href="@{/change-username}">Изменить</a>)-->
             </td>
         </tr>
         <!--Электронный адрес-->
