@@ -66,8 +66,8 @@
            th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}" th:text="${#strings.arraySplit(vacancy.source, '/')[1]}"></a>
     </div>
 
-    <!-- Button "Back" -->
-    <div class="col-lg-6 mx-auto text-center">
+    <!-- Buttons -->
+    <div class="col-lg-6 mx-auto text-center mt-5 mb-5">
         <a class="btn btn-secondary px-4 mt-5" href="javascript:history.back()">Назад</a>
         <a class="btn btn-warning px-4 mt-5" target="_blank" th:href="@{${vacancy.source}}">Откликнуться</a>
     </div>
