@@ -6,7 +6,10 @@
                     <use xlink:href="#bootstrap"></use>
                 </svg>
             </a>
-            <span class="mb-3 mb-md-0 text-body-secondary">© 2024 JobHunter, Inc</span>
+            <span id="footerText" class="mb-3 mb-md-0 text-body-secondary"></span>
         </div>
     </footer>
+    <script>
+        document.querySelector('#footerText').innerText = '© ' + new Date().getFullYear() + ' JobHunter, Inc'
+    </script>
 </div>
