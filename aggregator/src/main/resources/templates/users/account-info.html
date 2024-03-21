@@ -39,6 +39,7 @@
     <div class="card mx-auto" th:object="${user}">
         <img th:if="*{avatar != null}" th:src="@{/images/{fileName}(fileName=*{avatar.name})}"
              alt="Could not load image">
+        <img th:if="*{avatar == null}" th:src="@{/img/avatar.png}">
 
         <div class="card-body">
             <h5 class="card-title" th:text="'Имя пользователя: ' +*{username}"></h5>

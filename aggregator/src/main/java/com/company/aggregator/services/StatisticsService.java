@@ -21,6 +21,18 @@ public class StatisticsService {
 
     @Async
     @Transactional
+    public CompletableFuture<Void> deleteStatisticsAsync(User user) {
+        Statistics statistics = statisticsRepository.findStatisticsByUsername(user.getUsername());
+        if (statistics != null) {
+            user.setStatistics(null);
+            userRepository.save(user);
+            statisticsRepository.delete(statistics);
+        }
+        return CompletableFuture.completedFuture(null);
+    }
+
+    @Async
+    @Transactional
     public CompletableFuture<Void> saveStatisticsAsync(User user, com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
         Statistics statistics = ReceiveMessageDto.toStatistics(message);
         statistics.setUser(user);

@@ -58,7 +58,7 @@ function onMessageReceived(payload) {
 
     switch (message.type) {
         case 'JOIN':
-            counter.textContent = 'Найдено 0 шт.'
+            counter.textContent = '0%'
             // progressbarLoader.style.width = '0%'
             sendMessage()
             break
@@ -66,16 +66,17 @@ function onMessageReceived(payload) {
             console.log('left')
             break
         case 'RECEIVE':
-            let messageCounter = 'Найдено ' + message.content + ' шт.'
+            let messageCounter = parseInt(message.content).toFixed(0) + '%'
             counter.textContent = messageCounter
             // progressbarLoader.style.width = messageCounter
-            if (parseInt(message.content) >= 12) {
+            if (parseInt(message.content) >= 100) {
                 spinner.style.display = 'none'
                 waitParagraph.style.display = 'none'
                 counter.textContent = 'Готово!'
                 counter.classList.remove('text-warning')
                 counter.classList.add('text-success')
                 okButton.style.display = ''
+                window.onbeforeunload = null;
                 disconnect()
                 setTimeout(() => {
                     counter.style.display = 'none'
@@ -84,6 +85,7 @@ function onMessageReceived(payload) {
                     spaceBefore.style.display = 'none'
                     vacancy.style.display = ''
                 }, 5000);
+
             }
             break
     }

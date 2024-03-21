@@ -60,8 +60,6 @@ public class UserService implements UserDetailsService {
     @Async("asyncExecutor")
     @Transactional
     public CompletableFuture<User> saveUserAsync(User user) {
-
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(Role.USER));
         user.setAccountNonLocked(true);

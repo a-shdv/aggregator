@@ -41,7 +41,9 @@ public class RabbitMqServiceImpl implements RabbitMqService {
             vacancyService.saveMessageList(receiveMessageDtoList, user);
         }
         progressbarLoaderCounter += receiveMessageDtoList.size();
-        messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(progressbarLoaderCounter)).type("RECEIVE").build());
+        messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder()
+                .content(String.valueOf(8.4 * progressbarLoaderCounter)) // 100 / 12 (кол-во элементов на одной странице) = 1%
+                .type("RECEIVE").build());
     }
 
     @Override
@@ -50,7 +52,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
         log.info("RECEIVED: {}", message);
         if (message.getUsername() != null) {
             User user = userService.findUserByUsernameAsync(message.getUsername()).join();
-            statisticsService.saveStatisticsAsync(user, message).join();
+            statisticsService.deleteStatisticsAsync(user).thenRun(() -> statisticsService.saveStatisticsAsync(user, message).join());
         }
     }
 
