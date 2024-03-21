@@ -38,6 +38,7 @@
 </style>
 <body>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
+
 <div class="fixed-content">
     <div class="row justify-content-center"
          style="display: flex; justify-content: center; align-items: center;">
@@ -49,7 +50,7 @@
         <div class="alert alert-warning col-6" id="alertWarningMock" role="alert" style="display: none; margin-top: 35vh; margin-bottom: -33vh">
             Список избранных вакансий пуст!
         </div>
-
+        <div id="spaceMock" style="display: none; height: 70vh"></div>
         <div id="rowSuccess" class="row justify-content-center" style="display: none;">
             <div style="height: 35vh"></div>
             <div id="alertSuccess" style="display: none" class="alert alert-success col-6" role="alert">

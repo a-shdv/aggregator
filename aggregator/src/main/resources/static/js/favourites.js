@@ -130,6 +130,14 @@ deleteFromFavouritesForms.forEach((form, index) => {
                         console.log(xhr.responseText);
                         // Remove the table row from the DOM upon successful deletion
                         form.closest('tr').remove();
+
+                        if (document.querySelectorAll('tbody tr').length === 0) {
+                            document.querySelector('#favouritesHeader').remove()
+                            document.querySelector('#favouritesTable').remove()
+                            // document.querySelector('#pdfEmailButton').remove()
+                            document.querySelector('#alertWarningMock').style.display = ''
+                            document.querySelector('#spaceMock').style.display = ''
+                        }
                     }
                 }
             };
