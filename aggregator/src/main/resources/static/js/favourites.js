@@ -7,7 +7,7 @@ const clearFavouritesForm = document.querySelector('#clearFavouritesForm')
 const favouritesTable = document.querySelector('#favouritesTable')
 const pagination = document.querySelector('#pagination')
 const alertSuccess = document.querySelector('#alertSuccess')
-const rowSuccess =document.querySelector('#rowSuccess')
+const rowSuccess = document.querySelector('#rowSuccess')
 
 let stompClient = null;
 let username = null;
@@ -112,11 +112,28 @@ function confirmClearFavouritesForm(event) {
 }
 
 
-
 clearFavouritesForm.addEventListener("submit", confirmClearFavouritesForm);
 window.addEventListener('unload', disconnect);
 pdfEmailButton.addEventListener('click', connect)
 
-document.getElementById('deleteFavouriteButton').addEventListener('click', () => {
-
+const deleteFromFavouritesForms = document.querySelectorAll('#deleteFromFavouritesForm')
+deleteFromFavouritesForms.forEach((form, index) => {
+    form.addEventListener('submit', (event) => {
+        event.preventDefault()
+        console.log('test')
+        if (confirm('Вы уверены, что удалить вакансию из избранного?') === true) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/favourites/" + document.querySelector('#favouriteId').value, true);
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        console.log(xhr.responseText);
+                        // Remove the table row from the DOM upon successful deletion
+                        form.closest('tr').remove();
+                    }
+                }
+            };
+            xhr.send();
+        }
+    })
 })

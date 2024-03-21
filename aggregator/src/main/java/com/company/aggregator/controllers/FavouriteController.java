@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
 @RequiredArgsConstructor
@@ -53,7 +52,7 @@ public class FavouriteController {
                                                                      @ModelAttribute("favouriteDto") FavouriteDto favouriteDto) {
         CompletableFuture<Void> future = favouriteService.addToFavouritesAsync(user, FavouriteDto.toFavourite(favouriteDto));
 
-        return future.thenApplyAsync(result -> ResponseEntity.ok("Success!"))
+        return future.thenApply(result -> ResponseEntity.ok("Success!"))
                 .exceptionally(ex -> {
                     log.error(ex.getMessage());
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -63,18 +62,12 @@ public class FavouriteController {
 
 
     @PostMapping("/{id}")
-    public String deleteFromFavourites(@AuthenticationPrincipal User user, @PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<String> deleteFromFavourites(@AuthenticationPrincipal User user, @PathVariable Long id) {
         CompletableFuture<Void> future = favouriteService.deleteFromFavouritesAsync(user, id);
-        future.handle((res, ex) -> {
-            if (ex != null) {
-                log.info(ex.getMessage());
-                redirectAttributes.addFlashAttribute("error", ex.getMessage());
-            } else {
-                redirectAttributes.addFlashAttribute("success", "Вакансия успешно удалена!");
-            }
-            return null;
-        }).join();
-        return "redirect:/favourites";
+        return future.thenApply((res) -> ResponseEntity.ok("Success!"))
+                .exceptionally(ex ->
+                        ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .body(ex.getMessage())).join();
     }
 
     @PostMapping("/clear")
