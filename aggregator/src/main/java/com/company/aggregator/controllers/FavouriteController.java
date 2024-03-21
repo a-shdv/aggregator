@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
 @RequiredArgsConstructor
@@ -47,20 +49,16 @@ public class FavouriteController {
     }
 
     @PostMapping
-    public String addToFavourites(@AuthenticationPrincipal User user,
-                                  @ModelAttribute("favouriteDto") FavouriteDto favouriteDto,
-                                  RedirectAttributes redirectAttributes) {
+    public CompletableFuture<ResponseEntity<String>> addToFavourites(@AuthenticationPrincipal User user,
+                                                                     @ModelAttribute("favouriteDto") FavouriteDto favouriteDto) {
         CompletableFuture<Void> future = favouriteService.addToFavouritesAsync(user, FavouriteDto.toFavourite(favouriteDto));
-        future.handle((res, ex) -> {
-            if (ex != null) {
-                log.info(ex.getMessage());
-                redirectAttributes.addFlashAttribute("error", ex.getMessage());
-            } else {
-                redirectAttributes.addFlashAttribute("success", "Вакансия была успешно добавлена в избранное!");
-            }
-            return null;
-        }).join();
-        return "redirect:/vacancies";
+
+        return future.thenApplyAsync(result -> ResponseEntity.ok("Success!"))
+                .exceptionally(ex -> {
+                    log.error(ex.getMessage());
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(ex.getMessage());
+                });
     }
 
 

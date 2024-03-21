@@ -38,8 +38,10 @@
 <!--Список вакансий-->
 <div class="container mt-5">
     <div th:if="${isParserAvailable == true}">
-        <div style="color: red" th:if="${error}" th:text="${error}"></div>
-        <div style="color: green" th:if="${success}" th:text="${success}"></div>
+
+<!--        <div style="color: red" th:if="${error}" th:text="${error}"></div>-->
+<!--        <div id="success" style="display: none; color: green">Вакансия была успешно добавлена в избранное!</div>-->
+
         <div>
             <div class="row justify-content-center">
                 <div class="alert alert-warning col-6" th:if="${vacancies.isEmpty()}"
@@ -49,7 +51,7 @@
             </div>
 
             <div class="row justify-content-center" id="alertWarningMock" style="display: none">
-                <div  class="alert alert-warning col-6"
+                <div class="alert alert-warning col-6"
                      style="margin-top: 25vh; margin-bottom: 75vh" role="alert">
                     Список вакансий пуст!
                 </div>
@@ -69,6 +71,19 @@
                 <div class="col-12 mx-auto">
                     <div class="row">
                         <h2 id="allVacanciesHeader" class="text-center mb-5 mt-5">Все вакансии</h2>
+
+                        <div class="row justify-content-center">
+                            <div id="alertFavouriteAlreadyExists" class="alert alert-danger col-6"
+                                 style=" display: none" role="alert">
+                                Вакансия уже существует в избранном!
+                            </div>
+                            <div id="alertFavouriteAddedSuccessfully" class="alert alert-success col-6"
+                                 style=" display: none" role="alert">
+                                Вакансия была успешно добавлена в избранное!
+                            </div>
+                        </div>
+
+
                         <div class="col-lg-3" th:each="vacancy : ${vacancies}">
                             <div class="card mb-4" style="width: 18rem; height: 25rem;">
                                 <!--Заголовок-->
@@ -82,8 +97,8 @@
                                             </a>
                                         </div>
                                         <div class="col-2">
-                                            <form th:action="@{/favourites}" th:method="post"
-                                                  th:object="${favouriteDto}">
+
+                                            <form id="favouriteForm" th:object="${favouriteDto}">
                                                 <input name="title" th:value="${vacancy.title}" type="hidden">
                                                 <input name="date" th:value="${vacancy.date}" type="hidden">
                                                 <input name="company" th:value="${vacancy.company}" type="hidden">
@@ -91,12 +106,13 @@
                                                 <input name="source" th:value="${vacancy.source}" type="hidden">
                                                 <input name="logo" th:value="${vacancy.logo}" type="hidden">
 
-                                                <button style="background: none; border: none;" type="submit">
-                                                    <img alt="" id="starImage" th:src="@{/img/star-light.png}"
+                                                <button class="addToFavouritesSubmitButton" style="background: none; border: none;" type="submit">
+                                                    <img alt="" class="starImage" th:src="@{/img/star-light.png}"
                                                          style="max-width: 100%; max-height: 100%"
                                                          title="Добавить в избранное">
                                                 </button>
                                             </form>
+
                                         </div>
                                     </div>
                                 </div>

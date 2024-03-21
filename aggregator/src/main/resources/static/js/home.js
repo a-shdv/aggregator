@@ -170,6 +170,7 @@ document.getElementById('statisticsFormSubmit').addEventListener('click', (event
             }
         }
     };
+
     xhr.send(formData); // Отправляем данные формы на сервер
 
     // Скрыть форму статистики

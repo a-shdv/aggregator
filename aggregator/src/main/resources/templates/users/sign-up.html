@@ -42,7 +42,7 @@
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 
 <div class="centered-form">
-    <form th:action="@{/sign-up}" th:method="post" th:object="${signUpDto}" style="width: 20%">
+    <form th:action="@{/sign-up}" th:method="post" th:object="${signUpDto}" style="width: 15%">
         <div style="color: red" th:if="${error}" th:text="${error}"></div>
         <div style="color: green" th:if="${success}" th:text="${success}"></div>
         <div class="form-row mb-3">

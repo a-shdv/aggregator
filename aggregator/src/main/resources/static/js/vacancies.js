@@ -40,3 +40,67 @@ function confirmClearVacanciesButton(event) {
 }
 
 clearVacanciesForm.addEventListener("submit", confirmClearVacanciesButton);
+const addToFavouritesSubmitButtons = document.querySelectorAll('.addToFavouritesSubmitButton');
+const favouriteForms = document.querySelectorAll('#favouriteForm');
+const alertFavouriteAddedSuccessfully = document.querySelector('#alertFavouriteAddedSuccessfully');
+const alertFavouriteAlreadyExists = document.querySelector('#alertFavouriteAlreadyExists');
+
+favouriteForms.forEach((form, index) => {
+    form.addEventListener('submit', (event) => {
+        event.preventDefault()
+        alertFavouriteAddedSuccessfully.style.display = 'none'
+        alertFavouriteAlreadyExists.style.display = 'none'
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/favourites', true);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log(xhr.responseText);
+                    alertFavouriteAddedSuccessfully.style.display = ''
+                } else {
+                    console.log('error');
+                    alertFavouriteAlreadyExists.style.display = ''
+                }
+            }
+        };
+
+        xhr.send(new FormData(form));
+
+        setTimeout(() => {
+            alertFavouriteAddedSuccessfully.style.display = 'none'
+            alertFavouriteAlreadyExists.style.display = 'none'
+        }, 1500);
+    })
+})
+
+// addToFavouritesSubmitButtons.forEach((button, index) => {
+//     favouriteForms.addEventListener('submit', (event) => {
+//         event.preventDefault();
+//
+//         alertFavouriteAddedSuccessfully.style.display = 'none'
+//         alertFavouriteAlreadyExists.style.display = 'none'
+//
+//         const xhr = new XMLHttpRequest();
+//         xhr.open('POST', '/favourites', true);
+//         xhr.onreadystatechange = () => {
+//             if (xhr.readyState === XMLHttpRequest.DONE) {
+//                 if (xhr.status === 200) {
+//                     console.log(xhr.responseText);
+//                     alertFavouriteAddedSuccessfully.style.display = ''
+//                 } else {
+//                     console.log('error');
+//                     alertFavouriteAlreadyExists.style.display = ''
+//                 }
+//             }
+//         };
+//
+//         // const formData = new FormData(favouriteForms[index]);
+//         xhr.send(new FormData(favouriteForms));
+//
+//         setTimeout(() => {
+//             alertFavouriteAddedSuccessfully.style.display = 'none'
+//             alertFavouriteAlreadyExists.style.display = 'none'
+//         }, 1500);
+//     });
+// });

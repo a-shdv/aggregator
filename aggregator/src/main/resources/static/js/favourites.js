@@ -110,6 +110,9 @@ function confirmClearFavouritesForm(event) {
         return false;
     }
 }
+
+
+
 clearFavouritesForm.addEventListener("submit", confirmClearFavouritesForm);
 window.addEventListener('unload', disconnect);
 pdfEmailButton.addEventListener('click', connect)
