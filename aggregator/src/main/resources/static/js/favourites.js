@@ -100,6 +100,11 @@ function confirmClearFavouritesForm(event) {
         };
         xhr.send();
 
+        setTimeout(() => {
+            alertSuccess.style.display = 'none'
+            document.getElementById('alertWarningMock').style.display = ''
+        }, 1500);
+
 
     } else {
         return false;

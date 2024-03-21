@@ -47,6 +47,14 @@
                     Список вакансий пуст!
                 </div>
             </div>
+
+            <div class="row justify-content-center" id="alertWarningMock" style="display: none">
+                <div  class="alert alert-warning col-6"
+                     style="margin-top: 25vh; margin-bottom: 75vh" role="alert">
+                    Список вакансий пуст!
+                </div>
+            </div>
+
             <div class="row justify-content-center">
                 <div id="alertSuccess" style="display: none; margin-top: 25vh; margin-bottom: -25vh"
                      class="alert alert-success"
@@ -101,7 +109,7 @@
                                          th:src="${vacancy.logo}">
                                     <img class="card-img-top" style="max-height: 100%; max-width: 75%;"
                                          th:if="${vacancy.logo == null}"
-                                         th:src="@{img}">
+                                         th:src="@{/img/no-image.png}">
                                 </div>
 
                                 <!--Описание вакансии-->

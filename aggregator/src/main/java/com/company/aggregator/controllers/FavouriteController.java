@@ -1,13 +1,11 @@
 package com.company.aggregator.controllers;
 
 import com.company.aggregator.dtos.FavouriteDto;
-import com.company.aggregator.exceptions.FavouritesIsEmptyException;
 import com.company.aggregator.models.Favourite;
 import com.company.aggregator.models.User;
 import com.company.aggregator.services.EmailSenderService;
 import com.company.aggregator.services.FavouriteService;
 import com.company.aggregator.services.PdfGeneratorService;
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,9 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
@@ -48,7 +43,7 @@ public class FavouriteController {
         }
         Page<Favourite> favourites = favouriteService.findFavourites(user, PageRequest.of(page, size));
         model.addAttribute("favourites", favourites);
-        return "vacancies/favourites";
+        return "favourites/favourites";
     }
 
     @PostMapping
@@ -115,8 +110,7 @@ public class FavouriteController {
 //                        future.completeExceptionally(e);
 //                    }
 //                });
-//
-//
+
 //        future.handle((res, ex) -> {
 //            if (ex != null) {
 //                redirectAttributes.addFlashAttribute("error", ex.getMessage());

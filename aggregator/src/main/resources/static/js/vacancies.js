@@ -27,6 +27,12 @@ function confirmClearVacanciesButton(event) {
         };
         xhr.send();
 
+        setTimeout(() => {
+            alertSuccess.style.display = 'none'
+            spaceTest.style.display = 'none'
+            document.getElementById('alertWarningMock').style.display = ''
+        }, 1500);
+
     } else {
         console.log('false')
         return false;

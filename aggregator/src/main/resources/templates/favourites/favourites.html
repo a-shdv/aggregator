@@ -45,13 +45,18 @@
         <div class="alert alert-warning col-6" role="alert" th:if="${favourites.isEmpty()}">
             Список избранных вакансий пуст!
         </div>
+
+        <div class="alert alert-warning col-6" id="alertWarningMock" role="alert" style="display: none; margin-top: 35vh; margin-bottom: -33vh">
+            Список избранных вакансий пуст!
+        </div>
+
         <div id="rowSuccess" class="row justify-content-center" style="display: none;">
             <div style="height: 35vh"></div>
             <div id="alertSuccess" style="display: none" class="alert alert-success col-6" role="alert">
                 <h4 class="alert-heading">Успех!</h4>
                 <p>Список избранных вакансий очищен!</p>
             </div>
-            <div style="height: 35vh"></div>
+            <div style="height: 30vh"></div>
         </div>
         <div th:if="${favourites.isEmpty()}" style="height: 35vh"></div>
     </div>
@@ -136,7 +141,7 @@
                 <ul class="pagination justify-content-center mt-5 mb-5">
                     <!-- Previous -->
                     <li class="page-item" th:if="${favourites.hasPrevious()}">
-                        <form method="get" th:action="@{/vacancies}">
+                        <form method="get" th:action="@{/favourites}">
                             <input name="page" th:value="${favourites.previousPageable().pageNumber}" type="hidden"/>
                             <input name="size" th:value="${favourites.previousPageable().pageSize}" type="hidden"/>
                             <button aria-label="Пред" class="page-link" type="submit">
