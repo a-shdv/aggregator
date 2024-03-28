@@ -26,12 +26,6 @@ public class FavouriteService {
     private final FavouriteRepository favouriteRepository;
     private final UserRepository userRepository;
 
-    @Async("asyncExecutor")
-    @Transactional
-    public CompletableFuture<Page<Favourite>> findFavouritesAsync(User user, PageRequest pageRequest) {
-        return CompletableFuture.completedFuture(favouriteRepository.findListByUser(user, pageRequest));
-    }
-
     @Transactional
     public Page<Favourite> findFavourites(User user, PageRequest pageRequest) {
         return favouriteRepository.findListByUser(user, pageRequest);
@@ -88,16 +82,6 @@ public class FavouriteService {
     @Transactional
     public CompletableFuture<Favourite> findBySourceAsync(String source) {
         return CompletableFuture.completedFuture(favouriteRepository.findBySource(source));
-    }
-
-    @Async("asyncExecutor")
-    @Transactional
-    public CompletableFuture<List<Favourite>> findByUserAsync(User user) throws FavouritesIsEmptyException {
-        CompletableFuture<List<Favourite>> favourites = CompletableFuture.completedFuture(favouriteRepository.findListByUser(user));
-        if (favourites.join().isEmpty()) {
-            throw new FavouritesIsEmptyException("Список избранных вакансий пуст!");
-        }
-        return favourites;
     }
 
     @Transactional

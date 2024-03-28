@@ -36,7 +36,6 @@ public class VacancyController {
     private String vacanciesHeartbeatUrl;
     private boolean isVacanciesParserAvailable;
 
-
     @GetMapping("/{id}")
     public String findVacancy(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Vacancy vacancy = null;
@@ -64,7 +63,6 @@ public class VacancyController {
             model.addAttribute("success", success);
         }
 
-        //java.util.concurrent.RejectedExecutionException
         Page<Vacancy> vacancies = vacancyService.findVacancies(user, PageRequest.of(page, size));
         model.addAttribute("vacancies", vacancies);
         model.addAttribute("isParserAvailable",isVacanciesParserAvailable);

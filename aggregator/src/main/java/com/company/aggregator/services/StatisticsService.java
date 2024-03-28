@@ -48,11 +48,6 @@ public class StatisticsService {
         return CompletableFuture.completedFuture(statisticsRepository.findStatisticsByUsername(username));
     }
 
-    @Transactional
-    public Statistics findStatisticsByUsername(String username) {
-        return statisticsRepository.findStatisticsByUsername(username);
-    }
-
     @Async
     @Transactional
     public CompletableFuture<Void> deleteStatisticsAsync(StatisticsDto statisticsDto) {

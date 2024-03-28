@@ -103,7 +103,6 @@ public class WebsocketController {
             } else {
                 messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content("0").type("RECEIVE").build());
             }
-//            messageSendingOperations.convertAndSend("/topic/public", WebsocketDto.builder().counter(100).type("RECEIVE").build());
             return null;
         }).join();
 

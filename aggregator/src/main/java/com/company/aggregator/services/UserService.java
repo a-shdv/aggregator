@@ -66,23 +66,6 @@ public class UserService implements UserDetailsService {
         return CompletableFuture.completedFuture(userRepository.save(user));
     }
 
-    @Async("asyncExecutor")
-    @Transactional
-    public CompletableFuture<User> saveUserStatisticsAsync(User user, ReceiveMessageDto message) {
-        Statistics statistics = com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto.toStatistics(message);
-        user.setStatistics(statistics);
-        return CompletableFuture.completedFuture(userRepository.save(user));
-    }
-
-    @Async("asyncExecutor")
-    @Transactional
-    public CompletableFuture<List<User>> findUsersAsync(PageRequest pageRequest) {
-        return CompletableFuture.completedFuture(userRepository
-                .findAll(pageRequest)
-                .stream()
-                .filter(el -> el.getRoles().stream().findFirst().get().getAuthority().equals("USER")).collect(Collectors.toList()));
-    }
-
     @Transactional
     public List<User> findUsers(PageRequest pageRequest) {
         return userRepository
@@ -101,14 +84,6 @@ public class UserService implements UserDetailsService {
     public User findUserByUsername(String username) {
         return (User) loadUserByUsername(username);
     }
-
-//    @Async
-//    @Transactional
-//    public void changeUsername(User user, ChangeUsernameDto changeUsernameDto) {
-//        String updatedUsername = changeUsernameDto.getUsername();
-//        user.setUsername(updatedUsername);
-//        userRepository.save(user);
-//    }
 
     @Async("asyncExecutor")
     @Transactional

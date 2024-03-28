@@ -56,6 +56,6 @@ public class RabbitMqReceiverService {
                                 receiveMessageDto.getExperience(),
                                 receiveMessageDto.getCityId(),
                                 receiveMessageDto.getIsRemoteAvailable()
-                        ));
+                        )).join();
     }
 }

@@ -19,7 +19,6 @@ import java.util.concurrent.CompletableFuture;
 @Service
 @Slf4j
 public class EmailSenderService {
-    public static final String attachment = "/Users/a-shdv/Desktop/report.pdf";
     @Value("${spring.mail.username}")
     public static String fromAddress = "shadaevlab7@gmail.com";
     private final JavaMailSender emailSender;
@@ -36,17 +35,6 @@ public class EmailSenderService {
         simpleMailMessage.setSubject(subject);
         simpleMailMessage.setText(message);
         emailSender.send(simpleMailMessage);
-    }
-
-    @Async("asyncExecutor")
-    public CompletableFuture<Void> sendSimpleEmailAsync(String toAddress, String subject, String message) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom(fromAddress);
-        simpleMailMessage.setTo(toAddress);
-        simpleMailMessage.setSubject(subject);
-        simpleMailMessage.setText(message);
-        emailSender.send(simpleMailMessage);
-        return CompletableFuture.completedFuture(null);
     }
 
     public void sendEmailWithAttachment(String toAddress, String subject, String message, String attachment) throws MessagingException, FileNotFoundException {

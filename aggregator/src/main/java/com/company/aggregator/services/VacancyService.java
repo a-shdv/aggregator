@@ -23,40 +23,11 @@ public class VacancyService {
     private final VacancyRepository vacancyRepository;
     private final UserRepository userRepository;
 
-    @Async("asyncExecutor")
-    @Transactional
-    public void saveMessage(ReceiveMessageDto receiveMessageDto) {
-        vacancyRepository.save(ReceiveMessageDto.toVacancy(receiveMessageDto));
-    }
-
-
     @Transactional
     public List<Vacancy> saveMessageList(List<ReceiveMessageDto> receiveMessageDtoList, User user) {
         List<Vacancy> vacancies = ReceiveMessageDto.toVacancyList(receiveMessageDtoList);
         vacancies.forEach(vacancy -> vacancy.setUser(user));
         return vacancyRepository.saveAll(vacancies);
-    }
-
-    @Async("asyncExecutor")
-    @Transactional
-    public CompletableFuture<List<Vacancy>> saveMessageListAsync(List<ReceiveMessageDto> receiveMessageDtoList, User user) {
-        List<Vacancy> vacancies = ReceiveMessageDto.toVacancyList(receiveMessageDtoList);
-        vacancies.forEach(vacancy -> vacancy.setUser(user));
-        return CompletableFuture.completedFuture(vacancyRepository.saveAll(vacancies));
-    }
-
-
-    @Async("asyncExecutor")
-    @Transactional
-    public CompletableFuture<List<Vacancy>> findVacanciesAsync() {
-        return CompletableFuture.completedFuture(vacancyRepository.findAll());
-    }
-
-
-    @Async("asyncExecutor")
-    @Transactional
-    public CompletableFuture<Page<Vacancy>> findVacanciesAsync(User user, PageRequest pageRequest) {
-        return CompletableFuture.completedFuture(vacancyRepository.findByUser(user, pageRequest));
     }
 
     @Transactional
@@ -79,9 +50,5 @@ public class VacancyService {
             throw new VacancyNotFoundException("Вакансия не найдена!");
         }
         return vacancyRepository.findById(id).get();
-    }
-
-    public Vacancy findBySource(String source) {
-        return vacancyRepository.findBySource(source);
     }
 }

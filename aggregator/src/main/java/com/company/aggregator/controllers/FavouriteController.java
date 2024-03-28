@@ -75,42 +75,4 @@ public class FavouriteController {
         favouriteService.deleteFavouritesAsync(user).join();
         return ResponseEntity.ok().body("Vacancies cleared successfully");
     }
-
-//    @PostMapping("/generate-pdf-and-send-to-email")
-//    public String generatePdfAndSendToEmail(@AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
-//        CompletableFuture<Void> future = new CompletableFuture<>();
-//        String pdfPath = System.getProperty("user.home") + "/Downloads/report-" + UUID.randomUUID() + ".pdf";
-//
-//        CompletableFuture.supplyAsync(() -> {
-//                    List<Favourite> favourites = null;
-//                    try {
-//                        favourites = favouriteService.findByUser(user);
-//                    } catch (FavouritesIsEmptyException e) {
-//                        future.completeExceptionally(e);
-//                    }
-//
-//                    return favourites;
-//                })
-//                .thenAccept((favourites) -> pdfGeneratorService
-//                        .generatePdf(favourites, pdfPath))
-//                .thenRun(() -> {
-//                    try {
-//                        emailSenderService.sendEmailWithAttachment("shadaev2001@icloud.com", "Избранные вакансии", "", pdfPath);
-//                        future.complete(null);
-//                    } catch (MessagingException | FileNotFoundException e) {
-//                        future.completeExceptionally(e);
-//                    }
-//                });
-
-//        future.handle((res, ex) -> {
-//            if (ex != null) {
-//                redirectAttributes.addFlashAttribute("error", ex.getMessage());
-//            } else {
-//                redirectAttributes.addFlashAttribute("success", "Pdf успешно сгенерирован и отправлен на почту!");
-//            }
-//            return null;
-//        }).join();
-//
-//        return "redirect:/favourites";
-//    }
 }
