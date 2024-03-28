@@ -26,7 +26,7 @@ public class ImageController {
     public String uploadAvatar(@RequestParam("image") MultipartFile file, @AuthenticationPrincipal User user) throws IOException {
         imageStorageService.deleteAvatar(user);
         Image image = imageStorageService.uploadImage(file);
-        userService.uploadAvatarAsync(user, image).join();
+        userService.uploadAvatarAsync(user, image);
         return "redirect:/account-info";
     }
 

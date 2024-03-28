@@ -57,13 +57,12 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    @Async("asyncExecutor")
     @Transactional
-    public CompletableFuture<User> saveUserAsync(User user) {
+    public User saveUserAsync(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(Role.USER));
         user.setAccountNonLocked(true);
-        return CompletableFuture.completedFuture(userRepository.save(user));
+        return userRepository.save(user);
     }
 
     @Transactional
@@ -74,10 +73,9 @@ public class UserService implements UserDetailsService {
                 .filter(el -> el.getRoles().stream().findFirst().get().getAuthority().equals("USER")).collect(Collectors.toList());
     }
 
-    @Async("asyncExecutor")
     @Transactional
-    public CompletableFuture<User> findUserByUsernameAsync(String username) {
-        return CompletableFuture.completedFuture((User) loadUserByUsername(username));
+    public User findUserByUsernameAsync(String username) {
+        return (User) loadUserByUsername(username);
     }
 
     @Transactional
@@ -85,37 +83,32 @@ public class UserService implements UserDetailsService {
         return (User) loadUserByUsername(username);
     }
 
-    @Async("asyncExecutor")
     @Transactional
-    public CompletableFuture<User> changePassword(User user, ChangePasswordDto changePasswordDto) {
+    public User changePassword(User user, ChangePasswordDto changePasswordDto) {
         user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
-        return CompletableFuture.completedFuture(userRepository.save(user));
+        return userRepository.save(user);
     }
 
-    @Async("asyncExecutor")
     @Transactional
-    public CompletableFuture<User> block(UserLockStatusDto userLockStatusDto) {
+    public User block(UserLockStatusDto userLockStatusDto) {
         User user = (User) loadUserByUsername(userLockStatusDto.getUsername());
         user.setAccountNonLocked(false);
-        return CompletableFuture.completedFuture(userRepository.save(user));
+        return userRepository.save(user);
     }
 
-    @Async("asyncExecutor")
     @Transactional
-    public CompletableFuture<User> unblock(UserLockStatusDto userLockStatusDto) {
+    public User unblock(UserLockStatusDto userLockStatusDto) {
         User user = (User) loadUserByUsername(userLockStatusDto.getUsername());
         user.setAccountNonLocked(true);
-        return CompletableFuture.completedFuture(userRepository.save(user));
+        return userRepository.save(user);
     }
 
-    @Async
     @Transactional
-    public CompletableFuture<Void> uploadAvatarAsync(User user, Image avatar) {
+    public void uploadAvatarAsync(User user, Image avatar) {
         avatar.setUser(user);
         user.setAvatar(avatar);
         userRepository.save(user);
         imageStorageRepository.save(avatar);
-        return CompletableFuture.completedFuture(null);
     }
 
     @Override

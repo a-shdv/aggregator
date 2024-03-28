@@ -1,6 +1,8 @@
 package com.company.aggregator.controllers;
 
 import com.company.aggregator.dtos.FavouriteDto;
+import com.company.aggregator.exceptions.FavouriteAlreadyExistsException;
+import com.company.aggregator.exceptions.FavouriteNotFoundException;
 import com.company.aggregator.models.Favourite;
 import com.company.aggregator.models.User;
 import com.company.aggregator.services.EmailSenderService;
@@ -48,31 +50,32 @@ public class FavouriteController {
     }
 
     @PostMapping
-    public CompletableFuture<ResponseEntity<String>> addToFavourites(@AuthenticationPrincipal User user,
+    public ResponseEntity<String> addToFavourites(@AuthenticationPrincipal User user,
                                                                      @ModelAttribute("favouriteDto") FavouriteDto favouriteDto) {
-        CompletableFuture<Void> future = favouriteService.addToFavouritesAsync(user, FavouriteDto.toFavourite(favouriteDto));
-
-        return future.thenApply(result -> ResponseEntity.ok("Success!"))
-                .exceptionally(ex -> {
-                    log.error(ex.getMessage());
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body(ex.getMessage());
-                });
+        try {
+            favouriteService.addToFavouritesAsync(user, FavouriteDto.toFavourite(favouriteDto));
+        } catch (FavouriteAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
+        }
+        return ResponseEntity.ok("Success!");
     }
 
 
     @PostMapping("/{id}")
     public ResponseEntity<String> deleteFromFavourites(@AuthenticationPrincipal User user, @PathVariable Long id) {
-        CompletableFuture<Void> future = favouriteService.deleteFromFavouritesAsync(user, id);
-        return future.thenApply((res) -> ResponseEntity.ok("Success!"))
-                .exceptionally(ex ->
-                        ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body(ex.getMessage())).join();
+        try {
+            favouriteService.deleteFromFavouritesAsync(user, id);
+        } catch (FavouriteNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
+        }
+        return ResponseEntity.ok().body("Success!");
     }
 
     @PostMapping("/clear")
     public ResponseEntity<String> deleteVacancies(@AuthenticationPrincipal User user) {
-        favouriteService.deleteFavouritesAsync(user).join();
+        favouriteService.deleteFavouritesAsync(user);
         return ResponseEntity.ok().body("Vacancies cleared successfully");
     }
 }

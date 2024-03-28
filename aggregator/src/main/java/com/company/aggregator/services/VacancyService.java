@@ -35,13 +35,12 @@ public class VacancyService {
         return vacancyRepository.findByUser(user, pageRequest);
     }
 
-    @Async("asyncExecutor")
     @Transactional
-    public CompletableFuture<User> deleteVacanciesByUserAsync(User user) {
+    public User deleteVacanciesByUserAsync(User user) {
         List<Vacancy> vacancies = vacancyRepository.findByUser(user);
         vacancies.clear();
         user.setVacancies(vacancies);
-        return CompletableFuture.completedFuture(userRepository.save(user));
+        return userRepository.save(user);
     }
 
     public Vacancy findById(Long id) throws VacancyNotFoundException {

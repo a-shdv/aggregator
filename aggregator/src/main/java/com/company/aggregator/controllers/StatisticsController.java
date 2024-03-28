@@ -35,7 +35,7 @@ public class StatisticsController {
 
     @GetMapping
     public String findStatistics(@AuthenticationPrincipal User user, Model model) {
-        Statistics statistics = statisticsService.findStatisticsByUsernameAsync(user.getUsername()).join();
+        Statistics statistics = statisticsService.findStatisticsByUsernameAsync(user.getUsername());
         model.addAttribute("isParserAvailable", isStatisticsParserAvailable);
         model.addAttribute("statistics", statistics);
         return "statistics/statistics";
@@ -43,7 +43,7 @@ public class StatisticsController {
 
     @PostMapping
     public String findStatistics(@ModelAttribute("statisticsDto") StatisticsDto statisticsDto) {
-        statisticsService.deleteStatisticsAsync(statisticsDto).join();
+        statisticsService.deleteStatisticsAsync(statisticsDto);
         rabbitMqService.sendToStatisticsParser(StatisticsDto.toSendMessageDto(statisticsDto));
         return "redirect:/";
     }

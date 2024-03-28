@@ -51,8 +51,9 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     public void receiveStatisticsParser(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
         log.info("RECEIVED: {}", message);
         if (message.getUsername() != null) {
-            User user = userService.findUserByUsernameAsync(message.getUsername()).join();
-            statisticsService.deleteStatisticsAsync(user).thenRun(() -> statisticsService.saveStatisticsAsync(user, message).join());
+            User user = userService.findUserByUsernameAsync(message.getUsername());
+            statisticsService.deleteStatisticsAsync(user);
+            statisticsService.saveStatisticsAsync(user, message);
         }
     }
 

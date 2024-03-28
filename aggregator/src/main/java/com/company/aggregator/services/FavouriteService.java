@@ -31,57 +31,34 @@ public class FavouriteService {
         return favouriteRepository.findListByUser(user, pageRequest);
     }
 
-    @Async("asyncExecutor")
     @Transactional
-    public CompletableFuture<Void> addToFavouritesAsync(User user, Favourite favourite) {
-        CompletableFuture<Void> future = new CompletableFuture<>();
-        try {
-            if (favouriteRepository.findByUserAndSource(user, favourite.getSource()) != null) {
-                throw new FavouriteAlreadyExistsException("Вакансия уже существует в избранном " + favourite.getSource());
-            }
-            favourite.setUser(user);
-            favouriteRepository.save(favourite);
-            future.complete(null);
-        } catch (FavouriteAlreadyExistsException e) {
-            future.completeExceptionally(e);
+    public void addToFavouritesAsync(User user, Favourite favourite) throws FavouriteAlreadyExistsException {
+        if (favouriteRepository.findByUserAndSource(user, favourite.getSource()) != null) {
+            throw new FavouriteAlreadyExistsException("Вакансия уже существует в избранном " + favourite.getSource());
         }
-        return future;
+        favourite.setUser(user);
+        favouriteRepository.save(favourite);
     }
 
-    @Async("asyncExecutor")
     @Transactional
-    public CompletableFuture<User> deleteFavouritesAsync(User user) {
+    public User deleteFavouritesAsync(User user) {
         List<Favourite> favourites = favouriteRepository.findListByUser(user);
         favourites.clear();
         user.setFavourites(favourites);
-        return CompletableFuture.completedFuture(userRepository.save(user));
+        return userRepository.save(user);
     }
 
-    @Async("asyncExecutor")
     @Transactional
-    public CompletableFuture<Void> deleteFromFavouritesAsync(User user, Long id) {
-        CompletableFuture<Void> future = new CompletableFuture<>();
-        try {
-            Optional<Favourite> favourite = favouriteRepository.findById(id);
-            if (favourite.isEmpty()) {
-                throw new FavouriteNotFoundException("Вакансия не найдена!");
-            }
-            List<Favourite> favourites = favouriteRepository.findListByUser(user);
-            favourites.remove(favourite.get());
-            user.setFavourites(favourites);
-            userRepository.save(user);
-            favouriteRepository.deleteById(id);
-            future.complete(null);
-        } catch (FavouriteNotFoundException e) {
-            future.completeExceptionally(e);
+    public void deleteFromFavouritesAsync(User user, Long id) throws FavouriteNotFoundException {
+        Optional<Favourite> favourite = favouriteRepository.findById(id);
+        if (favourite.isEmpty()) {
+            throw new FavouriteNotFoundException("Вакансия не найдена!");
         }
-        return CompletableFuture.completedFuture(null);
-    }
-
-    @Async("asyncExecutor")
-    @Transactional
-    public CompletableFuture<Favourite> findBySourceAsync(String source) {
-        return CompletableFuture.completedFuture(favouriteRepository.findBySource(source));
+        List<Favourite> favourites = favouriteRepository.findListByUser(user);
+        favourites.remove(favourite.get());
+        user.setFavourites(favourites);
+        userRepository.save(user);
+        favouriteRepository.deleteById(id);
     }
 
     @Transactional

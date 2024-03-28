@@ -56,11 +56,11 @@ public class UserController {
     @PostMapping("/sign-up")
     public String signUp(@ModelAttribute("signUpDto") SignUpDto dto, RedirectAttributes redirectAttributes) {
         try {
-            CompletableFuture<User> user = userService.findUserByUsernameAsync(dto.getUsername());
-            if (user.join() != null) {
+            User user = userService.findUserByUsernameAsync(dto.getUsername());
+            if (user != null) {
                 throw new UserAlreadyExistsException("Пользователь уже существует: " + dto.getUsername());
             }
-            userService.saveUserAsync(SignUpDto.toUser(dto)).join();
+            userService.saveUserAsync(SignUpDto.toUser(dto));
             redirectAttributes.addFlashAttribute("success", "Пользователь успешно создан: " + dto.getUsername());
             return "redirect:/sign-in";
         } catch (UserAlreadyExistsException ex) {
@@ -98,7 +98,7 @@ public class UserController {
             if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmNewPassword())) {
                 throw new PasswordsDoNotMatchException("Пароли не совпадают!");
             }
-            userService.changePassword(user, changePasswordDto).join();
+            userService.changePassword(user, changePasswordDto);
             redirectAttributes.addFlashAttribute("success", "Пароль был успешно изменен!");
         } catch (OldPasswordIsWrongException | PasswordsDoNotMatchException e) {
             log.error(e.getMessage());

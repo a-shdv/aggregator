@@ -19,38 +19,32 @@ public class StatisticsService {
     private final StatisticsRepository statisticsRepository;
     private final UserRepository userRepository;
 
-    @Async
     @Transactional
-    public CompletableFuture<Void> deleteStatisticsAsync(User user) {
+    public void deleteStatisticsAsync(User user) {
         Statistics statistics = statisticsRepository.findStatisticsByUsername(user.getUsername());
         if (statistics != null) {
             user.setStatistics(null);
             userRepository.save(user);
             statisticsRepository.delete(statistics);
         }
-        return CompletableFuture.completedFuture(null);
     }
 
-    @Async
     @Transactional
-    public CompletableFuture<Void> saveStatisticsAsync(User user, com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
+    public void saveStatisticsAsync(User user, com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
         Statistics statistics = ReceiveMessageDto.toStatistics(message);
         statistics.setUser(user);
         user.setStatistics(statistics);
         statisticsRepository.save(statistics);
         userRepository.save(user);
-        return CompletableFuture.completedFuture(null);
     }
 
-    @Async
     @Transactional
-    public CompletableFuture<Statistics> findStatisticsByUsernameAsync(String username) {
-        return CompletableFuture.completedFuture(statisticsRepository.findStatisticsByUsername(username));
+    public Statistics findStatisticsByUsernameAsync(String username) {
+        return statisticsRepository.findStatisticsByUsername(username);
     }
 
-    @Async
     @Transactional
-    public CompletableFuture<Void> deleteStatisticsAsync(StatisticsDto statisticsDto) {
+    public void deleteStatisticsAsync(StatisticsDto statisticsDto) {
         User user = userRepository.findUserByUsername(statisticsDto.getUsername());
         if (user.getStatistics() != null) {
             Statistics statistics = statisticsRepository.findStatisticsByUsername(user.getUsername());
@@ -58,6 +52,5 @@ public class StatisticsService {
             user.setStatistics(null);
             userRepository.save(user);
         }
-        return CompletableFuture.completedFuture(null);
     }
 }
