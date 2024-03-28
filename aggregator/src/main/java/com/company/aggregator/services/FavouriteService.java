@@ -12,12 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +30,7 @@ public class FavouriteService {
     }
 
     @Transactional
-    public void addToFavouritesAsync(User user, Favourite favourite) throws FavouriteAlreadyExistsException {
+    public void addToFavourites(User user, Favourite favourite) throws FavouriteAlreadyExistsException {
         if (favouriteRepository.findByUserAndSource(user, favourite.getSource()) != null) {
             throw new FavouriteAlreadyExistsException("Вакансия уже существует в избранном " + favourite.getSource());
         }
@@ -41,7 +39,7 @@ public class FavouriteService {
     }
 
     @Transactional
-    public User deleteFavouritesAsync(User user) {
+    public User deleteFavourites(User user) {
         List<Favourite> favourites = favouriteRepository.findListByUser(user);
         favourites.clear();
         user.setFavourites(favourites);
@@ -49,7 +47,7 @@ public class FavouriteService {
     }
 
     @Transactional
-    public void deleteFromFavouritesAsync(User user, Long id) throws FavouriteNotFoundException {
+    public void deleteFromFavourites(User user, Long id) throws FavouriteNotFoundException {
         Optional<Favourite> favourite = favouriteRepository.findById(id);
         if (favourite.isEmpty()) {
             throw new FavouriteNotFoundException("Вакансия не найдена!");

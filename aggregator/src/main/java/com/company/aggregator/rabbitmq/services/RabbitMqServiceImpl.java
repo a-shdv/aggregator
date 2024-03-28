@@ -52,14 +52,14 @@ public class RabbitMqServiceImpl implements RabbitMqService {
         log.info("RECEIVED: {}", message);
         if (message.getUsername() != null) {
             User user = userService.findUserByUsernameAsync(message.getUsername());
-            statisticsService.deleteStatisticsAsync(user);
-            statisticsService.saveStatisticsAsync(user, message);
+            statisticsService.deleteStatistics(user);
+            statisticsService.saveStatistics(user, message);
         }
     }
 
     @Override
     public void sendToVacanciesParser(com.company.aggregator.rabbitmq.dtos.vacancies.SendMessageDto sendMessageDto) {
-        vacancyService.deleteVacanciesByUserAsync(userService.findUserByUsername(sendMessageDto.getUsername()));
+        vacancyService.deleteVacanciesByUser(userService.findUserByUsername(sendMessageDto.getUsername()));
         rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend0(), sendMessageDto);
         progressbarLoaderCounter = 0;
         messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(progressbarLoaderCounter)).type("RECEIVE").build());

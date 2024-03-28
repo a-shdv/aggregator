@@ -26,12 +26,11 @@ public class ImageController {
     public String uploadAvatar(@RequestParam("image") MultipartFile file, @AuthenticationPrincipal User user) throws IOException {
         imageStorageService.deleteAvatar(user);
         Image image = imageStorageService.uploadImage(file);
-        userService.uploadAvatarAsync(user, image);
+        userService.uploadAvatar(user, image);
         return "redirect:/account-info";
     }
 
     @PostMapping
-    // @RestController
     public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
         Image image = imageStorageService.uploadImage(file);
         return ResponseEntity.status(HttpStatus.OK)

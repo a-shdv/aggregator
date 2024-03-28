@@ -10,12 +10,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +34,7 @@ public class VacancyService {
     }
 
     @Transactional
-    public User deleteVacanciesByUserAsync(User user) {
+    public User deleteVacanciesByUser(User user) {
         List<Vacancy> vacancies = vacancyRepository.findByUser(user);
         vacancies.clear();
         user.setVacancies(vacancies);

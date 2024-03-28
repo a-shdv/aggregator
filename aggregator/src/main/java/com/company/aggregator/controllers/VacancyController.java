@@ -21,8 +21,6 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.concurrent.CompletableFuture;
-
 @Controller
 @RequestMapping("/vacancies")
 @RequiredArgsConstructor
@@ -71,7 +69,7 @@ public class VacancyController {
 
     @PostMapping("/clear")
     public ResponseEntity<String> deleteVacancies(@AuthenticationPrincipal User user) {
-        vacancyService.deleteVacanciesByUserAsync(user);
+        vacancyService.deleteVacanciesByUser(user);
         return ResponseEntity.ok().body("Vacancies cleared successfully");
     }
 

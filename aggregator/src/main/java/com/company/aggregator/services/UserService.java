@@ -4,9 +4,7 @@ import com.company.aggregator.dtos.ChangePasswordDto;
 import com.company.aggregator.dtos.UserLockStatusDto;
 import com.company.aggregator.enums.Role;
 import com.company.aggregator.models.Image;
-import com.company.aggregator.models.Statistics;
 import com.company.aggregator.models.User;
-import com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto;
 import com.company.aggregator.repositories.ImageStorageRepository;
 import com.company.aggregator.repositories.UserRepository;
 import jakarta.annotation.PostConstruct;
@@ -15,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,7 +54,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User saveUserAsync(User user) {
+    public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(Role.USER));
         user.setAccountNonLocked(true);
@@ -104,7 +100,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void uploadAvatarAsync(User user, Image avatar) {
+    public void uploadAvatar(User user, Image avatar) {
         avatar.setUser(user);
         user.setAvatar(avatar);
         userRepository.save(user);

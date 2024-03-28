@@ -1,16 +1,12 @@
 package com.company.aggregator.rabbitmq.dtos.statistics;
 
-import com.company.aggregator.dtos.StatisticsDto;
 import com.company.aggregator.models.Statistics;
-import com.company.aggregator.models.Vacancy;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor

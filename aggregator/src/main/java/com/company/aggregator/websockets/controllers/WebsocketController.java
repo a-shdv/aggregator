@@ -61,7 +61,6 @@ public class WebsocketController {
     @SendTo("/topic/public")
     public WebSocketReceiveMessageDto addUser(@Payload WebSocketReceiveMessageDto webSocketReceiveMessageDto,
                                               SimpMessageHeaderAccessor headerAccessor) {
-        //add username in web socket session
         headerAccessor.getSessionAttributes().put("username", webSocketReceiveMessageDto.getSender());
         return webSocketReceiveMessageDto;
     }
@@ -82,11 +81,9 @@ public class WebsocketController {
                     } catch (FavouritesIsEmptyException e) {
                         future.completeExceptionally(e);
                     }
-
                     return favourites;
                 })
-                .thenAccept((favourites) -> pdfGeneratorService
-                        .generatePdf(favourites, pdfPath))
+                .thenAccept((favourites) -> pdfGeneratorService.generatePdf(favourites, pdfPath))
                 .thenRun(() -> {
                     try {
                         emailSenderService.sendEmailWithAttachment("shadaev2001@icloud.com", "Избранные вакансии", "", pdfPath);

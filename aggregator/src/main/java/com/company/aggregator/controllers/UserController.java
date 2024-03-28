@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.concurrent.CompletableFuture;
-
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -60,7 +58,7 @@ public class UserController {
             if (user != null) {
                 throw new UserAlreadyExistsException("Пользователь уже существует: " + dto.getUsername());
             }
-            userService.saveUserAsync(SignUpDto.toUser(dto));
+            userService.saveUser(SignUpDto.toUser(dto));
             redirectAttributes.addFlashAttribute("success", "Пользователь успешно создан: " + dto.getUsername());
             return "redirect:/sign-in";
         } catch (UserAlreadyExistsException ex) {

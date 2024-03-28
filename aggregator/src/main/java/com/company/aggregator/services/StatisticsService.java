@@ -8,10 +8,7 @@ import com.company.aggregator.repositories.StatisticsRepository;
 import com.company.aggregator.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +17,7 @@ public class StatisticsService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void deleteStatisticsAsync(User user) {
+    public void deleteStatistics(User user) {
         Statistics statistics = statisticsRepository.findStatisticsByUsername(user.getUsername());
         if (statistics != null) {
             user.setStatistics(null);
@@ -30,7 +27,7 @@ public class StatisticsService {
     }
 
     @Transactional
-    public void saveStatisticsAsync(User user, com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
+    public void saveStatistics(User user, com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
         Statistics statistics = ReceiveMessageDto.toStatistics(message);
         statistics.setUser(user);
         user.setStatistics(statistics);
@@ -39,12 +36,12 @@ public class StatisticsService {
     }
 
     @Transactional
-    public Statistics findStatisticsByUsernameAsync(String username) {
+    public Statistics findStatisticsByUsername(String username) {
         return statisticsRepository.findStatisticsByUsername(username);
     }
 
     @Transactional
-    public void deleteStatisticsAsync(StatisticsDto statisticsDto) {
+    public void deleteStatistics(StatisticsDto statisticsDto) {
         User user = userRepository.findUserByUsername(statisticsDto.getUsername());
         if (user.getStatistics() != null) {
             Statistics statistics = statisticsRepository.findStatisticsByUsername(user.getUsername());
