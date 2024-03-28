@@ -18,6 +18,6 @@ public class RabbitMqReceiverService {
     @RabbitListener(queues = "${rabbitmq.queue-to-receive}")
     public void receive(ReceiveMessageDto receiveMessageDto) {
         log.info("RECEIVED: {}", receiveMessageDto.toString());
-        service.findStatistics(receiveMessageDto);
+        service.findStatistics(receiveMessageDto).join();
     }
 }

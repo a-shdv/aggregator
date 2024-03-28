@@ -8,9 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +23,8 @@ import java.util.regex.Pattern;
 public class StatisticsService {
     private final RabbitMqSenderService rabbitMqSenderService;
 
-    public void findStatistics(ReceiveMessageDto receiveMessageDto) {
+    @Async("asyncExecutor")
+    public CompletableFuture<Void> findStatistics(ReceiveMessageDto receiveMessageDto) {
         StringBuilder url = new StringBuilder("https://gorodrabot.ru/salary");
 
         // Профессия
@@ -51,7 +54,7 @@ public class StatisticsService {
                     .getElementsByClass("chart-options chart-list");
         } else {
             rabbitMqSenderService.send(SendMessageDto.builder().build());
-            return;
+            return CompletableFuture.completedFuture(null);
         }
 
 
@@ -95,7 +98,7 @@ public class StatisticsService {
         } else {
             log.error("Could not parse elements!");
         }
-
+        return CompletableFuture.completedFuture(null);
     }
 
     private Document connectDocumentToUrl(String url) {
