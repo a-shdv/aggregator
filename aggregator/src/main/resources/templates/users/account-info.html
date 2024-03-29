@@ -38,7 +38,7 @@
 <div class="container" style="width: 18rem;">
     <div class="card mx-auto" th:object="${user}">
         <img alt="Could not load image" th:if="*{avatar != null}"
-             th:src="@{/images/{fileName}(fileName=*{avatar.name})}">
+             th:src="@{/images/{fileName}(fileName=*{avatar.getFilename})}">
         <img th:if="*{avatar == null}" th:src="@{/img/avatar.png}">
 
         <div class="card-body">
