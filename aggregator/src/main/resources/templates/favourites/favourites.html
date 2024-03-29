@@ -30,6 +30,7 @@
     input[type=radio], input[type=checkbox] {
         accent-color: #ffc107;
     }
+
     .fixed-content {
         max-width: 1600px; /* Adjust the width as per your requirement */
         margin: 0 auto; /* Center the container horizontally */
@@ -42,27 +43,28 @@
 <div class="fixed-content">
     <div class="row justify-content-center"
          style="display: flex; justify-content: center; align-items: center;">
-        <div th:if="${favourites.isEmpty()}" style="height: 35vh"></div>
+        <div style="height: 35vh" th:if="${favourites.isEmpty()}"></div>
         <div class="alert alert-warning col-6" role="alert" th:if="${favourites.isEmpty()}">
             Список избранных вакансий пуст!
         </div>
 
-        <div class="alert alert-warning col-6" id="alertWarningMock" role="alert" style="display: none; margin-top: 35vh; margin-bottom: -33vh">
+        <div class="alert alert-warning col-6" id="alertWarningMock" role="alert"
+             style="display: none; margin-top: 35vh; margin-bottom: -33vh">
             Список избранных вакансий пуст!
         </div>
         <div id="spaceMock" style="display: none; height: 70vh"></div>
-        <div id="rowSuccess" class="row justify-content-center" style="display: none;">
+        <div class="row justify-content-center" id="rowSuccess" style="display: none;">
             <div style="height: 35vh"></div>
-            <div id="alertSuccess" style="display: none" class="alert alert-success col-6" role="alert">
+            <div class="alert alert-success col-6" id="alertSuccess" role="alert" style="display: none">
                 <h4 class="alert-heading">Успех!</h4>
                 <p>Список избранных вакансий очищен!</p>
             </div>
             <div style="height: 30vh"></div>
         </div>
-        <div th:if="${favourites.isEmpty()}" style="height: 35vh"></div>
+        <div style="height: 35vh" th:if="${favourites.isEmpty()}"></div>
     </div>
 
-    <div id="favouritesTable" class="container mt-5" th:if="${!favourites.isEmpty()}">
+    <div class="container mt-5" id="favouritesTable" th:if="${!favourites.isEmpty()}">
         <div class="row justify-content-center mt-9 col-lg-12">
             <table class="table table-hover">
                 <h2 id="favouritesHeader">Избранное</h2>
@@ -85,8 +87,9 @@
                         <p class="text-warning">Пожалуйста, подождите. Идет формирование отчета...</p>
                     </div>
 
-                    <div style="color: red; display: none;" id="error">При формировании отчета произошла ошибка!</div>
-                    <div style="color: green; display: none;" id="success">Отчет успешно сформирован и отправлен на почту!
+                    <div id="error" style="color: red; display: none;">При формировании отчета произошла ошибка!</div>
+                    <div id="success" style="color: green; display: none;">Отчет успешно сформирован и отправлен на
+                        почту!
                     </div>
                 </div>
 
@@ -111,8 +114,9 @@
                     <!--Ссылка на вакансию-->
                     <td>
                         <!--Удалить из избранного-->
-                        <form id="deleteFromFavouritesForm" th:action="@{/favourites/{id}(id=${favourite.id})}" th:method="post">
-                            <input type="hidden" id="favouriteId" th:value="${favourite.id}">
+                        <form id="deleteFromFavouritesForm" th:action="@{/favourites/{id}(id=${favourite.id})}"
+                              th:method="post">
+                            <input id="favouriteId" th:value="${favourite.id}" type="hidden">
                             <button id="deleteFavouriteButton" style="background: none; border: none" type="submit">
                                 <img alt="Не удалось загрузить изображение" class="card-img-top"
                                      style="color: white; max-height: 5%; max-width: 5%;"
@@ -129,7 +133,7 @@
                 <form th:action="@{/favourites/generate-pdf-and-send-to-email}" th:method="post">
                     <input id="username" th:value="${#authentication.principal.username}" type="hidden">
 
-                    <button id="pdfEmailButton" class="btn btn-md btn-warning" th:text="'Сформировать PDF'"
+                    <button class="btn btn-md btn-warning" id="pdfEmailButton" th:text="'Сформировать PDF'"
                             type="submit"></button>
                 </form>
             </div>
@@ -177,7 +181,7 @@
         </div>
 
         <!--Кнопка "Очистить"-->
-        <form id="clearFavouritesForm" class="mt-5" th:action="@{/favourites/clear}" th:method="post">
+        <form class="mt-5" id="clearFavouritesForm" th:action="@{/favourites/clear}" th:method="post">
             <input class="btn btn-danger btn-md mb-5" type="submit" value="Очистить">
         </form>
 

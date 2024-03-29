@@ -2,20 +2,21 @@ package com.company.aggregator.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table
-@Getter
-@Setter
-@ToString(exclude = "user")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(exclude = "user")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Statistics {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String username;
+    Long id;
+    String username;
     String avgSalaryTitle;
     String avgSalaryDescription;
     String medianSalaryTitle;
@@ -26,5 +27,6 @@ public class Statistics {
     String city;
     String year;
     String currency;
-    @OneToOne(mappedBy = "statistics") private User user;
+    @OneToOne(mappedBy = "statistics")
+    User user;
 }

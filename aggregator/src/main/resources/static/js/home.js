@@ -162,7 +162,7 @@ document.getElementById('statisticsFormSubmit').addEventListener('click', (event
 
     var xhr = new XMLHttpRequest(); // Создаем объект XMLHttpRequest
     xhr.open('POST', form.action, true); // Настраиваем запрос
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) { // Проверяем, завершен ли запрос
             if (xhr.status === 200) { // Проверяем успешность запроса
                 console.log('Данные успешно отправлены на сервер');

@@ -1,13 +1,11 @@
 package com.company.aggregator.controllers;
 
-import com.company.aggregator.exceptions.VacancyNotFoundException;
+import com.company.aggregator.exceptions.vacancy.VacancyNotFoundException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.models.Vacancy;
-import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
-import com.company.aggregator.services.VacancyService;
+import com.company.aggregator.services.impl.VacancyServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,9 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 @Slf4j
 public class VacancyController {
-    private final VacancyService vacancyService;
-    private final RabbitTemplate rabbitTemplate;
-    private final RabbitMqProperties rabbitProperties;
+    private final VacancyServiceImpl vacancyServiceImpl;
     private final RestTemplate restTemplate;
     @Value("${constants.vacancies-heartbeat-url}")
     private String vacanciesHeartbeatUrl;
@@ -38,7 +34,7 @@ public class VacancyController {
     public String findVacancy(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Vacancy vacancy = null;
         try {
-            vacancy = vacancyService.findById(id);
+            vacancy = vacancyServiceImpl.findById(id);
         } catch (VacancyNotFoundException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/";
@@ -61,15 +57,15 @@ public class VacancyController {
             model.addAttribute("success", success);
         }
 
-        Page<Vacancy> vacancies = vacancyService.findVacancies(user, PageRequest.of(page, size));
+        Page<Vacancy> vacancies = vacancyServiceImpl.findVacancies(user, PageRequest.of(page, size));
         model.addAttribute("vacancies", vacancies);
-        model.addAttribute("isParserAvailable",isVacanciesParserAvailable);
+        model.addAttribute("isParserAvailable", isVacanciesParserAvailable);
         return "vacancies/vacancies";
     }
 
     @PostMapping("/clear")
     public ResponseEntity<String> deleteVacancies(@AuthenticationPrincipal User user) {
-        vacancyService.deleteVacanciesByUser(user);
+        vacancyServiceImpl.deleteVacanciesByUser(user);
         return ResponseEntity.ok().body("Vacancies cleared successfully");
     }
 

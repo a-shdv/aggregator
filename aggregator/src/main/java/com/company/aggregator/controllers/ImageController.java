@@ -2,8 +2,8 @@ package com.company.aggregator.controllers;
 
 import com.company.aggregator.models.Image;
 import com.company.aggregator.models.User;
-import com.company.aggregator.services.ImageStorageService;
-import com.company.aggregator.services.UserService;
+import com.company.aggregator.services.impl.ImageStorageServiceImpl;
+import com.company.aggregator.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,28 +19,28 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RequestMapping("/images")
 public class ImageController {
-    private final ImageStorageService imageStorageService;
-    private final UserService userService;
+    private final ImageStorageServiceImpl imageStorageServiceImpl;
+    private final UserServiceImpl userServiceImpl;
 
     @PostMapping("/avatar")
     public String uploadAvatar(@RequestParam("image") MultipartFile file, @AuthenticationPrincipal User user) throws IOException {
-        imageStorageService.deleteAvatar(user);
-        Image image = imageStorageService.uploadImage(file);
-        userService.uploadAvatar(user, image);
+        imageStorageServiceImpl.deleteAvatar(user);
+        Image image = imageStorageServiceImpl.uploadImage(file);
+        userServiceImpl.uploadAvatar(user, image);
         return "redirect:/account-info";
     }
 
     @PostMapping
     public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
-        Image image = imageStorageService.uploadImage(file);
+        Image image = imageStorageServiceImpl.uploadImage(file);
         return ResponseEntity.status(HttpStatus.OK)
                 .body("Image has been successfully uploaded!");
     }
 
     @GetMapping("/{fileName}")
     // @RestController
-    public ResponseEntity<?> downloadImage(@PathVariable String fileName){
-        byte[] imageData= imageStorageService.downloadImage(fileName);
+    public ResponseEntity<?> downloadImage(@PathVariable String fileName) {
+        byte[] imageData = imageStorageServiceImpl.downloadImage(fileName);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/png"))
                 .body(imageData);

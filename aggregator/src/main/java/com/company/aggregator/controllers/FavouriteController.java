@@ -1,16 +1,15 @@
 package com.company.aggregator.controllers;
 
 import com.company.aggregator.dtos.FavouriteDto;
-import com.company.aggregator.exceptions.FavouriteAlreadyExistsException;
-import com.company.aggregator.exceptions.FavouriteNotFoundException;
+import com.company.aggregator.exceptions.favourite.FavouriteAlreadyExistsException;
+import com.company.aggregator.exceptions.favourite.FavouriteNotFoundException;
 import com.company.aggregator.models.Favourite;
 import com.company.aggregator.models.User;
-import com.company.aggregator.services.FavouriteService;
+import com.company.aggregator.services.impl.FavouriteServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/favourites")
 @Slf4j
 public class FavouriteController {
-    private final FavouriteService favouriteService;
+    private final FavouriteServiceImpl favouriteServiceImpl;
 
     @GetMapping
     public String findFavourites(@AuthenticationPrincipal User user,
@@ -37,38 +36,28 @@ public class FavouriteController {
         if (success != null) {
             model.addAttribute("success", success);
         }
-        Page<Favourite> favourites = favouriteService.findFavourites(user, PageRequest.of(page, size));
+        Page<Favourite> favourites = favouriteServiceImpl.findFavourites(user, PageRequest.of(page, size));
         model.addAttribute("favourites", favourites);
         return "favourites/favourites";
     }
 
     @PostMapping
     public ResponseEntity<String> addToFavourites(@AuthenticationPrincipal User user,
-                                                                     @ModelAttribute("favouriteDto") FavouriteDto favouriteDto) {
-        try {
-            favouriteService.addToFavourites(user, FavouriteDto.toFavourite(favouriteDto));
-        } catch (FavouriteAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(e.getMessage());
-        }
+                                                  @ModelAttribute("favouriteDto") FavouriteDto favouriteDto) throws FavouriteAlreadyExistsException {
+        favouriteServiceImpl.addToFavourites(user, FavouriteDto.toFavourite(favouriteDto));
         return ResponseEntity.ok("Success!");
     }
 
 
     @PostMapping("/{id}")
-    public ResponseEntity<String> deleteFromFavourites(@AuthenticationPrincipal User user, @PathVariable Long id) {
-        try {
-            favouriteService.deleteFromFavourites(user, id);
-        } catch (FavouriteNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(e.getMessage());
-        }
+    public ResponseEntity<String> deleteFromFavourites(@AuthenticationPrincipal User user, @PathVariable Long id) throws FavouriteNotFoundException {
+        favouriteServiceImpl.deleteFromFavourites(user, id);
         return ResponseEntity.ok().body("Success!");
     }
 
     @PostMapping("/clear")
     public ResponseEntity<String> deleteVacancies(@AuthenticationPrincipal User user) {
-        favouriteService.deleteFavourites(user);
+        favouriteServiceImpl.deleteAllFavourites(user);
         return ResponseEntity.ok().body("Vacancies cleared successfully");
     }
 }

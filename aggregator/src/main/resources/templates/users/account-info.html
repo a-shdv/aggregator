@@ -37,8 +37,8 @@
 
 <div class="container" style="width: 18rem;">
     <div class="card mx-auto" th:object="${user}">
-        <img th:if="*{avatar != null}" th:src="@{/images/{fileName}(fileName=*{avatar.name})}"
-             alt="Could not load image">
+        <img alt="Could not load image" th:if="*{avatar != null}"
+             th:src="@{/images/{fileName}(fileName=*{avatar.name})}">
         <img th:if="*{avatar == null}" th:src="@{/img/avatar.png}">
 
         <div class="card-body">
@@ -50,10 +50,10 @@
         </div>
     </div>
 
-    <form th:method="post" th:action="@{/images/avatar}" enctype="multipart/form-data">
+    <form enctype="multipart/form-data" th:action="@{/images/avatar}" th:method="post">
         <div class="form-row mb-3">
             <div class="form-group">
-                <input class="btn" type="file" size="50" name="image" accept="image/png, image/jpg, image/jpeg"/>
+                <input accept="image/png, image/jpg, image/jpeg" class="btn" name="image" size="50" type="file"/>
                 <input type="submit" value="Загрузить"/>
             </div>
         </div>

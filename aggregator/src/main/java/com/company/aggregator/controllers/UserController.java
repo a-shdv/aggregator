@@ -2,11 +2,11 @@ package com.company.aggregator.controllers;
 
 import com.company.aggregator.dtos.ChangePasswordDto;
 import com.company.aggregator.dtos.SignUpDto;
-import com.company.aggregator.exceptions.OldPasswordIsWrongException;
-import com.company.aggregator.exceptions.PasswordsDoNotMatchException;
-import com.company.aggregator.exceptions.UserAlreadyExistsException;
+import com.company.aggregator.exceptions.user.OldPasswordIsWrongException;
+import com.company.aggregator.exceptions.user.PasswordsDoNotMatchException;
+import com.company.aggregator.exceptions.user.UserAlreadyExistsException;
 import com.company.aggregator.models.User;
-import com.company.aggregator.services.UserService;
+import com.company.aggregator.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/sign-in")
@@ -52,20 +52,14 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public String signUp(@ModelAttribute("signUpDto") SignUpDto dto, RedirectAttributes redirectAttributes) {
-        try {
-            User user = userService.findUserByUsernameAsync(dto.getUsername());
+    public String signUp(@ModelAttribute("signUpDto") SignUpDto dto, RedirectAttributes redirectAttributes) throws UserAlreadyExistsException {
+            User user = userServiceImpl.findUserByUsername(dto.getUsername());
             if (user != null) {
                 throw new UserAlreadyExistsException("Пользователь уже существует: " + dto.getUsername());
             }
-            userService.saveUser(SignUpDto.toUser(dto));
+            userServiceImpl.saveUser(SignUpDto.toUser(dto));
             redirectAttributes.addFlashAttribute("success", "Пользователь успешно создан: " + dto.getUsername());
             return "redirect:/sign-in";
-        } catch (UserAlreadyExistsException ex) {
-            log.info(ex.getMessage());
-            redirectAttributes.addFlashAttribute("error", ex.getMessage());
-            return "redirect:/sign-up";
-        }
     }
 
     @GetMapping("/account-info")
@@ -88,20 +82,15 @@ public class UserController {
     }
 
     @PostMapping("/change-password")
-    public String changePassword(@AuthenticationPrincipal User user, @ModelAttribute ChangePasswordDto changePasswordDto, RedirectAttributes redirectAttributes) {
-        try {
-            if (!passwordEncoder.matches(changePasswordDto.oldPassword(), user.getPassword())) {
-                throw new OldPasswordIsWrongException("Старый пароль неверный!");
-            }
-            if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmNewPassword())) {
-                throw new PasswordsDoNotMatchException("Пароли не совпадают!");
-            }
-            userService.changePassword(user, changePasswordDto);
-            redirectAttributes.addFlashAttribute("success", "Пароль был успешно изменен!");
-        } catch (OldPasswordIsWrongException | PasswordsDoNotMatchException e) {
-            log.error(e.getMessage());
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+    public String changePassword(@AuthenticationPrincipal User user, @ModelAttribute ChangePasswordDto changePasswordDto, RedirectAttributes redirectAttributes) throws OldPasswordIsWrongException, PasswordsDoNotMatchException {
+        if (!passwordEncoder.matches(changePasswordDto.oldPassword(), user.getPassword())) {
+            throw new OldPasswordIsWrongException("Старый пароль неверный!");
         }
+        if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmNewPassword())) {
+            throw new PasswordsDoNotMatchException("Пароли не совпадают!");
+        }
+        userServiceImpl.changePassword(user, changePasswordDto);
+        redirectAttributes.addFlashAttribute("success", "Пароль был успешно изменен!");
         return "redirect:/change-password";
     }
 }

@@ -37,7 +37,7 @@ spring:
     driver-class-name: org.postgresql.Driver
 
 
-#  liquibase:
+  #  liquibase:
   #    url: jdbc:postgresql://localhost:5434/test_db
   #    user: postgres
   #    password: postgres

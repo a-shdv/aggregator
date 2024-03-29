@@ -8,12 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface VacancyRepository extends JpaRepository<Vacancy, Long> {
-    Vacancy findBySource(String source);
+    Optional<Page<Vacancy>> findVacancyByUser(User user, PageRequest pageRequest);
 
-    Page<Vacancy> findByUser(User user, PageRequest pageRequest);
-
-    List<Vacancy> findByUser(User user);
+    Optional<List<Vacancy>> findVacanciesByUser(User user);
 }

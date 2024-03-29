@@ -1,15 +1,15 @@
 package com.company.aggregator.websockets.controllers;
 
 import com.company.aggregator.dtos.VacancyDto;
-import com.company.aggregator.exceptions.FavouritesIsEmptyException;
+import com.company.aggregator.exceptions.favourite.FavouritesIsEmptyException;
 import com.company.aggregator.models.Favourite;
 import com.company.aggregator.models.User;
 import com.company.aggregator.rabbitmq.dtos.vacancies.SendMessageDto;
 import com.company.aggregator.rabbitmq.services.RabbitMqService;
-import com.company.aggregator.services.EmailSenderService;
-import com.company.aggregator.services.FavouriteService;
-import com.company.aggregator.services.PdfGeneratorService;
-import com.company.aggregator.services.UserService;
+import com.company.aggregator.services.impl.EmailSenderServiceImpl;
+import com.company.aggregator.services.impl.FavouriteServiceImpl;
+import com.company.aggregator.services.impl.PdfGeneratorServiceImpl;
+import com.company.aggregator.services.impl.UserServiceImpl;
 import com.company.aggregator.websockets.dtos.WebSocketReceiveMessageDto;
 import com.company.aggregator.websockets.dtos.WebSocketSendMessageDto;
 import jakarta.mail.MessagingException;
@@ -32,10 +32,10 @@ import java.util.concurrent.CompletableFuture;
 public class WebsocketController {
     private final RabbitMqService rabbitMqService;
 
-    private final FavouriteService favouriteService;
-    private final PdfGeneratorService pdfGeneratorService;
-    private final EmailSenderService emailSenderService;
-    private final UserService userService;
+    private final FavouriteServiceImpl favouriteServiceImpl;
+    private final PdfGeneratorServiceImpl pdfGeneratorServiceImpl;
+    private final EmailSenderServiceImpl emailSenderServiceImpl;
+    private final UserServiceImpl userServiceImpl;
     private final SimpMessageSendingOperations messageSendingOperations;
 
 
@@ -76,17 +76,17 @@ public class WebsocketController {
                     List<Favourite> favourites = null;
                     User user;
                     try {
-                        user = userService.findUserByUsername(webSocketReceiveMessageDto.getSender());
-                        favourites = favouriteService.findByUser(user);
+                        user = userServiceImpl.findUserByUsername(webSocketReceiveMessageDto.getSender());
+                        favourites = favouriteServiceImpl.findFavouritesByUser(user);
                     } catch (FavouritesIsEmptyException e) {
                         future.completeExceptionally(e);
                     }
                     return favourites;
                 })
-                .thenAccept((favourites) -> pdfGeneratorService.generatePdf(favourites, pdfPath))
+                .thenAccept((favourites) -> pdfGeneratorServiceImpl.generatePdf(favourites, pdfPath))
                 .thenRun(() -> {
                     try {
-                        emailSenderService.sendEmailWithAttachment("shadaev2001@icloud.com", "Избранные вакансии", "", pdfPath);
+                        emailSenderServiceImpl.sendEmailWithAttachment("shadaev2001@icloud.com", "Избранные вакансии", "", pdfPath);
                         future.complete(null);
                     } catch (MessagingException | FileNotFoundException e) {
                         future.completeExceptionally(e);

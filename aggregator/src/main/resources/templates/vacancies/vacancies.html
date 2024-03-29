@@ -39,28 +39,28 @@
 <div class="container mt-5">
     <div th:if="${isParserAvailable == true}">
 
-<!--        <div style="color: red" th:if="${error}" th:text="${error}"></div>-->
-<!--        <div id="success" style="display: none; color: green">Вакансия была успешно добавлена в избранное!</div>-->
+        <!--        <div style="color: red" th:if="${error}" th:text="${error}"></div>-->
+        <!--        <div id="success" style="display: none; color: green">Вакансия была успешно добавлена в избранное!</div>-->
 
         <div>
             <div class="row justify-content-center">
-                <div class="alert alert-warning col-6" th:if="${vacancies.isEmpty()}"
-                     style="margin-top: 25vh; margin-bottom: -25vh" role="alert">
+                <div class="alert alert-warning col-6" role="alert"
+                     style="margin-top: 25vh; margin-bottom: -25vh" th:if="${vacancies.isEmpty()}">
                     Список вакансий пуст!
                 </div>
             </div>
 
             <div class="row justify-content-center" id="alertWarningMock" style="display: none">
                 <div class="alert alert-warning col-6"
-                     style="margin-top: 25vh; margin-bottom: 45vh" role="alert"> <!---->
+                     role="alert" style="margin-top: 25vh; margin-bottom: 45vh"> <!---->
                     Список вакансий пуст!
                 </div>
             </div>
 
             <div class="row justify-content-center">
-                <div id="alertSuccess" style="display: none; margin-top: 25vh; margin-bottom: -25vh"
-                     class="alert alert-success"
-                     role="alert">
+                <div class="alert alert-success" id="alertSuccess"
+                     role="alert"
+                     style="display: none; margin-top: 25vh; margin-bottom: -25vh">
                     <h4 class="alert-heading">Успех!</h4>
                     <p>Список вакансий очищен!</p>
                 </div>
@@ -70,15 +70,15 @@
             <div class="row align-items-center mt-3" id="allVacanciesList" th:if="${!vacancies.isEmpty()}">
                 <div class="col-12 mx-auto">
                     <div class="row">
-                        <h2 id="allVacanciesHeader" class="text-center mb-5 mt-5">Все вакансии</h2>
+                        <h2 class="text-center mb-5 mt-5" id="allVacanciesHeader">Все вакансии</h2>
 
                         <div class="row justify-content-center">
-                            <div id="alertFavouriteAlreadyExists" class="alert alert-danger col-6"
-                                 style=" display: none" role="alert">
+                            <div class="alert alert-danger col-6" id="alertFavouriteAlreadyExists"
+                                 role="alert" style=" display: none">
                                 Вакансия уже существует в избранном!
                             </div>
-                            <div id="alertFavouriteAddedSuccessfully" class="alert alert-success col-6"
-                                 style=" display: none" role="alert">
+                            <div class="alert alert-success col-6" id="alertFavouriteAddedSuccessfully"
+                                 role="alert" style=" display: none">
                                 Вакансия была успешно добавлена в избранное!
                             </div>
                         </div>
@@ -105,9 +105,10 @@
                                                 <input name="source" th:value="${vacancy.source}" type="hidden">
                                                 <input name="logo" th:value="${vacancy.logo}" type="hidden">
 
-                                                <button class="addToFavouritesSubmitButton" style="background: none; border: none;" type="submit">
-                                                    <img alt="" class="starImage" th:src="@{/img/star-light.png}"
-                                                         style="max-width: 100%; max-height: 100%"
+                                                <button class="addToFavouritesSubmitButton"
+                                                        style="background: none; border: none;" type="submit">
+                                                    <img alt="" class="starImage" style="max-width: 100%; max-height: 100%"
+                                                         th:src="@{/img/star-light.png}"
                                                          title="Добавить в избранное">
                                                 </button>
                                             </form>
@@ -149,8 +150,8 @@
                 </div>
 
                 <!--Кнопка "Очистить"-->
-                <form id="clearVacanciesForm" class="mt-5" th:action="@{/vacancies/clear}" th:method="post">
-                    <input id="clearVacanciesButton" class="btn btn-danger btn-md mb-5" type="submit"
+                <form class="mt-5" id="clearVacanciesForm" th:action="@{/vacancies/clear}" th:method="post">
+                    <input class="btn btn-danger btn-md mb-5" id="clearVacanciesButton" type="submit"
                            value="Очистить">
                 </form>
 

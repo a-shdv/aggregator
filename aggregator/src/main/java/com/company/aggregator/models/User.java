@@ -3,6 +3,7 @@ package com.company.aggregator.models;
 import com.company.aggregator.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,44 +11,44 @@ import java.util.*;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+@Data
 @ToString(exclude = {"statistics", "vacancies", "favourites", "avatar"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String email;
-    private String username;
-    private String password;
-    private boolean isAccountNonLocked;
+    Long id;
+    String email;
+    String username;
+    String password;
+    boolean isAccountNonLocked;
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"))
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    private Set<Role> roles = new HashSet<>();
+    Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private List<Vacancy> vacancies = new ArrayList<>();
+    List<Vacancy> vacancies = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private List<Favourite> favourites = new ArrayList<>();
+    List<Favourite> favourites = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "statistics_id", referencedColumnName = "id")
-    private Statistics statistics;
+    Statistics statistics;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "avatar_id", referencedColumnName = "id")
-    private Image avatar;
+    Image avatar;
 
 
     @Override

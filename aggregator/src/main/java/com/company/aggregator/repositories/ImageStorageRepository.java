@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface ImageStorageRepository extends JpaRepository<Image, Long> {
-    Optional<Image> findByName(String filename);
+    Optional<Image> findImageByName(String filename);
 
-    Optional<Image> findByUser(User user);
+    Optional<Image> findImageByUser(User user);
 }

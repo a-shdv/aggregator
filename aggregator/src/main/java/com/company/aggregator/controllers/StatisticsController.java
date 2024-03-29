@@ -1,11 +1,12 @@
 package com.company.aggregator.controllers;
 
 import com.company.aggregator.dtos.StatisticsDto;
+import com.company.aggregator.exceptions.statistics.StatisticsNotFoundException;
 import com.company.aggregator.models.Statistics;
 import com.company.aggregator.models.User;
 import com.company.aggregator.rabbitmq.services.RabbitMqService;
-import com.company.aggregator.services.StatisticsService;
-import com.company.aggregator.services.UserService;
+import com.company.aggregator.services.impl.StatisticsServiceImpl;
+import com.company.aggregator.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,24 +27,28 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class StatisticsController {
     private final RestTemplate restTemplate;
+    private final RabbitMqService rabbitMqService;
+    private final StatisticsServiceImpl statisticsServiceImpl;
+    private final UserServiceImpl userServiceImpl;
     @Value("${constants.statistics-heartbeat-url}")
     private String statisticsHeartbeatUrl;
     private boolean isStatisticsParserAvailable;
-    private final RabbitMqService rabbitMqService;
-    private final StatisticsService statisticsService;
-    private final UserService userService;
 
     @GetMapping
     public String findStatistics(@AuthenticationPrincipal User user, Model model) {
-        Statistics statistics = statisticsService.findStatisticsByUsername(user.getUsername());
+        Statistics statistics = null;
+        try {
+            statistics = statisticsServiceImpl.findStatisticsByUsername(user.getUsername());
+            model.addAttribute("statistics", statistics);
+        } catch (StatisticsNotFoundException e) {
+        }
         model.addAttribute("isParserAvailable", isStatisticsParserAvailable);
-        model.addAttribute("statistics", statistics);
         return "statistics/statistics";
     }
 
     @PostMapping
     public String findStatistics(@ModelAttribute("statisticsDto") StatisticsDto statisticsDto) {
-        statisticsService.deleteStatistics(statisticsDto);
+        statisticsServiceImpl.deleteStatistics(statisticsDto);
         rabbitMqService.sendToStatisticsParser(StatisticsDto.toSendMessageDto(statisticsDto));
         return "redirect:/";
     }
@@ -57,4 +62,5 @@ public class StatisticsController {
             isStatisticsParserAvailable = false;
         }
     }
+
 }

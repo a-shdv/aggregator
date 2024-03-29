@@ -3,34 +3,35 @@ package com.company.aggregator.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "vacancies")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString(exclude = "user")
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Vacancy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String title;
-    private String date;
-    private String salary;
-    private String company;
+    Long id;
+    String title;
+    String date;
+    String salary;
+    String company;
     @Column(columnDefinition = "text")
-    private String requirements;
+    String requirements;
     @Column(columnDefinition = "text")
-    private String description;
+    String description;
     @Column(columnDefinition = "text")
-    private String schedule;
+    String schedule;
     @Column(columnDefinition = "text")
-    private String source;
+    String source;
     @Column(columnDefinition = "text")
-    private String logo;
+    String logo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    @ToString.Exclude
+    User user;
 }

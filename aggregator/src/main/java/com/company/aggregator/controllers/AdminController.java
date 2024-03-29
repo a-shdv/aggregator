@@ -1,7 +1,7 @@
 package com.company.aggregator.controllers;
 
 import com.company.aggregator.dtos.UserLockStatusDto;
-import com.company.aggregator.services.UserService;
+import com.company.aggregator.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -16,25 +16,25 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin")
 @Slf4j
 public class AdminController {
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
     @GetMapping
     public String adminPanel(@RequestParam(required = false, defaultValue = "0") int page,
                              @RequestParam(required = false, defaultValue = "10") int size,
                              Model model) {
-        model.addAttribute("users", userService.findUsers(PageRequest.of(page, size)));
+        model.addAttribute("users", userServiceImpl.findUsers(PageRequest.of(page, size)));
         return "admins/panel";
     }
 
     @PostMapping("/block")
     public String block(@ModelAttribute UserLockStatusDto userLockStatusDto) {
-        userService.block(userLockStatusDto);
+        userServiceImpl.block(userLockStatusDto);
         return "redirect:/admin";
     }
 
     @PostMapping("/unblock")
     public String unblock(@ModelAttribute UserLockStatusDto userLockStatusDto) {
-        userService.unblock(userLockStatusDto);
+        userServiceImpl.unblock(userLockStatusDto);
         return "redirect:/admin";
     }
 }

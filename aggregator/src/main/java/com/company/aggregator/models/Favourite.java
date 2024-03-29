@@ -2,27 +2,28 @@ package com.company.aggregator.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "favourites")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString(exclude = "user")
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Favourite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String title;
-    private String date;
-    private String company;
+    Long id;
+    String title;
+    String date;
+    String company;
     @Column(columnDefinition = "text")
-    private String schedule;
+    String schedule;
     @Column(columnDefinition = "text")
-    private String source;
+    String source;
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
-    private String logo;
+    @ToString.Exclude
+    User user;
+    String logo;
 }
