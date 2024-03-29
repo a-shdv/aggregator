@@ -63,7 +63,8 @@
 
         <h3>Источник</h3>
         <a class="mb-3" target="_blank"
-           th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}" th:text="${#strings.arraySplit(vacancy.source, '/')[1]}"></a>
+           th:href="'https://' + ${#strings.arraySplit(vacancy.source, '/')[1]}"
+           th:text="${#strings.arraySplit(vacancy.source, '/')[1]}"></a>
     </div>
 
     <!-- Buttons -->

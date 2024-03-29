@@ -56,10 +56,10 @@
     <div class="container justify-content-center align-items-center text-center">
         <div id="spaceBefore" style="height: 40vh; display: none"></div>
         <div id="spinner" style="display: none">
-            <div id="spinner-inner" class="spinner-border text-warning" role="status">
+            <div class="spinner-border text-warning" id="spinner-inner" role="status">
                 <span class="sr-only"></span>
             </div>
-            <p id="waitParagraph" class="text-warning">Пожалуйста, подождите...</p>
+            <p class="text-warning" id="waitParagraph">Пожалуйста, подождите...</p>
         </div>
         <p class="text-warning text-center" id="counter" style="display: none"></p>
         <div style="text-align: center">
@@ -175,7 +175,7 @@
 
         <!--Форма для заполнения статистики-->
         <div class="row justify-content-center">
-            <div id="alertSuccess" style="display: none" class="alert alert-success col-6" role="alert">
+            <div class="alert alert-success col-6" id="alertSuccess" role="alert" style="display: none">
                 <h4 class="alert-heading">Успех!</h4>
                 <p>Запрос отправлен <a th:href="@{/statistics}">(перейти)</a>.</p>
             </div>
@@ -193,15 +193,15 @@
                 <div class="form-group">
                     <label for="profession">Название профессии</label>
                     <br>
-                    <input id="profession" class="form-control" name="profession" type="text" placeholder="Программист"
-                           required>
+                    <input class="form-control" id="profession" name="profession" placeholder="Программист" required
+                           type="text">
                 </div>
 
                 <!--Город-->
                 <div class="form-group mt-3">
                     <label for="city">Месторасположение</label>
                     <br>
-                    <input id="city" class="form-control" name="city" type="text" placeholder="Москва" required>
+                    <input class="form-control" id="city" name="city" placeholder="Москва" required type="text">
                 </div>
 
                 <!--Год-->
@@ -227,24 +227,24 @@
                     <label class="form-check-label" for="statisticsCurrency">Валюта</label>
                     <div class="form-check" id="statisticsCurrency">
                         <!--Рубль-->
-                        <input id="rub" checked class="form-check-input" name="currency" type="radio" value="">
+                        <input checked class="form-check-input" id="rub" name="currency" type="radio" value="">
                         <label class="form-check-label" for="rub">RUB, ₽</label>
                         <br>
 
                         <!--Доллар-->
-                        <input id="usd" class="form-check-input" name="currency" type="radio" value="usd">
+                        <input class="form-check-input" id="usd" name="currency" type="radio" value="usd">
                         <label class="form-check-label" for="usd">USD, $</label>
                         <br>
 
                         <!--Евро-->
-                        <input id="eur" class="form-check-input" name="currency" type="radio" value="eur">
+                        <input class="form-check-input" id="eur" name="currency" type="radio" value="eur">
                         <label class="form-check-label" for="eur">EUR, €</label>
                         <br>
                     </div>
                 </div>
 
                 <div class="form-group mt-5">
-                    <input id="statisticsFormSubmit" class="btn btn-md btn-warning" type="submit" value="Отправить">
+                    <input class="btn btn-md btn-warning" id="statisticsFormSubmit" type="submit" value="Отправить">
                 </div>
             </form>
         </div>
