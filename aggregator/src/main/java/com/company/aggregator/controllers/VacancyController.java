@@ -3,7 +3,9 @@ package com.company.aggregator.controllers;
 import com.company.aggregator.exceptions.VacancyNotFoundException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.models.Vacancy;
+import com.company.aggregator.rabbitmq.dtos.CancelParsingDto;
 import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
+import com.company.aggregator.rabbitmq.services.RabbitMqService;
 import com.company.aggregator.services.VacancyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 public class VacancyController {
     private final VacancyService vacancyService;
-    private final RabbitTemplate rabbitTemplate;
-    private final RabbitMqProperties rabbitProperties;
+    private final RabbitMqService rabbitMqService;
     private final RestTemplate restTemplate;
     @Value("${constants.vacancies-heartbeat-url}")
     private String vacanciesHeartbeatUrl;
@@ -71,6 +72,13 @@ public class VacancyController {
     public ResponseEntity<String> deleteVacancies(@AuthenticationPrincipal User user) {
         vacancyService.deleteVacanciesByUser(user);
         return ResponseEntity.ok().body("Vacancies cleared successfully");
+    }
+
+    @PostMapping("/cancel-parsing")
+    public String cancelParsing() {
+        CancelParsingDto cancelParsingDto = CancelParsingDto.builder().isParsingCancelled(true).build();
+        rabbitMqService.sendToVacanciesParserCancel(cancelParsingDto);
+        return "/home";
     }
 
     @Scheduled(initialDelay = 2_000, fixedDelay = 10_000)

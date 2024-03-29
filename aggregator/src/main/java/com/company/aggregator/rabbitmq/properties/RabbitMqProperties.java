@@ -44,6 +44,7 @@ public class RabbitMqProperties {
      */
     private String queueToSend0;
     private String queueToSend1;
+    private String queueToSend2;
 
     /**
      * Наименование очереди для приема в RabbitMQ.
@@ -56,6 +57,7 @@ public class RabbitMqProperties {
      */
     private String routingKeyToSend0;
     private String routingKeyToSend1;
+    private String routingKeyToSend2;
 
     /**
      * Наименование routingKey для приема в RabbitMQ.

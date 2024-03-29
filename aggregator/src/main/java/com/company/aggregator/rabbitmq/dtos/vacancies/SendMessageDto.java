@@ -21,6 +21,7 @@ public class SendMessageDto implements Serializable {
     Integer experience;
     Integer cityId;
     Boolean isRemoteAvailable;
+//    Boolean isParsingCancelled = false;
 
     @Override
     public String toString() {

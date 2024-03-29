@@ -46,6 +46,11 @@ public class RabbitMqConfiguration {
     }
 
     @Bean
+    public Queue queueToSend2() {
+        return new Queue(rabbitMqProperties.getQueueToSend2(), true, false, false, rabbitArgs);
+    }
+
+    @Bean
     public Queue queueToReceive0() {
         return new Queue(rabbitMqProperties.getQueueToReceive0(), true, false, false, rabbitArgs);
     }
@@ -69,6 +74,12 @@ public class RabbitMqConfiguration {
     public Binding bindingToSend1(TopicExchange exchange) {
         return BindingBuilder.bind(queueToSend1()).to(exchange).with(rabbitMqProperties.getRoutingKeyToSend1());
     }
+
+    @Bean
+    public Binding bindingToSend2(TopicExchange exchange) {
+        return BindingBuilder.bind(queueToSend2()).to(exchange).with(rabbitMqProperties.getRoutingKeyToSend2());
+    }
+
 
     @Bean
     public Binding bindingToReceive0(TopicExchange exchange) {

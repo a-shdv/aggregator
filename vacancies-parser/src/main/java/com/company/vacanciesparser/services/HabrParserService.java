@@ -28,6 +28,10 @@ public class HabrParserService {
                                                  Integer experience, Integer cityId, Boolean isRemoteAvailable) {
         int previousPage;
         int currentPage = 1;
+
+        if (cityId == null) {
+            cityId = 0;
+        }
         StringBuilder url = new StringBuilder("https://career.habr.com/vacancies" +
                 "?page=" + currentPage + "&q=" + query + "&salary=" + salary + "&with_salary=" + onlyWithSalary +
                 "&city_id=" + parseCityId(cityId) + "&remote=" + isRemoteAvailable + "&type=all");

@@ -62,6 +62,14 @@
             <p id="waitParagraph" class="text-warning">Пожалуйста, подождите...</p>
         </div>
         <p class="text-warning text-center" id="counter" style="display: none"></p>
+        <div style="text-align: center">
+            <form th:action="@{/vacancies/cancel-parsing}" th:method="post" id="cancelForm" style="display: none">
+                <input type="hidden" name="isParsingCancelled" value="true">
+                <input type="submit" class="btn btn-md btn-warning mt-3 text-center" value="Прервать">
+            </form>
+        </div>
+
+
 
         <div style="text-align: center">
             <a id="okButton" style="display: none" target="_blank" th:href="@{/vacancies}">

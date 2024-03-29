@@ -107,7 +107,9 @@ function sendMessage() {
         spaceBefore.style.display = ''
         vacancy.style.display = 'none'
         spinner.style.display = ''
+        document.querySelector('#cancelForm').style.display = ''
         // progressbar.style.display = ''
+        // document.querySelector('#can/celButton').style.display = ''
         counter.style.display = ''
         spaceAfter.style.display = ''
 
@@ -188,6 +190,7 @@ document.getElementById('statisticsFormSubmit').addEventListener('click', (event
         // Скрыть сообщение об успешной отправке
         document.getElementById('alertSuccess').style.display = 'none';
         document.getElementById('spaceAfterAlertSuccess').style.display = 'none';
+        document.querySelector('#cancelForm').style.display = 'none'
         // Вернуть форму статистики
         document.getElementById('switchForms').style.display = ''
         document.getElementById('statisticsForm').style.display = '';

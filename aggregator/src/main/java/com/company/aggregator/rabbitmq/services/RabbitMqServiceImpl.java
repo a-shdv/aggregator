@@ -2,6 +2,7 @@ package com.company.aggregator.rabbitmq.services;
 
 
 import com.company.aggregator.models.User;
+import com.company.aggregator.rabbitmq.dtos.CancelParsingDto;
 import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
 import com.company.aggregator.services.StatisticsService;
 import com.company.aggregator.services.UserService;
@@ -64,6 +65,11 @@ public class RabbitMqServiceImpl implements RabbitMqService {
         progressbarLoaderCounter = 0;
         messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(progressbarLoaderCounter)).type("RECEIVE").build());
         log.info("SENT (vacancies): {}", sendMessageDto);
+    }
+
+    @Override
+    public void sendToVacanciesParserCancel(CancelParsingDto cancelParsingDto) {
+        rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend2(), cancelParsingDto);
     }
 
     @Override

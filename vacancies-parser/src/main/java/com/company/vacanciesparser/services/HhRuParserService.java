@@ -26,6 +26,7 @@ public class HhRuParserService {
     @Async
     public CompletableFuture<Void> findVacancies(String username, String query, BigDecimal salary, Boolean onlyWithSalary,
                                                  Integer experience, Integer cityId, Boolean isRemoteAvailable) {
+        System.out.println(Thread.currentThread().getName());
         int currentPage = 0;
         int previousPage;
 
