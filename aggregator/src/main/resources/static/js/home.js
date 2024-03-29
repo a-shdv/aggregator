@@ -182,15 +182,16 @@ document.getElementById('statisticsFormSubmit').addEventListener('click', (event
     document.getElementById('switchForms').style.display = 'none'
 
     // Показать сообщение об успешной отправке
+    document.querySelector('#cancelForm').style.display = 'none'
     document.getElementById('spaceAfterAlertSuccess').style.display = '';
-    document.getElementById('alertSuccess').style.display = '';
 
+    document.getElementById('alertSuccess').style.display = '';
     // Установить таймер на 2 секунды для скрытия сообщения об успехе и возврата формы
     setTimeout(() => {
         // Скрыть сообщение об успешной отправке
         document.getElementById('alertSuccess').style.display = 'none';
         document.getElementById('spaceAfterAlertSuccess').style.display = 'none';
-        document.querySelector('#cancelForm').style.display = 'none'
+
         // Вернуть форму статистики
         document.getElementById('switchForms').style.display = ''
         document.getElementById('statisticsForm').style.display = '';
