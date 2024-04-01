@@ -88,7 +88,7 @@
         <div style="height: 15vh"></div>
 
         <!--Форма для заполнения вакансии-->
-        <div class="row justify-content-center">
+        <div sec:authorize="hasAuthority('USER')" class="row justify-content-center">
             <form class="col-lg-4" id="vacancyForm" th:action="@{/vacancies}" th:method="post">
                 <h2>Вакансия</h2>
 
@@ -105,7 +105,7 @@
                 </a>
 
                 <!-- Collapsible section -->
-                <div class="collapsible" id="collapsibleSection">
+                <div class="collapsible collapsed" id="collapsibleSection">
                     <!-- Зарплата -->
                     <div class="form-group">
                         <label for="salary">Заработная плата (от ...)</label>
@@ -174,7 +174,8 @@
                         <!--'Можно удаленно'-->
                         <div class="form-check">
                             <label class="form-check-label" for="isRemoteAvailable">Только удаленно</label>
-                            <input class="form-check-input" id="isRemoteAvailable" name="isRemoteAvailable" type="checkbox">
+                            <input class="form-check-input" id="isRemoteAvailable" name="isRemoteAvailable"
+                                   type="checkbox">
                             <br><br>
                         </div>
                     </div>
@@ -182,20 +183,22 @@
                 <br>
                 <!--Отправка формы-->
                 <input class="btn btn-md btn-warning mt-3" id="searchVacanciesButton" type="submit" value="Отправить">
+                <div id="searchVacanciesButtonSpace" style="height: 40vh"></div>
             </form>
         </div>
     </div>
 
     <!--Форма для заполнения статистики-->
-    <div class="row justify-content-center">
+    <div sec:authorize="hasAuthority('ADMIN')" class="row justify-content-center">
         <div id="alertSuccess" style="display: none" class="alert alert-success col-6" role="alert">
             <h4 class="alert-heading">Успех!</h4>
             <p>Запрос отправлен <a th:href="@{/statistics}">(перейти)</a>.</p>
         </div>
 
+
         <div id="spaceAfterAlertSuccess" style="height: 40vh; display: none"></div>
 
-        <form class="col-lg-4" id="statisticsForm" style="display: none" th:action="@{/statistics}" th:method="post"
+        <form class="col-lg-4" id="statisticsForm" th:action="@{/statistics}" th:method="post"
               th:object="${statisticsDto}">
             <h2>Статистика</h2>
 
@@ -256,51 +259,31 @@
                 </div>
             </div>
 
-            <div class="form-group mt-5">
+            <div class="form-group mt-5 mb-5">
                 <input id="statisticsFormSubmit" class="btn btn-md btn-warning" type="submit" value="Отправить">
             </div>
         </form>
     </div>
-    <div class="row justify-content-center text-center mb-4 mt-5">
-        <div class="col-lg-3">
-            <div class="form-group" id="switchForms">
-                <div class="form-check d-flex">
-                    <!--Радиобокс для вакансии-->
-                    <input checked class="form-check-input" id="vac" name="switchForm" type="radio" value="0">
-                    <label class="form-check-label mr-3" for="vac" style=" margin-right: 30px; margin-left: 2px;">Вакансия</label>
+</div>
+<!--    <div class="row justify-content-center text-center mb-4 mt-5">-->
+<!--        <div class="col-lg-3">-->
+<!--            <div class="form-group" id="switchForms">-->
+<!--                <div class="form-check d-flex">-->
+<!--                    &lt;!&ndash;Радиобокс для вакансии&ndash;&gt;-->
+<!--                    <input checked class="form-check-input" id="vac" name="switchForm" type="radio" value="0">-->
+<!--                    <label class="form-check-label mr-3" for="vac" style=" margin-right: 30px; margin-left: 2px;">Вакансия</label>-->
 
-                    <!--Радиобокс для статистики-->
-                    <input class="form-check-input" id="stat" name="switchForm" type="radio" value="1">
-                    <label class="form-check-label" for="stat" style="margin-left: 2px;">Статистика</label>
-                </div>
-            </div>
-        </div>
-
-
-        <div style="height: 2vh"></div>
-    </div>
+<!--                    &lt;!&ndash;Радиобокс для статистики&ndash;&gt;-->
+<!--                    <input class="form-check-input" id="stat" name="switchForm" type="radio" value="1">-->
+<!--                    <label class="form-check-label" for="stat" style="margin-left: 2px;">Статистика</label>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div style="height: 2vh"></div>-->
+<!--    </div>-->
 </div>
 
 <div th:insert="~{/partials/footer :: footer}"></div>
 <script th:inline="javascript" th:src="@{/js/home.js}"></script>
-<script>
-    // JavaScript to handle show/hide functionality for elements with class .collapsible
-    document.getElementById("toggleCollapse").addEventListener("click", function (e) {
-        e.preventDefault();
-        var collapsibleSections = document.querySelectorAll(".collapsible");
-        collapsibleSections.forEach(function (section) {
-            section.classList.toggle("collapsed");
-            if (section.classList.contains("collapsed")) {
-                section.style.maxHeight = "0";
-                section.style.opacity = "0";
-                this.innerText = "Show";
-            } else {
-                section.style.maxHeight = "none";
-                section.style.opacity = "1";
-                this.innerText = "Hide";
-            }
-        });
-    });
-</script>
 </body>
 </html>

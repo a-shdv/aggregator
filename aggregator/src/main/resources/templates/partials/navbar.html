@@ -30,11 +30,11 @@
                         <a aria-current="page" class="nav-link active" th:href="@{/}">Главная</a>
                     </li>
                     <!--Вакансии-->
-                    <li class="nav-item">
+                    <li sec:authorize="hasAuthority('USER')"  class="nav-item">
                         <a aria-current="page" class="nav-link active" th:href="@{/vacancies}">Вакансии</a>
                     </li>
                     <!--Статистика-->
-                    <li class="nav-item">
+                    <li sec:authorize="hasAuthority('ADMIN')"  class="nav-item">
                         <a aria-current="page" class="nav-link active" th:href="@{/statistics}">Статистика</a>
                     </li>
                     <!--О нас-->
