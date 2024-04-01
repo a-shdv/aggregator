@@ -92,6 +92,9 @@
             <form class="col-lg-4" id="vacancyForm" th:action="@{/vacancies}" th:method="post">
                 <h2>Вакансия</h2>
 
+                <!--Username-->
+                <input id="username" name="username" th:value="${#authentication.principal.username}" type="hidden">
+
                 <!--Название вакансии-->
                 <div class="form-group">
                     <label for="title">Название вакансии</label>

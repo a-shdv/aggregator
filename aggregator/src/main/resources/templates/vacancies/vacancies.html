@@ -107,7 +107,8 @@
 
                                                 <button class="addToFavouritesSubmitButton"
                                                         style="background: none; border: none;" type="submit">
-                                                    <img alt="" class="starImage" style="max-width: 100%; max-height: 100%"
+                                                    <img alt="" class="starImage"
+                                                         style="max-width: 100%; max-height: 100%"
                                                          th:src="@{/img/star-light.png}"
                                                          title="Добавить в избранное">
                                                 </button>
@@ -208,6 +209,7 @@
         </div>
     </div>
     <div th:insert="~{/partials/footer :: footer}"></div>
-    <script th:inline="javascript" th:src="@{/js/vacancies.js}"></script>
+</div>
+<script th:inline="javascript" th:src="@{/js/vacancies.js}"></script>
 </body>
 </html>
