@@ -54,11 +54,11 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User saveUser(User user) {
+    public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(Role.USER));
         user.setAccountNonLocked(true);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Transactional
@@ -70,33 +70,28 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User findUserByUsernameAsync(String username) {
-        return (User) loadUserByUsername(username);
-    }
-
-    @Transactional
     public User findUserByUsername(String username) {
         return (User) loadUserByUsername(username);
     }
 
     @Transactional
-    public User changePassword(User user, ChangePasswordDto changePasswordDto) {
+    public void changePassword(User user, ChangePasswordDto changePasswordDto) {
         user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Transactional
-    public User block(UserLockStatusDto userLockStatusDto) {
+    public void block(UserLockStatusDto userLockStatusDto) {
         User user = (User) loadUserByUsername(userLockStatusDto.getUsername());
         user.setAccountNonLocked(false);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Transactional
-    public User unblock(UserLockStatusDto userLockStatusDto) {
+    public void unblock(UserLockStatusDto userLockStatusDto) {
         User user = (User) loadUserByUsername(userLockStatusDto.getUsername());
         user.setAccountNonLocked(true);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Transactional

@@ -54,7 +54,7 @@ public class UserController {
     @PostMapping("/sign-up")
     public String signUp(@ModelAttribute("signUpDto") SignUpDto dto, RedirectAttributes redirectAttributes) {
         try {
-            User user = userService.findUserByUsernameAsync(dto.getUsername());
+            User user = userService.findUserByUsername(dto.getUsername());
             if (user != null) {
                 throw new UserAlreadyExistsException("Пользователь уже существует: " + dto.getUsername());
             }

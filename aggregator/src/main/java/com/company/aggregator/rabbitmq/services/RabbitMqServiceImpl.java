@@ -24,7 +24,6 @@ import java.util.List;
 @EnableRabbit
 public class RabbitMqServiceImpl implements RabbitMqService {
 
-    private static int previousProgressbarLoaderCounter = 0;
     private static int progressbarLoaderCounter = 0;
     private final RabbitTemplate rabbitTemplate;
     private final RabbitMqProperties rabbitProperties;
@@ -52,7 +51,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     public void receiveStatisticsParser(com.company.aggregator.rabbitmq.dtos.statistics.ReceiveMessageDto message) {
         log.info("RECEIVED: {}", message);
         if (message.getUsername() != null) {
-            User user = userService.findUserByUsernameAsync(message.getUsername());
+            User user = userService.findUserByUsername(message.getUsername());
             statisticsService.deleteStatistics(user);
             statisticsService.saveStatistics(user, message);
         }

@@ -39,11 +39,11 @@ public class FavouriteService {
     }
 
     @Transactional
-    public User deleteFavourites(User user) {
+    public void deleteFavourites(User user) {
         List<Favourite> favourites = favouriteRepository.findListByUser(user);
         favourites.clear();
         user.setFavourites(favourites);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Transactional
