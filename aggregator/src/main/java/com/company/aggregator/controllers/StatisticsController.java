@@ -26,12 +26,12 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class StatisticsController {
     private final RestTemplate restTemplate;
-    @Value("${constants.statistics-heartbeat-url}")
-    private String statisticsHeartbeatUrl;
-    private boolean isStatisticsParserAvailable;
     private final RabbitMqService rabbitMqService;
     private final StatisticsService statisticsService;
     private final UserService userService;
+    @Value("${constants.statistics-heartbeat-url}")
+    private String statisticsHeartbeatUrl;
+    private boolean isStatisticsParserAvailable;
 
     @GetMapping
     public String findStatistics(@AuthenticationPrincipal User user, Model model) {

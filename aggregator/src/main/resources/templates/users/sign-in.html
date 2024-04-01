@@ -42,7 +42,7 @@
 
 <div th:insert="~{/partials/navbar :: navbar}"></div>
 <div class="centered-form">
-    <form th:action="@{/sign-in}" th:method="post" style="width: 15%">
+    <form style="width: 15%" th:action="@{/sign-in}" th:method="post">
         <div style="color: green" th:if="${success}" th:text="${success}"></div>
         <div style="color: red" th:if="${param.error}">
             <th:block th:switch="${param.error.get(0)}">

@@ -12,10 +12,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Statistics {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String username;
     String avgSalaryTitle;
     String avgSalaryDescription;
     String medianSalaryTitle;
@@ -26,5 +22,10 @@ public class Statistics {
     String city;
     String year;
     String currency;
-    @OneToOne(mappedBy = "statistics") private User user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String username;
+    @OneToOne(mappedBy = "statistics")
+    private User user;
 }

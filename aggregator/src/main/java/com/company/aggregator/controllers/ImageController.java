@@ -38,9 +38,8 @@ public class ImageController {
     }
 
     @GetMapping("/{fileName}")
-    // @RestController
-    public ResponseEntity<?> downloadImage(@PathVariable String fileName){
-        byte[] imageData= imageStorageService.downloadImage(fileName);
+    public ResponseEntity<?> downloadImage(@PathVariable String fileName) {
+        byte[] imageData = imageStorageService.downloadImage(fileName);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/png"))
                 .body(imageData);

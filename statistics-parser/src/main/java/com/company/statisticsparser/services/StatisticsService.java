@@ -23,6 +23,28 @@ import java.util.regex.Pattern;
 public class StatisticsService {
     private final RabbitMqSenderService rabbitMqSenderService;
 
+    private static String replaceNumbersAftersDots(String input) {
+        // Replace digits after dots with empty string
+        String pattern = "(\\.\\d{2})";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(input);
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            m.appendReplacement(sb, "");
+        }
+        m.appendTail(sb);
+        return sb.toString();
+    }
+
+    private static String switchCurrency(String currency) {
+        return switch (currency) {
+            case "" -> "RUB, ₽";
+            case "eur" -> "EUR, €";
+            case "usd" -> "USD, $";
+            default -> "";
+        };
+    }
+
     @Async("asyncExecutor")
     public CompletableFuture<Void> findStatistics(ReceiveMessageDto receiveMessageDto) {
         StringBuilder url = new StringBuilder("https://gorodrabot.ru/salary");
@@ -108,27 +130,5 @@ public class StatisticsService {
             log.error(e.getMessage());
         }
         return null;
-    }
-
-    private static String replaceNumbersAftersDots(String input) {
-        // Replace digits after dots with empty string
-        String pattern = "(\\.\\d{2})";
-        Pattern r = Pattern.compile(pattern);
-        Matcher m = r.matcher(input);
-        StringBuffer sb = new StringBuffer();
-        while (m.find()) {
-            m.appendReplacement(sb, "");
-        }
-        m.appendTail(sb);
-        return sb.toString();
-    }
-
-    private static String switchCurrency(String currency) {
-        return switch (currency) {
-            case "" -> "RUB, ₽";
-            case "eur" -> "EUR, €";
-            case "usd" -> "USD, $";
-            default -> "";
-        };
     }
 }

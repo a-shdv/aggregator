@@ -4,12 +4,10 @@ import com.company.aggregator.exceptions.VacancyNotFoundException;
 import com.company.aggregator.models.User;
 import com.company.aggregator.models.Vacancy;
 import com.company.aggregator.rabbitmq.dtos.CancelParsingDto;
-import com.company.aggregator.rabbitmq.properties.RabbitMqProperties;
 import com.company.aggregator.rabbitmq.services.RabbitMqService;
 import com.company.aggregator.services.VacancyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -64,7 +62,7 @@ public class VacancyController {
 
         Page<Vacancy> vacancies = vacancyService.findVacancies(user, PageRequest.of(page, size));
         model.addAttribute("vacancies", vacancies);
-        model.addAttribute("isParserAvailable",isVacanciesParserAvailable);
+        model.addAttribute("isParserAvailable", isVacanciesParserAvailable);
         return "vacancies/vacancies";
     }
 

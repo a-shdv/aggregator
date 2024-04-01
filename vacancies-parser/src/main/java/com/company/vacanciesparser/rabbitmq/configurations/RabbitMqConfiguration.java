@@ -44,6 +44,7 @@ public class RabbitMqConfiguration {
     public Queue queueToReceive0() {
         return new Queue(rabbitMqProperties.getQueueToReceive0(), true, false, false, rabbiteArgs);
     }
+
     @Bean
     public Queue queueToReceive1() {
         return new Queue(rabbitMqProperties.getQueueToReceive1(), true, false, false, rabbiteArgs);

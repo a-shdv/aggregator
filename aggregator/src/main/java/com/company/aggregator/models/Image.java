@@ -11,13 +11,14 @@ import lombok.*;
 @Builder
 @ToString(exclude = {"data", "user"})
 public class Image {
+    @OneToOne(mappedBy = "avatar")
+    User user;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String type;
-    @Lob @Column private byte[] data;
-
-    @OneToOne (mappedBy = "avatar")
-    User user;
+    @Lob
+    @Column
+    private byte[] data;
 }

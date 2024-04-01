@@ -41,11 +41,16 @@
         -o-box-shadow: none !important;
     }
 
-    /*.fixed-content {*/
-    /*    max-width: 800px; !* Adjust the width as per your requirement *!*/
-    /*    margin: 0 auto; !* Center the container horizontally *!*/
-    /*    padding: 20px; !* Add padding for spacing *!*/
-    /*}*/
+    .collapsible {
+        max-height: 2000px; /* or any value larger than the expected content */
+        overflow: hidden;
+        transition: max-height 0.5s ease, opacity 0.5s ease;
+    }
+
+    .collapsible.collapsed {
+        max-height: 0;
+        opacity: 0;
+    }
 </style>
 <body>
 <div th:insert="~{/partials/navbar :: navbar}"></div>
@@ -68,7 +73,6 @@
                 <input type="submit" class="btn btn-md btn-warning mt-3 text-center" value="Прервать">
             </form>
         </div>
-
 
 
         <div style="text-align: center">
@@ -95,173 +99,179 @@
                            type="text">
                 </div>
 
+                <!-- Add a link to show/hide the collapsible section -->
+                <a href="#" id="toggleCollapse">
+                    Фильтры
+                </a>
 
+                <!-- Collapsible section -->
+                <div class="collapsible" id="collapsibleSection">
+                    <!-- Зарплата -->
+                    <div class="form-group">
+                        <label for="salary">Заработная плата (от ...)</label>
+                        <input class="form-control" id="salary" min="0" name="salary" type="number" value="0">
+                    </div>
 
-                <!--Зарплата-->
-                <div class="form-group">
-                    <label for="salary">Заработная плата (от ...)</label>
-                    <input class="form-control" id="salary" min="0" name="salary" type="number" value="0">
-                </div>
+                    <!-- Заработная плата указана -->
+                    <div class="form-group">
+                        <div class="form-check">
+                            <label class="form-check-label" for="onlyWithSalary"> Заработная плата указана</label>
+                            <input class="form-check-input" id="onlyWithSalary" name="onlyWithSalary" type="checkbox">
+                            <br><br>
+                        </div>
+                    </div>
 
-                <!--Заработная плата указана-->
-                <div class="form-group">
-                    <div class="form-check">
-                        <label class="form-check-label" for="onlyWithSalary"> Заработная плата указана</label>
-                        <input class="form-check-input" id="onlyWithSalary" name="onlyWithSalary" type="checkbox">
+                    <!-- Опыт работы -->
+                    <div class="form-group">
+                        <label class="form-check-label" for="workExperience">Опыт работы</label>
+                        <div class="form-check" id="workExperience">
+                            <!--Не имеет значения-->
+                            <input checked class="form-check-input" id="0" name="experience" type="radio" value="0">
+                            <label class="form-check-label" for="0">Не имеет значения</label>
+                            <br>
+                            <!--Нет опыта-->
+                            <input class="form-check-input" id="1" name="experience" type="radio" value="1">
+                            <label class="form-check-label" for="1">Нет опыта</label>
+                            <br>
+                            <!--От 1 года до 3 лет-->
+                            <input class="form-check-input" id="2" name="experience" type="radio" value="2">
+                            <label class="form-check-label" for="2">От 1 года до 3 лет</label>
+                            <br>
+                            <!--От 3 до 6 лет-->
+                            <input class="form-check-input" id="3" name="experience" type="radio" value="3">
+                            <label class="form-check-label" for="3">От 3 до 6 лет</label>
+                            <br>
+                            <!--Более 6 лет-->
+                            <input class="form-check-input" id="4" name="experience" type="radio" value="4">
+                            <label class="form-check-label" for="4">Более 6 лет</label>
+                            <br> <br>
+                        </div>
+                    </div>
+
+                    <!-- Город -->
+                    <div class="form-group">
+                        <label>Город</label>
+                        <label>
+                            <select id="cityId" name="cityId" required>
+                                <option disabled value="">Выберите город</option>
+                                <option selected value="0">Москва</option>
+                                <option value="1">Санкт-Петербург</option>
+                                <option value="2">Екатеринбург</option>
+                                <option value="3">Новосибирск</option>
+                                <option value="4">Казань</option>
+                                <option value="5">Нижний Новгород</option>
+                                <option value="6">Ульяновск</option>
+                                <option value="7">Тольятти</option>
+                                <option value="8">Астрахань</option>
+                                <option value="9">Уфа</option>
+                            </select>
+                        </label>
                         <br><br>
                     </div>
-                </div>
 
-                <!--Опыт работы-->
-                <div class="form-group">
-                    <label class="form-check-label" for="workExperience">Опыт работы</label>
-                    <div class="form-check" id="workExperience">
-                        <!--Не имеет значения-->
-                        <input checked class="form-check-input" id="0" name="experience" type="radio" value="0">
-                        <label class="form-check-label" for="0">Не имеет значения</label>
-                        <br>
-                        <!--Нет опыта-->
-                        <input class="form-check-input" id="1" name="experience" type="radio" value="1">
-                        <label class="form-check-label" for="1">Нет опыта</label>
-                        <br>
-                        <!--От 1 года до 3 лет-->
-                        <input class="form-check-input" id="2" name="experience" type="radio" value="2">
-                        <label class="form-check-label" for="2">От 1 года до 3 лет</label>
-                        <br>
-                        <!--От 3 до 6 лет-->
-                        <input class="form-check-input" id="3" name="experience" type="radio" value="3">
-                        <label class="form-check-label" for="3">От 3 до 6 лет</label>
-                        <br>
-                        <!--Более 6 лет-->
-                        <input class="form-check-input" id="4" name="experience" type="radio" value="4">
-                        <label class="form-check-label" for="4">Более 6 лет</label>
-                        <br> <br>
+                    <!-- Только удаленно -->
+                    <div class="form-group">
+                        <!--'Можно удаленно'-->
+                        <div class="form-check">
+                            <label class="form-check-label" for="isRemoteAvailable">Только удаленно</label>
+                            <input class="form-check-input" id="isRemoteAvailable" name="isRemoteAvailable" type="checkbox">
+                            <br><br>
+                        </div>
                     </div>
                 </div>
-
-                <!--Город-->
-                <div class="form-group">
-                    <label>Город</label>
-                    <label>
-                        <select id="cityId" name="cityId" required>
-                            <option disabled value="">Выберите город</option>
-                            <option selected value="0">Москва</option>
-                            <option value="1">Санкт-Петербург</option>
-                            <option value="2">Екатеринбург</option>
-                            <option value="3">Новосибирск</option>
-                            <option value="4">Казань</option>
-                            <option value="5">Нижний Новгород</option>
-                            <option value="6">Ульяновск</option>
-                            <option value="7">Тольятти</option>
-                            <option value="8">Астрахань</option>
-                            <option value="9">Уфа</option>
-                        </select>
-                    </label>
-                    <br><br>
-                </div>
-
-                <div class="form-group">
-                    <!--'Можно удаленно'-->
-                    <div class="form-check">
-                        <label class="form-check-label" for="isRemoteAvailable">Только удаленно</label>
-                        <input class="form-check-input" id="isRemoteAvailable" name="isRemoteAvailable"
-                               type="checkbox">
-                        <br><br>
-                    </div>
-                </div>
-
+                <br>
                 <!--Отправка формы-->
                 <input class="btn btn-md btn-warning mt-3" id="searchVacanciesButton" type="submit" value="Отправить">
             </form>
         </div>
+    </div>
 
-        <!--Форма для заполнения статистики-->
-        <div class="row justify-content-center">
-            <div id="alertSuccess" style="display: none" class="alert alert-success col-6" role="alert">
-                <h4 class="alert-heading">Успех!</h4>
-                <p>Запрос отправлен <a th:href="@{/statistics}">(перейти)</a>.</p>
+    <!--Форма для заполнения статистики-->
+    <div class="row justify-content-center">
+        <div id="alertSuccess" style="display: none" class="alert alert-success col-6" role="alert">
+            <h4 class="alert-heading">Успех!</h4>
+            <p>Запрос отправлен <a th:href="@{/statistics}">(перейти)</a>.</p>
+        </div>
+
+        <div id="spaceAfterAlertSuccess" style="height: 40vh; display: none"></div>
+
+        <form class="col-lg-4" id="statisticsForm" style="display: none" th:action="@{/statistics}" th:method="post"
+              th:object="${statisticsDto}">
+            <h2>Статистика</h2>
+
+            <!--Username-->
+            <input id="username" name="username" th:value="${#authentication.principal.username}" type="hidden">
+
+            <!--Профессия-->
+            <div class="form-group">
+                <label for="profession">Название профессии</label>
+                <br>
+                <input id="profession" class="form-control" name="profession" type="text" placeholder="Программист"
+                       required>
             </div>
 
-            <div id="spaceAfterAlertSuccess" style="height: 40vh; display: none"></div>
-
-            <form class="col-lg-4" id="statisticsForm" style="display: none" th:action="@{/statistics}" th:method="post"
-                  th:object="${statisticsDto}">
-                <h2>Статистика</h2>
-
-                <!--Username-->
-                <input id="username" name="username" th:value="${#authentication.principal.username}" type="hidden">
-
-                <!--Профессия-->
-                <div class="form-group">
-                    <label for="profession">Название профессии</label>
-                    <br>
-                    <input id="profession" class="form-control" name="profession" type="text" placeholder="Программист"
-                           required>
-                </div>
-
-                <!--Город-->
-                <div class="form-group mt-3">
-                    <label for="city">Месторасположение</label>
-                    <br>
-                    <input id="city" class="form-control" name="city" type="text" placeholder="Москва" required>
-                </div>
-
-                <!--Год-->
-                <div class="form-group mt-3">
-                    <label for="year">Год</label>
-                    <br>
-                    <select id="year" name="year" required>
-                        <option disabled value="">Выберите год</option>
-                        <option selected value="2024">2024</option>
-                        <option value="2023">2023</option>
-                        <option value="2022">2022</option>
-                        <option value="2021">2021</option>
-                        <option value="2020">2020</option>
-                        <option value="2019">2019</option>
-                        <option value="2018">2018</option>
-                        <option value="2017">2017</option>
-                    </select>
-                </div>
+            <!--Город-->
+            <div class="form-group mt-3">
+                <label for="city">Месторасположение</label>
                 <br>
+                <input id="city" class="form-control" name="city" type="text" placeholder="Москва" required>
+            </div>
 
-                <!--Валюта-->
-                <div class="form-group">
-                    <label class="form-check-label" for="statisticsCurrency">Валюта</label>
-                    <div class="form-check" id="statisticsCurrency">
-                        <!--Рубль-->
-                        <input id="rub" checked class="form-check-input" name="currency" type="radio" value="">
-                        <label class="form-check-label" for="rub">RUB, ₽</label>
-                        <br>
+            <!--Год-->
+            <div class="form-group mt-3">
+                <label for="year">Год</label>
+                <br>
+                <select id="year" name="year" required>
+                    <option disabled value="">Выберите год</option>
+                    <option selected value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
+                    <option value="2017">2017</option>
+                </select>
+            </div>
+            <br>
 
-                        <!--Доллар-->
-                        <input id="usd" class="form-check-input" name="currency" type="radio" value="usd">
-                        <label class="form-check-label" for="usd">USD, $</label>
-                        <br>
+            <!--Валюта-->
+            <div class="form-group">
+                <label class="form-check-label" for="statisticsCurrency">Валюта</label>
+                <div class="form-check" id="statisticsCurrency">
+                    <!--Рубль-->
+                    <input id="rub" checked class="form-check-input" name="currency" type="radio" value="">
+                    <label class="form-check-label" for="rub">RUB, ₽</label>
+                    <br>
 
-                        <!--Евро-->
-                        <input id="eur" class="form-check-input" name="currency" type="radio" value="eur">
-                        <label class="form-check-label" for="eur">EUR, €</label>
-                        <br>
-                    </div>
+                    <!--Доллар-->
+                    <input id="usd" class="form-check-input" name="currency" type="radio" value="usd">
+                    <label class="form-check-label" for="usd">USD, $</label>
+                    <br>
+
+                    <!--Евро-->
+                    <input id="eur" class="form-check-input" name="currency" type="radio" value="eur">
+                    <label class="form-check-label" for="eur">EUR, €</label>
+                    <br>
                 </div>
+            </div>
 
-                <div class="form-group mt-5">
-                    <input id="statisticsFormSubmit" class="btn btn-md btn-warning" type="submit" value="Отправить">
-                </div>
-            </form>
-        </div>
-        <div class="row justify-content-center text-center mb-4 mt-5">
-            <div class="col-lg-3">
-                <div class="form-group" id="switchForms">
-                    <div class="form-check d-flex">
-                        <!--Радиобокс для вакансии-->
-                        <input checked class="form-check-input" id="vac" name="switchForm" type="radio" value="0">
-                        <label class="form-check-label mr-3" for="vac" style=" margin-right: 30px; margin-left: 2px;">Вакансия</label>
+            <div class="form-group mt-5">
+                <input id="statisticsFormSubmit" class="btn btn-md btn-warning" type="submit" value="Отправить">
+            </div>
+        </form>
+    </div>
+    <div class="row justify-content-center text-center mb-4 mt-5">
+        <div class="col-lg-3">
+            <div class="form-group" id="switchForms">
+                <div class="form-check d-flex">
+                    <!--Радиобокс для вакансии-->
+                    <input checked class="form-check-input" id="vac" name="switchForm" type="radio" value="0">
+                    <label class="form-check-label mr-3" for="vac" style=" margin-right: 30px; margin-left: 2px;">Вакансия</label>
 
-                        <!--Радиобокс для статистики-->
-                        <input class="form-check-input" id="stat" name="switchForm" type="radio" value="1">
-                        <label class="form-check-label" for="stat" style="margin-left: 2px;">Статистика</label>
-                    </div>
+                    <!--Радиобокс для статистики-->
+                    <input class="form-check-input" id="stat" name="switchForm" type="radio" value="1">
+                    <label class="form-check-label" for="stat" style="margin-left: 2px;">Статистика</label>
                 </div>
             </div>
         </div>
@@ -273,5 +283,24 @@
 
 <div th:insert="~{/partials/footer :: footer}"></div>
 <script th:inline="javascript" th:src="@{/js/home.js}"></script>
+<script>
+    // JavaScript to handle show/hide functionality for elements with class .collapsible
+    document.getElementById("toggleCollapse").addEventListener("click", function (e) {
+        e.preventDefault();
+        var collapsibleSections = document.querySelectorAll(".collapsible");
+        collapsibleSections.forEach(function (section) {
+            section.classList.toggle("collapsed");
+            if (section.classList.contains("collapsed")) {
+                section.style.maxHeight = "0";
+                section.style.opacity = "0";
+                this.innerText = "Show";
+            } else {
+                section.style.maxHeight = "none";
+                section.style.opacity = "1";
+                this.innerText = "Hide";
+            }
+        });
+    });
+</script>
 </body>
 </html>

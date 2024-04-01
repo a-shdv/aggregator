@@ -44,7 +44,7 @@ public class FavouriteController {
 
     @PostMapping
     public ResponseEntity<String> addToFavourites(@AuthenticationPrincipal User user,
-                                                                     @ModelAttribute("favouriteDto") FavouriteDto favouriteDto) {
+                                                  @ModelAttribute("favouriteDto") FavouriteDto favouriteDto) {
         try {
             favouriteService.addToFavourites(user, FavouriteDto.toFavourite(favouriteDto));
         } catch (FavouriteAlreadyExistsException e) {
@@ -67,7 +67,7 @@ public class FavouriteController {
     }
 
     @PostMapping("/clear")
-    public ResponseEntity<String> deleteVacancies(@AuthenticationPrincipal User user) {
+    public ResponseEntity<String> deleteFavourites(@AuthenticationPrincipal User user) {
         favouriteService.deleteFavourites(user);
         return ResponseEntity.ok().body("Vacancies cleared successfully");
     }

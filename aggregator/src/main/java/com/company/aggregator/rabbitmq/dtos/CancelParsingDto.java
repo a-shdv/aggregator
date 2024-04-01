@@ -11,6 +11,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CancelParsingDto  implements Serializable {
+public class CancelParsingDto implements Serializable {
     Boolean isParsingCancelled;
 }
