@@ -49,6 +49,8 @@ public class User implements UserDetails {
     @JoinColumn(name = "avatar_id", referencedColumnName = "id")
     private Image avatar;
 
+    private int numOfRequests;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
@@ -72,5 +74,9 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void incrementNumOfRequests() {
+        this.numOfRequests++;
     }
 }

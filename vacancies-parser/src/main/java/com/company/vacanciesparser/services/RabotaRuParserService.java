@@ -19,15 +19,16 @@ import java.util.concurrent.CompletableFuture;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+// 30 вакансий на одной странице
 public class RabotaRuParserService {
     private static final Integer amount = 30;
     private final RabbitMqSenderService rabbitMqSenderService;
 
     @Async
     public CompletableFuture<Void> findVacancies(String username, String query, BigDecimal salary, Boolean onlyWithSalary,
-                                                 Integer experience, Integer cityId, Boolean isRemoteAvailable) {
+                                                 Integer experience, Integer cityId, Boolean isRemoteAvailable, Integer numOfRequests) {
         int prevPage;
-        int currPage = 1;
+        int currPage = -1 + numOfRequests;
         StringBuilder url = new StringBuilder(
                 "https://www.rabota.ru/vacancy" +
                         "?query=" + query +

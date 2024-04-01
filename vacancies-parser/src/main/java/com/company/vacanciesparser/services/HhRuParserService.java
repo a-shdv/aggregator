@@ -19,15 +19,15 @@ import java.util.concurrent.CompletableFuture;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+// 50 вакансий на одной странице
 public class HhRuParserService {
-    private static final Integer amount = 60;
+    private static final Integer amount = 50;
     private final RabbitMqSenderService rabbitMqSenderService;
 
     @Async
     public CompletableFuture<Void> findVacancies(String username, String query, BigDecimal salary, Boolean onlyWithSalary,
-                                                 Integer experience, Integer cityId, Boolean isRemoteAvailable) {
-        System.out.println(Thread.currentThread().getName());
-        int currentPage = 0;
+                                                 Integer experience, Integer cityId, Boolean isRemoteAvailable, Integer numOfRequests) {
+        int currentPage = -1 + numOfRequests;
         int previousPage;
 
         String schedule = isRemoteAvailable ? "&schedule=remote" : "";

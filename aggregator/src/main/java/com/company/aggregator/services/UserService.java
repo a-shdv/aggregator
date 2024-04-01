@@ -54,10 +54,15 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void saveUser(User user) {
+    public void signUpUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(Role.USER));
         user.setAccountNonLocked(true);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void saveUser(User user) {
         userRepository.save(user);
     }
 

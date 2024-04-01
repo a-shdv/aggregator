@@ -53,6 +53,7 @@ public class WebsocketController {
                 .experience(vacancyDto.getExperience())
                 .cityId(vacancyDto.getCityId())
                 .isRemoteAvailable(vacancyDto.getIsRemoteAvailable())
+                .numOfRequests(vacancyDto.getNumOfRequests())
                 .build());
         return vacancyDto;
     }

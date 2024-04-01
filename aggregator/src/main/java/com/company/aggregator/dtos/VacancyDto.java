@@ -20,4 +20,5 @@ public class VacancyDto {
     Integer cityId;
     Boolean isRemoteAvailable;
     String type;
+    Integer numOfRequests;
 }

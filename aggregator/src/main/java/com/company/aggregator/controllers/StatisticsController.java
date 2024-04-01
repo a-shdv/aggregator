@@ -28,7 +28,6 @@ public class StatisticsController {
     private final RestTemplate restTemplate;
     private final RabbitMqService rabbitMqService;
     private final StatisticsService statisticsService;
-    private final UserService userService;
     @Value("${constants.statistics-heartbeat-url}")
     private String statisticsHeartbeatUrl;
     private boolean isStatisticsParserAvailable;

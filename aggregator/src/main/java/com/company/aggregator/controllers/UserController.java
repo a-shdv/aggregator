@@ -58,7 +58,7 @@ public class UserController {
             if (user != null) {
                 throw new UserAlreadyExistsException("Пользователь уже существует: " + dto.getUsername());
             }
-            userService.saveUser(SignUpDto.toUser(dto));
+            userService.signUpUser(SignUpDto.toUser(dto));
             redirectAttributes.addFlashAttribute("success", "Пользователь успешно создан: " + dto.getUsername());
             return "redirect:/sign-in";
         } catch (UserAlreadyExistsException ex) {

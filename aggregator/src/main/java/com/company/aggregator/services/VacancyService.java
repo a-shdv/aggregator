@@ -22,10 +22,10 @@ public class VacancyService {
     private final UserRepository userRepository;
 
     @Transactional
-    public List<Vacancy> saveMessageList(List<ReceiveMessageDto> receiveMessageDtoList, User user) {
+    public void saveMessageList(List<ReceiveMessageDto> receiveMessageDtoList, User user) {
         List<Vacancy> vacancies = ReceiveMessageDto.toVacancyList(receiveMessageDtoList);
         vacancies.forEach(vacancy -> vacancy.setUser(user));
-        return vacancyRepository.saveAll(vacancies);
+        vacancyRepository.saveAll(vacancies);
     }
 
     @Transactional
@@ -34,11 +34,11 @@ public class VacancyService {
     }
 
     @Transactional
-    public User deleteVacanciesByUser(User user) {
+    public void deleteVacanciesByUser(User user) {
         List<Vacancy> vacancies = vacancyRepository.findByUser(user);
         vacancies.clear();
         user.setVacancies(vacancies);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     public Vacancy findById(Long id) throws VacancyNotFoundException {

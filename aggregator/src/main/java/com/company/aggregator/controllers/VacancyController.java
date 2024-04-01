@@ -5,6 +5,7 @@ import com.company.aggregator.models.User;
 import com.company.aggregator.models.Vacancy;
 import com.company.aggregator.rabbitmq.dtos.CancelParsingDto;
 import com.company.aggregator.rabbitmq.services.RabbitMqService;
+import com.company.aggregator.services.UserService;
 import com.company.aggregator.services.VacancyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ public class VacancyController {
     @Value("${constants.vacancies-heartbeat-url}")
     private String vacanciesHeartbeatUrl;
     private boolean isVacanciesParserAvailable;
+    private final UserService userService;
 
     @GetMapping("/{id}")
     public String findVacancy(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
@@ -69,6 +71,8 @@ public class VacancyController {
     @PostMapping("/clear")
     public ResponseEntity<String> deleteVacancies(@AuthenticationPrincipal User user) {
         vacancyService.deleteVacanciesByUser(user);
+        user.setNumOfRequests(0);
+        userService.saveUser(user);
         return ResponseEntity.ok().body("Vacancies cleared successfully");
     }
 

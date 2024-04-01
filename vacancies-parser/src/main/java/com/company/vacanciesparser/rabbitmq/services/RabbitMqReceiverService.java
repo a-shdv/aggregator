@@ -37,7 +37,8 @@ public class RabbitMqReceiverService {
                                     receiveMessageDto.getIsOnlyWithSalary(),
                                     receiveMessageDto.getExperience(),
                                     receiveMessageDto.getCityId(),
-                                    receiveMessageDto.getIsRemoteAvailable()
+                                    receiveMessageDto.getIsRemoteAvailable(),
+                                    receiveMessageDto.getNumOfRequests()
                             ),
 
                     hhRuParserService
@@ -48,7 +49,8 @@ public class RabbitMqReceiverService {
                                     receiveMessageDto.getIsOnlyWithSalary(),
                                     receiveMessageDto.getExperience(),
                                     receiveMessageDto.getCityId(),
-                                    receiveMessageDto.getIsRemoteAvailable()
+                                    receiveMessageDto.getIsRemoteAvailable(),
+                                    receiveMessageDto.getNumOfRequests()
                             ),
                     rabotaRuParserService
                             .findVacancies(
@@ -58,7 +60,8 @@ public class RabbitMqReceiverService {
                                     receiveMessageDto.getIsOnlyWithSalary(),
                                     receiveMessageDto.getExperience(),
                                     receiveMessageDto.getCityId(),
-                                    receiveMessageDto.getIsRemoteAvailable()
+                                    receiveMessageDto.getIsRemoteAvailable(),
+                                    receiveMessageDto.getNumOfRequests()
                             )).join();
         }
     }
