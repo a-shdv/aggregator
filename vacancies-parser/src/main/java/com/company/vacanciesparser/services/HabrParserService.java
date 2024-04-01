@@ -53,26 +53,27 @@ public class HabrParserService {
             final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
             while (currentPage <= amount / elements.size()) {
-                elements.forEach(element -> {
-                    String vacancyUrl = element
+                for (int i = 0; i < elements.size(); i++) {
+                    String vacancyUrl = elements
+                            .get(i)
                             .getElementsByClass("vacancy-card__title-link").first()
                             .absUrl("href");
 
                     SendMessageDto sendMessageDto = SendMessageDto.builder()
                             .username(username)
-                            .title(element.getElementsByClass("vacancy-card__title").text())
-                            .date(element.getElementsByClass("vacancy-card__date").text())
-                            .salary(element.getElementsByClass("vacancy-card__salary").text())
-                            .company(element.getElementsByClass("vacancy-card__company-title").text())
-                            .requirements(element.getElementsByClass("vacancy-card__skills").first().text())
-                            .schedule(element.getElementsByClass("vacancy-card__meta").text())
+                            .title(elements.get(i).getElementsByClass("vacancy-card__title").text())
+                            .date(elements.get(i).getElementsByClass("vacancy-card__date").text())
+                            .salary(elements.get(i).getElementsByClass("vacancy-card__salary").text())
+                            .company(elements.get(i).getElementsByClass("vacancy-card__company-title").text())
+                            .requirements(elements.get(i).getElementsByClass("vacancy-card__skills").first().text())
+                            .schedule(elements.get(i).getElementsByClass("vacancy-card__meta").text())
                             .description(parseWebPageDescription(vacancyUrl))
                             .source(vacancyUrl)
-                            .logo(doc.getElementsByClass("vacancy-card__icon").first() != null ? doc.getElementsByClass("vacancy-card__icon").first().absUrl("src") : null)
+                            .logo(doc.getElementsByClass("vacancy-card__icon").get(i) != null ? doc.getElementsByClass("vacancy-card__icon").get(i).absUrl("src") : null)
                             .build();
 
                     sendMessageDtoList.add(sendMessageDto);
-                });
+                }
 
                 previousPage = currentPage;
                 currentPage++;
