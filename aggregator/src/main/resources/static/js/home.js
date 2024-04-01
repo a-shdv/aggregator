@@ -118,8 +118,9 @@ function sendMessage() {
 }
 
 window.addEventListener('unload', disconnect);
-searchVacanciesButton.addEventListener('click', connect)
-
+if (searchVacanciesButton != null) {
+    searchVacanciesButton.addEventListener('click', connect)
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     // Получаем радиобоксы и формы
@@ -201,22 +202,47 @@ if (statisticsFormSubmit != null) {
     });
 }
 
-document.getElementById("toggleCollapse").addEventListener("click", function (e) {
-    e.preventDefault();
-    const collapsibleSections = document.querySelectorAll(".collapsible");
-    collapsibleSections.forEach(function (section) {
-        section.classList.toggle("collapsed");
-        if (section.classList.contains("collapsed")) {
-            document.getElementById('searchVacanciesButtonSpace').style.display = ''
-            section.style.maxHeight = "0";
-            section.style.opacity = "0";
-            this.innerText = "Show";
-            document.getElementById('search')
-        } else {
-            document.getElementById('searchVacanciesButtonSpace').style.display = 'none'
-            section.style.maxHeight = "none";
-            section.style.opacity = "1";
-            this.innerText = "Hide";
-        }
+const toggleCollapseVacancies = document.getElementById("toggleCollapse")
+if (toggleCollapseVacancies != null) {
+    toggleCollapseVacancies.addEventListener("click", function (e) {
+        e.preventDefault();
+        const collapsibleSections = document.querySelectorAll(".collapsible");
+        collapsibleSections.forEach(function (section) {
+            section.classList.toggle("collapsed");
+            if (section.classList.contains("collapsed")) {
+                document.getElementById('searchVacanciesButtonSpace').style.display = ''
+                section.style.maxHeight = "0";
+                section.style.opacity = "0";
+                this.innerText = "Show";
+                document.getElementById('search')
+            } else {
+                document.getElementById('searchVacanciesButtonSpace').style.display = 'none'
+                section.style.maxHeight = "none";
+                section.style.opacity = "1";
+                this.innerText = "Hide";
+            }
+        });
     });
-});
+}
+
+const toggleCollapseStatistics = document.getElementById('toggleCollapseStatistics')
+if (toggleCollapseStatistics != null) {
+    toggleCollapseStatistics.addEventListener('click', (e) => {
+        e.preventDefault()
+        const collapsibleSections = document.querySelectorAll(".collapsible");
+        collapsibleSections.forEach( (section) => {
+            section.classList.toggle("collapsed");
+            if (section.classList.contains("collapsed")) {
+                section.style.maxHeight = "0";
+                section.style.opacity = "0";
+                this.innerText = "Show";
+                document.getElementById('searchStatisticsButtonSpace').style.display = ''
+            } else {
+                section.style.maxHeight = "none";
+                section.style.opacity = "1";
+                this.innerText = "Hide";
+                document.getElementById('searchStatisticsButtonSpace').style.display = 'none'
+            }
+        });
+    })
+}

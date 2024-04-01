@@ -220,48 +220,56 @@
                 <input id="city" class="form-control" name="city" type="text" placeholder="Москва" required>
             </div>
 
+            <a href="#" id="toggleCollapseStatistics">
+                Фильтры
+            </a>
+
             <!--Год-->
-            <div class="form-group mt-3">
-                <label for="year">Год</label>
+            <div class="collapsible collapsed" id="collapsibleSectionStatistics">
+
+                <div class="form-group mt-3">
+                    <label for="year">Год</label>
+                    <br>
+                    <select id="year" name="year" required>
+                        <option disabled value="">Выберите год</option>
+                        <option selected value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                    </select>
+                </div>
                 <br>
-                <select id="year" name="year" required>
-                    <option disabled value="">Выберите год</option>
-                    <option selected value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                    <option value="2020">2020</option>
-                    <option value="2019">2019</option>
-                    <option value="2018">2018</option>
-                    <option value="2017">2017</option>
-                </select>
-            </div>
-            <br>
 
-            <!--Валюта-->
-            <div class="form-group">
-                <label class="form-check-label" for="statisticsCurrency">Валюта</label>
-                <div class="form-check" id="statisticsCurrency">
-                    <!--Рубль-->
-                    <input id="rub" checked class="form-check-input" name="currency" type="radio" value="">
-                    <label class="form-check-label" for="rub">RUB, ₽</label>
-                    <br>
+                <!--Валюта-->
+                <div class="form-group">
+                    <label class="form-check-label" for="statisticsCurrency">Валюта</label>
+                    <div class="form-check" id="statisticsCurrency">
+                        <!--Рубль-->
+                        <input id="rub" checked class="form-check-input" name="currency" type="radio" value="">
+                        <label class="form-check-label" for="rub">RUB, ₽</label>
+                        <br>
 
-                    <!--Доллар-->
-                    <input id="usd" class="form-check-input" name="currency" type="radio" value="usd">
-                    <label class="form-check-label" for="usd">USD, $</label>
-                    <br>
+                        <!--Доллар-->
+                        <input id="usd" class="form-check-input" name="currency" type="radio" value="usd">
+                        <label class="form-check-label" for="usd">USD, $</label>
+                        <br>
 
-                    <!--Евро-->
-                    <input id="eur" class="form-check-input" name="currency" type="radio" value="eur">
-                    <label class="form-check-label" for="eur">EUR, €</label>
-                    <br>
+                        <!--Евро-->
+                        <input id="eur" class="form-check-input" name="currency" type="radio" value="eur">
+                        <label class="form-check-label" for="eur">EUR, €</label>
+                        <br>
+                    </div>
                 </div>
             </div>
 
             <div class="form-group mt-5 mb-5">
                 <input id="statisticsFormSubmit" class="btn btn-md btn-warning" type="submit" value="Отправить">
             </div>
+            <div id="searchStatisticsButtonSpace" style="height: 20vh"></div>
         </form>
     </div>
 </div>
