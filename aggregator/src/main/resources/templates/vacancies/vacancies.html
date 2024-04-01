@@ -83,6 +83,19 @@
                             </div>
                         </div>
 
+                        <!--Количество элементов на одной странице-->
+                        <div class="row mt-5 mb-5 justify-content-end">
+                            <div class="col-lg-3">
+                                <label for="pageSizeSelect" class="col-auto col-form-label">Элементов на одной странице:</label>
+                                <select class="form-control col-auto" id="pageSizeSelect">
+                                    <option value="6">6</option>
+                                    <option selected value="12">12</option>
+                                    <option value="24">24</option>
+                                    <option value="48">48</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-lg-3" th:each="vacancy : ${vacancies}">
                             <div class="card mb-4" style="width: 18rem; height: 25rem;">
                                 <!--Заголовок-->

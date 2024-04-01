@@ -1,7 +1,6 @@
 'use strict'
 
 const vacancy = document.querySelector('#vacancy')
-const vacancyForm = document.querySelector('#vacancyForm')
 const searchVacanciesButton = document.querySelector('#searchVacanciesButton')
 
 const spaceBefore = document.querySelector('#spaceBefore')
@@ -75,6 +74,7 @@ function onMessageReceived(payload) {
                 counter.textContent = 'Готово!'
                 counter.classList.remove('text-warning')
                 counter.classList.add('text-success')
+                document.getElementById('cancelForm').style.display = 'none';
                 okButton.style.display = ''
                 window.onbeforeunload = null;
                 disconnect()
@@ -122,40 +122,40 @@ if (searchVacanciesButton != null) {
     searchVacanciesButton.addEventListener('click', connect)
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Получаем радиобоксы и формы
-    // const vacancyRadio = document.getElementById("vac");
-    // const statisticsRadio = document.getElementById("stat");
-    const vacancyForm = document.getElementById("vacancyForm");
-    const statisticsForm = document.getElementById("statisticsForm");
-
-    // Функция для скрытия формы вакансии и показа формы статистики
-    function showStatisticsForm() {
-        vacancyForm.style.display = "none";
-        statisticsForm.style.display = "";
-    }
-
-    // Функция для скрытия формы статистики и показа формы вакансии
-    function showVacancyForm() {
-        // statisticsForm.style.display = "none";
-        vacancyForm.style.display = "";
-    }
-
-    // Обработчики событий для радиобоксов
-    // vacancyRadio.addEventListener("change", function () {
-    //     if (vacancyRadio.checked) {
-    //         showVacancyForm();
-    //     }
-    // });
-
-    // statisticsRadio.addEventListener("change", function () {
-    //     if (statisticsRadio.checked) {
-    //         showStatisticsForm();
-    //     }
-    // });
-    // По умолчанию показываем форму вакансии
-    showVacancyForm();
-});
+// document.addEventListener("DOMContentLoaded", () => {
+//     // Получаем радиобоксы и формы
+//     // const vacancyRadio = document.getElementById("vac");
+//     // const statisticsRadio = document.getElementById("stat");
+//     // const vacancyForm = document.getElementById("vacancyForm");
+//     // const statisticsForm = document.getElementById("statisticsForm");
+//
+//     // Функция для скрытия формы вакансии и показа формы статистики
+//     // function showStatisticsForm() {
+//     //     vacancyForm.style.display = "none";
+//     //     statisticsForm.style.display = "";
+//     // }
+//
+//     // Функция для скрытия формы статистики и показа формы вакансии
+//     // function showVacancyForm() {
+//     //     // statisticsForm.style.display = "none";
+//     //     vacancyForm.style.display = "";
+//     // }
+//
+//     // Обработчики событий для радиобоксов
+//     // vacancyRadio.addEventListener("change", function () {
+//     //     if (vacancyRadio.checked) {
+//     //         showVacancyForm();
+//     //     }
+//     // });
+//
+//     // statisticsRadio.addEventListener("change", function () {
+//     //     if (statisticsRadio.checked) {
+//     //         showStatisticsForm();
+//     //     }
+//     // });
+//     // По умолчанию показываем форму вакансии
+//     showVacancyForm();
+// });
 
 const statisticsFormSubmit = document.getElementById('statisticsFormSubmit')
 if (statisticsFormSubmit != null) {
@@ -182,11 +182,12 @@ if (statisticsFormSubmit != null) {
 
         // Скрыть форму статистики
         document.getElementById('statisticsForm').style.display = 'none';
-        document.getElementById('switchForms').style.display = 'none'
+        // document.getElementById('switchForms').style.display = 'none'
 
         // Показать сообщение об успешной отправке
         document.querySelector('#cancelForm').style.display = 'none'
         document.getElementById('spaceAfterAlertSuccess').style.display = '';
+
 
         document.getElementById('alertSuccess').style.display = '';
         // Установить таймер на 2 секунды для скрытия сообщения об успехе и возврата формы
@@ -196,7 +197,7 @@ if (statisticsFormSubmit != null) {
             document.getElementById('spaceAfterAlertSuccess').style.display = 'none';
 
             // Вернуть форму статистики
-            document.getElementById('switchForms').style.display = ''
+            // document.getElementById('switchForms').style.display = ''
             document.getElementById('statisticsForm').style.display = '';
         }, 2000);
     });

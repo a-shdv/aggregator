@@ -49,7 +49,6 @@ public class User implements UserDetails {
     @JoinColumn(name = "avatar_id", referencedColumnName = "id")
     private Image avatar;
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();

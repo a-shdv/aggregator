@@ -74,3 +74,29 @@ favouriteForms.forEach((form, index) => {
         }, 1000);
     })
 })
+
+document.addEventListener('DOMContentLoaded', function() {
+    const pageSizeSelect = document.getElementById('pageSizeSelect');
+    pageSizeSelect.addEventListener('change', function() {
+        const selectedPageSize = this.value;
+        const url = window.location.pathname + '?size=' + selectedPageSize;
+        window.location.href = url;
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const pageSizeSelect = document.getElementById('pageSizeSelect');
+
+    // Проверяем, есть ли сохраненное значение в localStorage
+    const savedValue = localStorage.getItem('selectedPageSize');
+    if (savedValue) {
+        pageSizeSelect.value = savedValue;
+    }
+
+    pageSizeSelect.addEventListener('change', function() {
+        const selectedPageSize = this.value;
+        localStorage.setItem('selectedPageSize', selectedPageSize); // Сохраняем выбранное значение
+        const url = window.location.pathname + '?size=' + selectedPageSize;
+        window.location.href = url;
+    });
+});

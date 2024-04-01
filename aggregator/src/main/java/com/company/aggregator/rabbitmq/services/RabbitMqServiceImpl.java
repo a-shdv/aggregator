@@ -42,7 +42,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
         }
         progressbarLoaderCounter += receiveMessageDtoList.size();
         messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder()
-                .content(String.valueOf(8.4 * progressbarLoaderCounter)) // 100 / 12 (кол-во элементов на одной странице) = 1%
+                .content(String.valueOf((100 / 12) * progressbarLoaderCounter)) // 100 / 48 (макс кол-во элементов на одной странице) = 1%
                 .type("RECEIVE").build());
     }
 
