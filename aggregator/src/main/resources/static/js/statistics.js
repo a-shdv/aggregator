@@ -422,7 +422,7 @@ function updateProfessionsBySalariesChart() {
         datasets: [
             {
                 axis: 'y',
-                label: ['Количество вакансий'],
+                label: ['Зарплата по профессиям'],
                 data: values,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
