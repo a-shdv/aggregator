@@ -73,7 +73,9 @@
             </div>
 
             <div class="container mt-5" th:if="${statistics != null}">
-                <h2 class="mb-3">Заработная плата</h2>
+                <h2 class="mb-3">Заработная плата
+                    (<a href="/">Повторить запрос</a>)
+                </h2>
                 <div class="row justify-content-center mb-3">
                     <div class="row mb-3">
                         <span class="fw-bold">Профессия: </span>
@@ -113,19 +115,24 @@
                 </div>
             </div>
 
-
-            <div class="col-lg-3">
-                <select  class="form-select form-select-sm" aria-label=".form-select-sm example">
-                    <option value="2024">2024</option >
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                    <option value="2020">2020</option>
-                    <option value="2019">2019</option>
-                    <option value="2018">2018</option>
-                    <option value="2017">2017</option>
-                </select>
+            <hr>
+            <div class="justify-content-left mb-3">
+                <div class="col-lg-3">
+                    <label>Выбрать диапазон:</label>
+                    <select  class="form-select form-select-sm"
+                             aria-label=".form-select-sm example">
+                        <option value="2024">2024</option >
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                    </select>
+                </div>
             </div>
+
 
             <h2 class="mb-3">Рейтинг количества вакансий по городам в России</h2>
             <div class="row justify-content-center mb-3">
@@ -145,7 +152,7 @@
                 </div>
             </div>
 
-            <h2 class="mb-3">Самые востребованные профессии в России</h2>
+            <h2 class="mb-3">Топ 10 востребованных профессий</h2>
             <div class="row justify-content-center mb-3">
                 <div class="row mb-3">
                     <div class="mb-5" style="max-width: 100%; max-height: 100%">
@@ -154,7 +161,7 @@
                 </div>
             </div>
 
-            <h2 class="mb-3">Основные сферы-источники вакансий в России</h2>
+            <h2 class="mb-3">Топ-10 сфер-источников вакансий в России </h2>
             <div class="row justify-content-center mb-3">
                 <div class="row mb-3">
                     <div class="mb-5" style="max-width: 100%; max-height: 100%">

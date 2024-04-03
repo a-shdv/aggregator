@@ -122,50 +122,19 @@ if (searchVacanciesButton != null) {
     searchVacanciesButton.addEventListener('click', connect)
 }
 
-// document.addEventListener("DOMContentLoaded", () => {
-//     // Получаем радиобоксы и формы
-//     // const vacancyRadio = document.getElementById("vac");
-//     // const statisticsRadio = document.getElementById("stat");
-//     // const vacancyForm = document.getElementById("vacancyForm");
-//     // const statisticsForm = document.getElementById("statisticsForm");
-//
-//     // Функция для скрытия формы вакансии и показа формы статистики
-//     // function showStatisticsForm() {
-//     //     vacancyForm.style.display = "none";
-//     //     statisticsForm.style.display = "";
-//     // }
-//
-//     // Функция для скрытия формы статистики и показа формы вакансии
-//     // function showVacancyForm() {
-//     //     // statisticsForm.style.display = "none";
-//     //     vacancyForm.style.display = "";
-//     // }
-//
-//     // Обработчики событий для радиобоксов
-//     // vacancyRadio.addEventListener("change", function () {
-//     //     if (vacancyRadio.checked) {
-//     //         showVacancyForm();
-//     //     }
-//     // });
-//
-//     // statisticsRadio.addEventListener("change", function () {
-//     //     if (statisticsRadio.checked) {
-//     //         showStatisticsForm();
-//     //     }
-//     // });
-//     // По умолчанию показываем форму вакансии
-//     showVacancyForm();
-// });
-
 const statisticsFormSubmit = document.getElementById('statisticsFormSubmit')
 if (statisticsFormSubmit != null) {
     statisticsFormSubmit.addEventListener('click', (event) => {
+        // if (document.getElementById('profession').value == null
+        //     || document.getElementById('city').value == null) {
+        //     return
+        // }
+
         event.preventDefault(); // Prevent form submission
+        let form = document.getElementById('statisticsForm');
+        let formData = new FormData(form); // Создаем объект FormData из формы
 
-        var form = document.getElementById('statisticsForm');
-        var formData = new FormData(form); // Создаем объект FormData из формы
-
-        var xhr = new XMLHttpRequest(); // Создаем объект XMLHttpRequest
+        let xhr = new XMLHttpRequest(); // Создаем объект XMLHttpRequest
         xhr.open('POST', form.action, true); // Настраиваем запрос
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) { // Проверяем, завершен ли запрос
