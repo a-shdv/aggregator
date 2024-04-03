@@ -60,7 +60,7 @@ public class RabotaRuParserService {
                     String requirements = "Нет поддержки ключевых слов для rabota.ru.";
                     String company = it.getElementsByClass("vacancy-preview-card__company-name").first().text();
                     String description = it.getElementsByClass("vacancy-preview-card__short-description").first().text();
-                    String schedule = it.getElementsByClass("vacancy-preview-location__address-text").first().text();
+                    String schedule = it.getElementsByClass("vacancy-preview-location__address-text") != null ? it.getElementsByClass("vacancy-preview-location__address-text").first().text() : "";
                     String logo = it.getElementsByClass("r-image__image").first() != null ? it.getElementsByClass("r-image__image").first().absUrl("src") : null;
 
                     SendMessageDto dto = SendMessageDto.builder()
@@ -101,7 +101,7 @@ public class RabotaRuParserService {
 
 
         } else {
-            log.error("Could not parse elements");
+            log.error("Could not parse elements: {}", this.getClass().getName());
         }
         return CompletableFuture.completedFuture(null);
     }

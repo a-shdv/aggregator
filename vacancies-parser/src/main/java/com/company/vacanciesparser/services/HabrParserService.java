@@ -94,6 +94,8 @@ public class HabrParserService {
                 rabbitMqSenderService.send(sendMessageDtoList);
                 sendMessageDtoList.clear();
             }
+        } else {
+            log.error("Could not parse elements: {}", this.getClass().getName());
         }
         return CompletableFuture.completedFuture(null);
     }

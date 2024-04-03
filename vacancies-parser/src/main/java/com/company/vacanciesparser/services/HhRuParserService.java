@@ -87,7 +87,7 @@ public class HhRuParserService {
                 sendMessageDtoList.clear();
             }
         } else {
-            log.error("Could not parse elements");
+            log.error("Could not parse elements: {}", this.getClass().getName());
         }
         return CompletableFuture.completedFuture(null);
     }
