@@ -30,10 +30,10 @@ public class VacancyController {
     private final VacancyService vacancyService;
     private final RabbitMqService rabbitMqService;
     private final RestTemplate restTemplate;
+    private final UserService userService;
     @Value("${constants.vacancies-heartbeat-url}")
     private String vacanciesHeartbeatUrl;
     private boolean isVacanciesParserAvailable;
-    private final UserService userService;
 
     @GetMapping("/{id}")
     public String findVacancy(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {

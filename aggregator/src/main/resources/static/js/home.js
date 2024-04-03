@@ -231,7 +231,7 @@ if (toggleCollapseStatistics != null) {
     toggleCollapseStatistics.addEventListener('click', (e) => {
         e.preventDefault()
         const collapsibleSections = document.querySelectorAll(".collapsible");
-        collapsibleSections.forEach( (section) => {
+        collapsibleSections.forEach((section) => {
             section.classList.toggle("collapsed");
             if (section.classList.contains("collapsed")) {
                 section.style.maxHeight = "0";
