@@ -125,11 +125,6 @@ if (searchVacanciesButton != null) {
 const statisticsFormSubmit = document.getElementById('statisticsFormSubmit')
 if (statisticsFormSubmit != null) {
     statisticsFormSubmit.addEventListener('click', (event) => {
-        // if (document.getElementById('profession').value == null
-        //     || document.getElementById('city').value == null) {
-        //     return
-        // }
-
         event.preventDefault(); // Prevent form submission
         let form = document.getElementById('statisticsForm');
         let formData = new FormData(form); // Создаем объект FormData из формы

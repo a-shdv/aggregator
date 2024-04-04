@@ -15,12 +15,15 @@ const topProfessionsBySalariesCtx = document.getElementById('topProfessionsBySal
 
 let year
 
+if (localStorage.getItem('year')) {
+    document.querySelector('.form-select').value = localStorage.getItem('year')
+}
+
 function updateMyChart() {
-    //region Checks
+    //region Проверки
     const avgSalary = document.querySelector('#avgSalary');
     const medianSalary = document.querySelector('#medianSalary');
     const modalSalary = document.querySelector('#modalSalary');
-
     let avgSalaryData
     let medianSalaryData
     let modalSalaryData
@@ -49,6 +52,7 @@ function updateMyChart() {
         myChart.destroy(); // Уничтожаем старый график, чтобы создать новый
     }
 
+    //region Построение графика
     myChart = new Chart(myChartCtx, {
         type: 'bar',
         data: {
@@ -88,17 +92,8 @@ function updateMyChart() {
             }
         }
     });
+    //endregion
 }
-
-if (localStorage.getItem('year')) {
-    document.querySelector('.form-select').value = localStorage.getItem('year')
-}
-
-document.querySelector('.form-select').addEventListener('change', function () {
-    year = this.value;
-    localStorage.setItem('year', year)
-    window.location.href = 'http://localhost:8080/statistics?year=' + year;
-});
 
 //  Топ-10 городов по количеству вакансий
 function updateTopTenCitiesByVacanciesChart() {
@@ -106,6 +101,7 @@ function updateTopTenCitiesByVacanciesChart() {
         topTenCitiesChartByVacancies.destroy()
     }
 
+    //region Наполнение данными
     let values
     let domain
     switch (localStorage.getItem('year')) {
@@ -146,7 +142,9 @@ function updateTopTenCitiesByVacanciesChart() {
             domain = ['Москва', 'Санкт-Петербург', 'Екатеринбург', 'Новосибирск', 'Краснодар', 'Челябинск', 'Нижний Новгород', 'Казань', 'Красноярск', 'Ростов-на-Дону']
             break;
     }
+    //endregion
 
+    //region Параметры для графика
     const data = {
         labels: domain,
         datasets: [
@@ -183,7 +181,9 @@ function updateTopTenCitiesByVacanciesChart() {
             }
         ]
     };
+    //endregion
 
+    //region Построение графика
     topTenCitiesChartByVacancies = new Chart(topTenCitiesChartByVacanciesCtx, {
         type: 'bar',
         data,
@@ -191,6 +191,7 @@ function updateTopTenCitiesByVacanciesChart() {
             indexAxis: 'y',
         }
     })
+    //endregion
 }
 
 //  Топ-10 востребованных профессий в России
@@ -199,6 +200,7 @@ function updateTopTenProfessionsPie() {
         topTenProfessionsChart.destroy()
     }
 
+    //region Наполнение данными
     let values
     let domain
     switch (localStorage.getItem('year')) {
@@ -239,8 +241,9 @@ function updateTopTenProfessionsPie() {
             values = [4.7, 4.5, 3.5, 2.6, 2.2, 1.9, 1.8, 1.7, 1.4, 1.4/*, 74.2*/]
             break;
     }
+    //endregion
 
-
+    //region Параметры для графика
     const data = {
         labels: domain,
         datasets: [{
@@ -262,24 +265,14 @@ function updateTopTenProfessionsPie() {
             hoverOffset: 1
         }]
     };
+    //endregion
 
+    //region Построение графика
     topTenProfessionsChart = new Chart(topTenProfessionsChartCtx, {
         type: 'pie',
-        data: data,
-        // options: {
-        //     hover: {
-        //         onHover: function(event, elements) {
-        //             if (elements.length) {
-        //                 const index = elements[0].index;
-        //                 console.log(domain[index]); // Элемент массива domain, соответствующий наведенному сегменту
-        //             }
-        //         }
-        //     },
-        //     tooltips: {
-        //         enabled: false // Отключаем всплывающие подсказки, если не нужны
-        //     }
-        // }
+        data: data
     });
+    //endregion
 
 }
 
@@ -289,6 +282,7 @@ function updateSourcesPie() {
         sourcesChart.destroy()
     }
 
+    //region Наполнение данными
     let values
     let domain
     switch (localStorage.getItem('year')) {
@@ -329,7 +323,9 @@ function updateSourcesPie() {
             values = [17.7, 21.7, 21.1, 10.7, 5.9, 4.5, 4.5, 3.7, 3.2, 1.4/*, 25*/]
             break;
     }
+    //endregion
 
+    //region Параметры графика
     const data = {
         labels: domain,
         datasets: [{
@@ -350,24 +346,14 @@ function updateSourcesPie() {
             hoverOffset: 1
         }]
     };
+    //endregion
+
+    //region Построение графика
     sourcesChart = new Chart(sourcesChartCtx, {
         type: 'pie',
-        data: data,
-        // options: {
-        //     hover: {
-        //         onHover: function(event, elements) {
-        //             if (elements.length) {
-        //                 const index = elements[0].index;
-        //                 console.log(domain[index]); // Элемент массива domain, соответствующий наведенному сегменту
-        //             }
-        //         }
-        //     },
-        //     tooltips: {
-        //         enabled: false // Отключаем всплывающие подсказки, если не нужны
-        //     }
-        // }
-
+        data: data
     })
+    //endregion
 }
 
 //  Топ профессий по зарплатам в России
@@ -376,6 +362,7 @@ function updateProfessionsBySalariesChart() {
         topProfessionsBySalaries.destroy()
     }
 
+    //region Наполнение данными
     let values
     let domain
     switch (localStorage.getItem('year')) {
@@ -416,7 +403,9 @@ function updateProfessionsBySalariesChart() {
             domain = ['CTO', 'CIO', 'Военнослужащий', 'Стоматолог-универсал', 'Эксперт по коммерческой недвижимости', 'Программист Navision', 'Руководитель проектов 1С', 'Дальнобойщик', 'Программист Linux']
             break;
     }
+    //endregion
 
+    //region Параметры графика
     const data = {
         labels: domain,
         datasets: [
@@ -453,7 +442,9 @@ function updateProfessionsBySalariesChart() {
             }
         ]
     };
+    //endregion
 
+    //region Построение графика
     topProfessionsBySalaries = new Chart(topProfessionsBySalariesCtx, {
         type: 'bar',
         data,
@@ -461,11 +452,19 @@ function updateProfessionsBySalariesChart() {
             indexAxis: 'y',
         }
     })
+    //endregion
 }
 
+//region Event listeners
 window.addEventListener('load', updateMyChart)
 window.addEventListener('load', updateTopTenCitiesByVacanciesChart)
 window.addEventListener('load', updateTopTenProfessionsPie)
 window.addEventListener('load', updateSourcesPie)
 window.addEventListener('load', updateProfessionsBySalariesChart)
+document.querySelector('.form-select').addEventListener('change', () => {
+    year = this.value;
+    localStorage.setItem('year', year)
+    window.location.href = 'http://localhost:8080/statistics?year=' + year;
+});
+//endregion
 

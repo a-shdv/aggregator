@@ -55,7 +55,7 @@ function onMessageReceived(payload) {
 
     switch (message.type) {
         case 'JOIN':
-            sendMessage()
+            onSendMessage()
             break
         case 'LEAVE':
             console.log('left')
@@ -77,7 +77,7 @@ function onMessageReceived(payload) {
     }
 }
 
-function sendMessage() {
+function onSendMessage() {
     if (stompClient) {
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(''));
     }
@@ -115,7 +115,6 @@ function confirmClearFavouritesForm(event) {
 clearFavouritesForm.addEventListener("submit", confirmClearFavouritesForm);
 window.addEventListener('unload', disconnect);
 pdfEmailButton.addEventListener('click', connect)
-
 const deleteFromFavouritesForms = document.querySelectorAll('#deleteFromFavouritesForm')
 deleteFromFavouritesForms.forEach((form, index) => {
     form.addEventListener('submit', (event) => {
