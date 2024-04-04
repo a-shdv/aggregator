@@ -7,6 +7,7 @@ const clearVacanciesButton = document.querySelector('#clearVacanciesButton')
 const pagination = document.querySelector('#pagination')
 const spaceTest = document.querySelector('#spaceTest')
 
+//region Подтверждение об очистке вакансий
 function confirmClearVacanciesButton(event) {
     event.preventDefault()
     const test = confirm('Вы уверены, что хотите очистить список вакансий?')
@@ -38,6 +39,7 @@ function confirmClearVacanciesButton(event) {
         return false;
     }
 }
+//endregion
 
 clearVacanciesForm.addEventListener("submit", confirmClearVacanciesButton);
 const addToFavouritesSubmitButtons = document.querySelectorAll('.addToFavouritesSubmitButton');
@@ -75,16 +77,16 @@ favouriteForms.forEach((form, index) => {
     })
 })
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const pageSizeSelect = document.getElementById('pageSizeSelect');
-    pageSizeSelect.addEventListener('change', function () {
+    pageSizeSelect.addEventListener('change', () => {
         const selectedPageSize = this.value;
         const url = window.location.pathname + '?size=' + selectedPageSize;
         window.location.href = url;
     });
 });
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const pageSizeSelect = document.getElementById('pageSizeSelect');
 
     // Проверяем, есть ли сохраненное значение в localStorage
@@ -93,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
         pageSizeSelect.value = savedValue;
     }
 
-    pageSizeSelect.addEventListener('change', function () {
+    pageSizeSelect.addEventListener('change', () => {
         const selectedPageSize = this.value;
         localStorage.setItem('selectedPageSize', selectedPageSize); // Сохраняем выбранное значение
         const url = window.location.pathname + '?size=' + selectedPageSize;

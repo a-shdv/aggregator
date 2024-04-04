@@ -6,16 +6,14 @@ const searchVacanciesButton = document.querySelector('#searchVacanciesButton')
 const spaceBefore = document.querySelector('#spaceBefore')
 const counter = document.querySelector('#counter')
 const spinner = document.querySelector('#spinner')
-const spinnerInner = document.querySelector('#spinner-inner')
 const waitParagraph = document.querySelector('#waitParagraph')
-// const progressbar = document.querySelector('#progressbar')
-// const progressbarLoader = document.querySelector('#progressbar-loader')
 const okButton = document.querySelector('#okButton')
 const spaceAfter = document.querySelector('#spaceAfter')
 
 let stompClient = null;
 let username = null;
 
+//region Websockets
 function connect(event) {
     event.preventDefault();
 
@@ -121,7 +119,9 @@ window.addEventListener('unload', disconnect);
 if (searchVacanciesButton != null) {
     searchVacanciesButton.addEventListener('click', connect)
 }
+//endregion
 
+//region Отправка формы "Статистика"
 const statisticsFormSubmit = document.getElementById('statisticsFormSubmit')
 if (statisticsFormSubmit != null) {
     statisticsFormSubmit.addEventListener('click', (event) => {
@@ -166,7 +166,9 @@ if (statisticsFormSubmit != null) {
         }, 2000);
     });
 }
+//endregion
 
+//region Фильтры для вакансий
 const toggleCollapseVacancies = document.getElementById("toggleCollapse")
 if (toggleCollapseVacancies != null) {
     toggleCollapseVacancies.addEventListener("click", function (e) {
@@ -189,7 +191,9 @@ if (toggleCollapseVacancies != null) {
         });
     });
 }
+//endregion
 
+//region Фильтры для статистики
 const toggleCollapseStatistics = document.getElementById('toggleCollapseStatistics')
 if (toggleCollapseStatistics != null) {
     toggleCollapseStatistics.addEventListener('click', (e) => {
@@ -211,3 +215,4 @@ if (toggleCollapseStatistics != null) {
         });
     })
 }
+//endregion
