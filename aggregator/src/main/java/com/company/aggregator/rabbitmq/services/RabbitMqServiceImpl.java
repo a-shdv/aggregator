@@ -37,12 +37,13 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     public void receiveVacanciesParser(List<com.company.aggregator.rabbitmq.dtos.vacancies.ReceiveMessageDto> receiveMessageDtoList) {
         log.info("RECEIVED: {}", receiveMessageDtoList);
         User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername());
+//        receiveMessageDtoList.removeIf(dto -> vacancyService.findBySource(dto.getSource()) != null);
         if (!receiveMessageDtoList.isEmpty()) {
             vacancyService.saveMessageList(receiveMessageDtoList, user);
         }
         progressbarLoaderCounter += receiveMessageDtoList.size();
         messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder()
-                .content(String.valueOf((100 / 12) * progressbarLoaderCounter)) // 100 / 12 (min кол-во элементов на одной странице) = 1%
+                .content(String.valueOf((100 / 6) * progressbarLoaderCounter)) // 100 / 12 (min кол-во элементов на одной странице) = 1%
                 .type("RECEIVE").build());
     }
 
