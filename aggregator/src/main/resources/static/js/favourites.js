@@ -70,6 +70,9 @@ function onMessageReceived(payload) {
                 case '0':
                     console.log('success')
                     success.style.display = ''
+                    setTimeout(() => {
+                        success.style.display = 'none'
+                    }, 1500); // Adjust timing to match animation duration
                     break
             }
             disconnect()
