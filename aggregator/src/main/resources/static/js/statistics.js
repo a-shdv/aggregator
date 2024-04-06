@@ -461,10 +461,10 @@ window.addEventListener('load', updateTopTenCitiesByVacanciesChart)
 window.addEventListener('load', updateTopTenProfessionsPie)
 window.addEventListener('load', updateSourcesPie)
 window.addEventListener('load', updateProfessionsBySalariesChart)
-document.querySelector('.form-select').addEventListener('change', () => {
-    year = this.value;
-    console.log(year)
-    localStorage.setItem('year', year)
+document.getElementById('year-select').addEventListener('change', (event) => {
+    const year = event.target.value;
+    console.log(year);
+    localStorage.setItem('year', year);
     window.location.href = 'http://localhost:8080/statistics?year=' + year;
 });
 //endregion
