@@ -250,16 +250,16 @@ function updateTopTenProfessionsPie() {
             label: 'Востребованные профессии ',
             data: values,
             backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(54, 162, 235)',
-                'rgb(242,64,255)',
-                'rgb(153, 102, 255)',
-                'rgb(238,255,86)',
-                'rgb(103,255,86)',
-                'rgb(86,255,196)',
+                'rgb(255, 99, 132, 0.5)',
+                'rgb(255, 159, 64, 0.5)',
+                'rgb(255, 205, 86, 0.5)',
+                'rgb(75, 192, 192, 0.5)',
+                'rgb(54, 162, 235, 0.5)',
+                'rgb(242,64,255, 0.5)',
+                'rgb(153, 102, 255, 0.5)',
+                'rgb(238,255,86, 0.5)',
+                'rgb(103,255,86, 0.5)',
+                'rgb(86,255,196, 0.5)',
                 // 'rgb(201, 203, 207)',
             ],
             hoverOffset: 1
@@ -332,15 +332,15 @@ function updateSourcesPie() {
             label: 'Источники вакансий',
             data: values,
             backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(54, 162, 235)',
-                'rgb(242,64,255)',
-                'rgb(153, 102, 255)',
-                'rgb(238,255,86)',
-                'rgb(103,255,86)',
+                'rgb(255, 99, 132, 0.5)',
+                'rgb(255, 159, 64, 0.5)',
+                'rgb(255, 205, 86, 0.5)',
+                'rgb(75, 192, 192, 0.5)',
+                'rgb(54, 162, 235, 0.5)',
+                'rgb(242,64,255, 0.5)',
+                'rgb(153, 102, 255, 0.5)',
+                'rgb(238,255,86, 0.5)',
+                'rgb(103,255,86, 0.5)',
                 // 'rgb(201, 203, 207)',
             ],
             hoverOffset: 1
@@ -463,6 +463,7 @@ window.addEventListener('load', updateSourcesPie)
 window.addEventListener('load', updateProfessionsBySalariesChart)
 document.querySelector('.form-select').addEventListener('change', () => {
     year = this.value;
+    console.log(year)
     localStorage.setItem('year', year)
     window.location.href = 'http://localhost:8080/statistics?year=' + year;
 });

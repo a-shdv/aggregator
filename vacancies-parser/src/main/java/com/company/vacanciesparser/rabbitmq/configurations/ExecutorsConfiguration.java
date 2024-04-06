@@ -18,7 +18,7 @@ public class ExecutorsConfiguration {
 
     @Bean
     public ThreadPoolExecutorFactoryBean coreExecutor() {
-        int corePoolSize = executorsProperties.getCorePoolSize() / 3;
+        int corePoolSize = executorsProperties.getCorePoolSize();
         ThreadPoolExecutorFactoryBean result = new ThreadPoolExecutorFactoryBean();
         result.setCorePoolSize(corePoolSize);
         result.setMaxPoolSize(corePoolSize * 2);
