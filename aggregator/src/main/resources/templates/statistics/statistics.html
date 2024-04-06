@@ -7,6 +7,15 @@
         color: #fff
     }
 
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
     form .form-control:focus {
         box-shadow: none !important;
         -moz-box-shadow: none !important;

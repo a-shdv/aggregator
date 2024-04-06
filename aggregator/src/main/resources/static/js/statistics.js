@@ -455,6 +455,14 @@ function updateProfessionsBySalariesChart() {
     //endregion
 }
 
+function updateCharts() {
+    updateMyChart()
+    updateTopTenCitiesByVacanciesChart()
+    updateTopTenProfessionsPie()
+    updateSourcesPie()
+    updateProfessionsBySalariesChart()
+}
+
 //region Event listeners
 window.addEventListener('load', updateMyChart)
 window.addEventListener('load', updateTopTenCitiesByVacanciesChart)
@@ -465,7 +473,14 @@ document.getElementById('year-select').addEventListener('change', (event) => {
     const year = event.target.value;
     console.log(year);
     localStorage.setItem('year', year);
-    window.location.href = 'http://localhost:8080/statistics?year=' + year;
+    // Add fade-in animation class
+    document.body.classList.add('fade-in');
+    // Remove animation class after animation ends
+    setTimeout(() => {
+        document.body.classList.remove('fade-in');
+        // Update URL without reloading the page
+        window.history.pushState({}, '', 'http://localhost:8080/statistics?year=' + year);
+    }, 500); // Adjust timing to match animation duration
 });
 //endregion
 
