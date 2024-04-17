@@ -105,6 +105,25 @@ public class HhRuParserService {
             case 7 -> parsedCityId = 212; // Тольятти
             case 8 -> parsedCityId = 15; // Астрахань
             case 9 -> parsedCityId = 99; // Уфа
+            case 10 -> parsedCityId = 54; // Красноярск
+            case 11-> parsedCityId = 104; // Челябинск
+            case 12 -> parsedCityId = 78; // Самара
+            case 13 -> parsedCityId = 76; // Ростов-на-Дону
+            case 14 -> parsedCityId = 53; // Краснодар
+            case 15 -> parsedCityId = 68; // Омск
+            case 16 -> parsedCityId = 26; // Воронеж
+            case 17 -> parsedCityId = 72; // Пермь
+            case 18 -> parsedCityId = 24; // Волгоград
+            case 20 -> parsedCityId = 79; // Саратов
+            case 21 -> parsedCityId = 95; // Тюмень
+            case 23 -> parsedCityId = 11; // Барнаул
+            case 24 -> parsedCityId = 29; // Махачкала
+            case 25 -> parsedCityId = 96; // Ижевск
+            case 26 -> parsedCityId = 102; // Хабаровск
+            case 27 -> parsedCityId = 35; // Иркутск
+            case 28 -> parsedCityId = 22; // Владивосток
+            case 29 -> parsedCityId = 112; // Ярославль
+            case 30 -> parsedCityId = 130; // Севастополь
         }
         return parsedCityId;
     }

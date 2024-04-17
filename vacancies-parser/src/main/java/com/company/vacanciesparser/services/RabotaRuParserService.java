@@ -129,6 +129,25 @@ public class RabotaRuParserService {
             case 7 -> parsedCityId = "tol"; // Тольятти
             case 8 -> parsedCityId = "astrakhan"; // Астрахань
             case 9 -> parsedCityId = "ufa"; // Уфа
+            case 10 -> parsedCityId = "krasnoyarsk"; // Красноярск
+            case 11-> parsedCityId = "chelyabinsk"; // Челябинск
+            case 12 -> parsedCityId = "samara"; // Самара
+            case 13 -> parsedCityId = "rostov"; // Ростов-на-Дону
+            case 14 -> parsedCityId = "krasnodar"; // Краснодар
+            case 15 -> parsedCityId = "omsk"; // Омск
+            case 16 -> parsedCityId = "voronezh"; // Воронеж
+            case 17 -> parsedCityId = "perm"; // Пермь
+            case 18 -> parsedCityId = "volgograd"; // Волгоград
+            case 20 -> parsedCityId = "saratov"; // Саратов
+            case 21 -> parsedCityId = "tumen"; // Тюмень
+            case 23 -> parsedCityId = "barnaul"; // Барнаул
+            case 24 -> parsedCityId = "mahachkala"; // Махачкала
+            case 25 -> parsedCityId = "izhevsk"; // Ижевск
+            case 26 -> parsedCityId = "khabarovsk"; // Хабаровск
+            case 27 -> parsedCityId = "irkutsk"; // Иркутск
+            case 28 -> parsedCityId = "vladivostok"; // Владивосток
+            case 29 -> parsedCityId = "yaroslavl"; // Ярославль
+            case 30 -> parsedCityId = "sevastopol"; // Севастополь
         }
         return parsedCityId;
     }
