@@ -5,11 +5,11 @@ import com.company.aggregator.models.Statistics;
 import com.company.aggregator.models.User;
 import com.company.aggregator.rabbitmq.services.RabbitMqService;
 import com.company.aggregator.services.StatisticsService;
-import com.company.aggregator.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,8 +21,9 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 @Controller
-@RequestMapping("/statistics")
 @RequiredArgsConstructor
+@PreAuthorize("hasAuthority('ADMIN')")
+@RequestMapping("/statistics")
 @Slf4j
 public class StatisticsController {
     private final RestTemplate restTemplate;

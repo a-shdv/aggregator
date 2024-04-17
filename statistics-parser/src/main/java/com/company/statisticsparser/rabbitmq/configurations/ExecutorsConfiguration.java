@@ -18,11 +18,11 @@ public class ExecutorsConfiguration {
 
     @Bean
     public ThreadPoolExecutorFactoryBean coreExecutor() {
-        log.info("Инициализация основного планировщика выполнения задач");
+        int corePoolSize = executorsProperties.getCorePoolSize();
         ThreadPoolExecutorFactoryBean result = new ThreadPoolExecutorFactoryBean();
-        result.setCorePoolSize(executorsProperties.getCorePoolSize());
-        result.setMaxPoolSize(executorsProperties.getCorePoolSize() * 2);
-        result.setThreadNamePrefix("parser-e-core-");
+        result.setCorePoolSize(corePoolSize);
+        result.setMaxPoolSize(corePoolSize * 2);
+        result.setThreadNamePrefix("aggregator-e-core-");
         return result;
     }
 

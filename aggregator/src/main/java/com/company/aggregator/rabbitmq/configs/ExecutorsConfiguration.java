@@ -18,10 +18,10 @@ public class ExecutorsConfiguration {
 
     @Bean
     public ThreadPoolExecutorFactoryBean coreExecutor() {
-        log.info("Main scheduler of execution of tasks initialization");
+        int corePoolSize = executorsProperties.getCorePoolSize();
         ThreadPoolExecutorFactoryBean result = new ThreadPoolExecutorFactoryBean();
-        result.setCorePoolSize(executorsProperties.getCorePoolSize());
-        result.setMaxPoolSize(executorsProperties.getCorePoolSize() * 2);
+        result.setCorePoolSize(corePoolSize);
+        result.setMaxPoolSize(corePoolSize * 2);
         result.setThreadNamePrefix("aggregator-e-core-");
         return result;
     }

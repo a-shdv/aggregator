@@ -7,7 +7,16 @@
         color: #fff
     }
 
-    form .form-control:focus {
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    form #year-select #year-select:focus #year-select::selection .form-control:focus {
         box-shadow: none !important;
         -moz-box-shadow: none !important;
         -webkit-box-shadow: none !important;
@@ -71,29 +80,25 @@
                     <div style="height: 30vh"></div>
                 </div>
             </div>
+
             <div class="container mt-5" th:if="${statistics != null}">
-                <h2 class="mb-3">Заработная плата</h2>
-                <div class="row justify-content-center">
+                <h2 class="mb-3">Заработная плата
+                    (<a href="/">Повторить запрос</a>)
+                </h2>
+                <div class="row justify-content-center mb-3">
                     <div class="row mb-3">
-                        <p>
-                            <span class="fw-bold">Профессия: </span>
-                            <span th:text="${statistics.getProfession()}"></span>
-                        </p>
-                        <p>
-                            <span class="fw-bold">Город: </span>
-                            <span th:text="${statistics.getCity()}"></span>
-                        </p>
-                        <p>
-                            <span class="fw-bold">Год: </span>
-                            <span th:text="${statistics.getYear()}"></span>
-                        </p>
-                        <p>
-                            <span class="fw-bold">Валюта: </span>
-                            <span th:text="${statistics.getCurrency()}"></span>
-                        </p>
+                        <span class="fw-bold">Профессия: </span>
+                        <span th:text="${statistics.getProfession()}"></span>
+                        <span class="fw-bold">Город: </span>
+                        <span th:text="${statistics.getCity()}"></span>
+                        <span class="fw-bold">Год: </span>
+                        <span th:text="${statistics.getYear()}"></span>
+                        <span class="fw-bold">Валюта: </span>
+                        <span th:text="${statistics.getCurrency()}"></span>
                     </div>
 
-                    <div class="mb-5" style="max-width: 75%; max-height: 75%">
+                    <!--Chart-->
+                    <div class="mb-5" style="max-width: 60%; max-height: 60%">
                         <canvas id="myChart"></canvas>
                     </div>
 
@@ -118,7 +123,61 @@
                     </div>
                 </div>
             </div>
-            <!--            <div style="height: 20vh"></div>-->
+
+            <hr>
+            <div class="justify-content-left mb-3">
+                <div class="col-lg-3">
+                    <label>Выбрать диапазон:</label>
+                    <select class="form-select form-select-sm" id="year-select">
+                        <option selected value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <h2 class="mb-3">Рейтинг количества вакансий по городам в России</h2>
+            <div class="row justify-content-center mb-3">
+                <div class="row mb-3">
+                    <div class="mb-5" style="max-width: 130%; max-height: 130%">
+                        <canvas id="topTenCitiesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="mb-3">Рейтинг профессий по зарплатам в России</h2>
+            <div class="row justify-content-center mb-3">
+                <div class="row mb-3">
+                    <div class="mb-5" style="max-width: 130%; max-height: 130%">
+                        <canvas id="topProfessionsBySalariesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="mb-3">Рейтинг наиболее востребованных профессий</h2>
+            <div class="row justify-content-center mb-3">
+                <div class="row mb-3">
+                    <div class="mb-5" style="max-width: 100%; max-height: 100%">
+                        <canvas id="topTenProfessionsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="mb-3">Рейтинг наиболее распространенных сфер</h2>
+            <div class="row justify-content-center mb-3">
+                <div class="row mb-3">
+                    <div class="mb-5" style="max-width: 100%; max-height: 100%">
+                        <canvas id="sourcesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

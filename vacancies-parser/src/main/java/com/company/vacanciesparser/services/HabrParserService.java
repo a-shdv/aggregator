@@ -94,6 +94,8 @@ public class HabrParserService {
                 rabbitMqSenderService.send(sendMessageDtoList);
                 sendMessageDtoList.clear();
             }
+        } else {
+            log.error("Could not parse elements: {}", this.getClass().getName());
         }
         return CompletableFuture.completedFuture(null);
     }
@@ -111,6 +113,25 @@ public class HabrParserService {
             case 7 -> parsedCityId = 735; // Тольятти
             case 8 -> parsedCityId = 683; // Астрахань
             case 9 -> parsedCityId = 740; // Уфа
+            case 10 -> parsedCityId = 708; // Красноярск
+            case 11-> parsedCityId = 744; // Челябинск
+            case 12 -> parsedCityId = 728; // Самара
+            case 13 -> parsedCityId = 726; // Ростов-на-Дону
+            case 14 -> parsedCityId = 707; // Краснодар
+            case 15 -> parsedCityId = 718; // Омск
+            case 16 -> parsedCityId = 692; // Воронеж
+            case 17 -> parsedCityId = 722; // Пермь
+            case 18 -> parsedCityId = 690; // Волгоград
+            case 20 -> parsedCityId = 729; // Саратов
+            case 21 -> parsedCityId = 738; // Тюмень
+            case 23 -> parsedCityId = 684; // Барнаул
+            case 24 -> parsedCityId = 3346; // Махачкала
+            case 25 -> parsedCityId = 695; // Ижевск
+            case 26 -> parsedCityId = 741; // Хабаровск
+            case 27 -> parsedCityId = 696; // Иркутск
+            case 28 -> parsedCityId = 688; // Владивосток
+            case 29 -> parsedCityId = 747; // Ярославль
+            case 30 -> parsedCityId = 914; // Севастополь
         }
         return parsedCityId;
     }

@@ -20,7 +20,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class FavouriteService {
+public class  FavouriteService {
     private final FavouriteRepository favouriteRepository;
     private final UserRepository userRepository;
 

@@ -29,6 +29,11 @@ public class VacancyService {
     }
 
     @Transactional
+    public Vacancy findBySource(String source) {
+        return vacancyRepository.findBySource(source).get();
+    }
+
+    @Transactional
     public Page<Vacancy> findVacancies(User user, PageRequest pageRequest) {
         return vacancyRepository.findByUser(user, pageRequest);
     }

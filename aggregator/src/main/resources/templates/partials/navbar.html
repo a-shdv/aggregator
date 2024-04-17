@@ -30,11 +30,11 @@
                         <a aria-current="page" class="nav-link active" th:href="@{/}">Главная</a>
                     </li>
                     <!--Вакансии-->
-                    <li sec:authorize="hasAuthority('USER')"  class="nav-item">
+                    <li class="nav-item" sec:authorize="hasAuthority('USER')">
                         <a aria-current="page" class="nav-link active" th:href="@{/vacancies}">Вакансии</a>
                     </li>
                     <!--Статистика-->
-                    <li sec:authorize="hasAuthority('ADMIN')"  class="nav-item">
+                    <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
                         <a aria-current="page" class="nav-link active" th:href="@{/statistics}">Статистика</a>
                     </li>
                     <!--О нас-->
@@ -79,7 +79,8 @@
                                 <li>
                                     <form class="dropdown-item navbar-text pe-3" th:action="@{/logout}"
                                           th:method="post">
-                                        <input style="background: none;	border: none; width: inherit; text-align: left" type="submit"
+                                        <input style="background: none;	border: none; width: inherit; text-align: left"
+                                               type="submit"
                                                value="Выйти"/>
                                     </form>
                                 </li>
