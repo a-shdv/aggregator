@@ -483,4 +483,3 @@ document.getElementById('year-select').addEventListener('change', (event) => {
     }, 500); // Adjust timing to match animation duration
 });
 //endregion
-

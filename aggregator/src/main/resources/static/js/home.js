@@ -379,3 +379,25 @@ $(() => {
         source: jobTitles // Use the array as the data source
     });
 });
+
+// Для статистики
+$(() => {
+    // Array of example job titles for autocomplete
+    let jobTitles = [
+        "Менеджер",
+        "Продавец",
+        "Оператор",
+        "Менеджер по продажам",
+        "Врач",
+        "Водитель",
+        "Инженер",
+        "Слесарь",
+        "Кассир",
+        "Консультант"
+
+    ];
+    // Initialize autocomplete on the title input field
+    $("#profession").autocomplete({
+        source: jobTitles // Use the array as the data source
+    });
+});
