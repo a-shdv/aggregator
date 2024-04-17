@@ -476,6 +476,7 @@ document.getElementById('year-select').addEventListener('change', (event) => {
     // Add fade-in animation class
     document.body.classList.add('fade-in');
     // Remove animation class after animation ends
+        updateCharts()
     setTimeout(() => {
         document.body.classList.remove('fade-in');
         // Update URL without reloading the page
