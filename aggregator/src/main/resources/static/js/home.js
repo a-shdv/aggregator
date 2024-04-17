@@ -6,14 +6,16 @@ const searchVacanciesButton = document.querySelector('#searchVacanciesButton')
 const spaceBefore = document.querySelector('#spaceBefore')
 const counter = document.querySelector('#counter')
 const spinner = document.querySelector('#spinner')
+const spinnerInner = document.querySelector('#spinner-inner')
 const waitParagraph = document.querySelector('#waitParagraph')
+// const progressbar = document.querySelector('#progressbar')
+// const progressbarLoader = document.querySelector('#progressbar-loader')
 const okButton = document.querySelector('#okButton')
 const spaceAfter = document.querySelector('#spaceAfter')
 
 let stompClient = null;
 let username = null;
 
-//region Websockets
 function connect(event) {
     event.preventDefault();
 
@@ -119,9 +121,42 @@ window.addEventListener('unload', disconnect);
 if (searchVacanciesButton != null) {
     searchVacanciesButton.addEventListener('click', connect)
 }
-//endregion
 
-//region Отправка формы "Статистика"
+// document.addEventListener("DOMContentLoaded", () => {
+//     // Получаем радиобоксы и формы
+//     // const vacancyRadio = document.getElementById("vac");
+//     // const statisticsRadio = document.getElementById("stat");
+//     // const vacancyForm = document.getElementById("vacancyForm");
+//     // const statisticsForm = document.getElementById("statisticsForm");
+//
+//     // Функция для скрытия формы вакансии и показа формы статистики
+//     // function showStatisticsForm() {
+//     //     vacancyForm.style.display = "none";
+//     //     statisticsForm.style.display = "";
+//     // }
+//
+//     // Функция для скрытия формы статистики и показа формы вакансии
+//     // function showVacancyForm() {
+//     //     // statisticsForm.style.display = "none";
+//     //     vacancyForm.style.display = "";
+//     // }
+//
+//     // Обработчики событий для радиобоксов
+//     // vacancyRadio.addEventListener("change", function () {
+//     //     if (vacancyRadio.checked) {
+//     //         showVacancyForm();
+//     //     }
+//     // });
+//
+//     // statisticsRadio.addEventListener("change", function () {
+//     //     if (statisticsRadio.checked) {
+//     //         showStatisticsForm();
+//     //     }
+//     // });
+//     // По умолчанию показываем форму вакансии
+//     showVacancyForm();
+// });
+
 const statisticsFormSubmit = document.getElementById('statisticsFormSubmit')
 if (statisticsFormSubmit != null) {
     statisticsFormSubmit.addEventListener('click', (event) => {
@@ -166,9 +201,7 @@ if (statisticsFormSubmit != null) {
         }, 2000);
     });
 }
-//endregion
 
-//region Фильтры для вакансий
 const toggleCollapseVacancies = document.getElementById("toggleCollapse")
 if (toggleCollapseVacancies != null) {
     toggleCollapseVacancies.addEventListener("click", function (e) {
@@ -180,20 +213,18 @@ if (toggleCollapseVacancies != null) {
                 document.getElementById('searchVacanciesButtonSpace').style.display = ''
                 section.style.maxHeight = "0";
                 section.style.opacity = "0";
-                this.innerText = "Show";
+                //this.innerText = "Show";
                 document.getElementById('search')
             } else {
                 document.getElementById('searchVacanciesButtonSpace').style.display = 'none'
                 section.style.maxHeight = "none";
                 section.style.opacity = "1";
-                this.innerText = "Hide";
+                //this.innerText = "Hide";
             }
         });
     });
 }
-//endregion
 
-//region Фильтры для статистики
 const toggleCollapseStatistics = document.getElementById('toggleCollapseStatistics')
 if (toggleCollapseStatistics != null) {
     toggleCollapseStatistics.addEventListener('click', (e) => {
@@ -215,4 +246,136 @@ if (toggleCollapseStatistics != null) {
         });
     })
 }
-//endregion
+
+/*Autocomplete*/
+$(() => {
+    // Array of example job titles for autocomplete
+    let jobTitles = [
+        "Учитель",
+        "Врач",
+        "Врач-терапевт",
+        "Врач-стоматолог",
+        "Врач-косметолог",
+        "Врач-педиатр",
+        "Врач-хирург",
+        "Врач-экспер",
+        "Врач узи",
+        "Врач терапевт",
+        "Врач рентгенолог",
+        "Аналитик",
+        "Аналитик бизнес-процессов",
+        "Аналитик продаж",
+        "Аналитик данных",
+        "Аналитик-маркетолог",
+        "Аналитик 1С",
+        "Аналитик SQL",
+        "Аналитик сми",
+        "Аналитик excel",
+        "Инженер",
+        "Инженер пто",
+        "Инженер-конструктор",
+        "Инженер-проектировщик",
+        "Инженер-технолог",
+        "Инженер по эксплуатации",
+        "Инженер-электрик",
+        "Инженер-механик",
+        "Инженер-энергетик",
+        "Инженер по охране труда",
+        "Программист",
+        "Программист 1С",
+        "Программист микроконтроллеров",
+        "Программист-стажер",
+        "Программист java",
+        "Программист c#",
+        "Программист c++",
+        "Программист php",
+        "Программист python",
+        "Медсестра",
+        "Администратор",
+        "Администратор салона красоты",
+        "Администратор гостиницы",
+        "Администратор клиники",
+        "Администратор магазина",
+        "Администратор ресторана",
+        "Менеджер",
+        "Менеджер по закупкам",
+        "Менеджер по продажам",
+        "Менеджер по туризму",
+        "Менеджер проекта",
+        "Менеджер по логистике",
+        "Менеджер ресторана",
+        "Менеджер интернет-магазина",
+        "Менеджер проектов",
+        "Продавец",
+        "Продавец-консультант",
+        "Продавец-кассир",
+        "Продавец одежды",
+        "Продавец продовольственных товаров",
+        "Бухгалтер",
+        "Адвокат",
+        "Маркетолог",
+        "Маркетолог-аналитик",
+        "Маркетолог-стажер",
+        "Рабочий",
+        "Рабочий на производство",
+        "Рабочий склада",
+        "Рабочий персонал",
+        "Дизайнер",
+        "Дизайнер-верстальщик",
+        "Дизайнер-консультант",
+        "Дизайнер интерьеров",
+        "Финансист",
+        "Финансист-экономист",
+        "Финансовый контролер",
+        "Шеф-повар",
+        "Психолог",
+        "Строитель",
+        "Архитектор",
+        "Массажист",
+        "Пожарный",
+        "Полицейский",
+        "Повар",
+        "Фотограф",
+        "Электрик",
+        "Механик",
+        "Логист",
+        "Пилот",
+        "Журналист",
+        "Фармацевт",
+        "Водитель",
+        "Водитель-экспедитор",
+        "Водитель-курьер",
+        "Водитель персональный",
+        "Водитель офисный",
+        "Водитель такси",
+        "Мастер по ремонту автомобилей",
+        "Монтажник",
+        "Официант",
+        "Педагог",
+        "Риелтор",
+        "Тренер",
+        "Тренер инструктор",
+        "Тренер по футболу",
+        "Тренер по плаванию",
+        "Тренер тренажерного зала",
+        "Графический дизайнер",
+        "Секретарь",
+        "Садовник",
+        "Пекарь",
+        "Техник",
+        "Разнорабочий",
+        "Кассир",
+        "Уборщик",
+        "Ветеринар",
+        "Маникюрша",
+        "Массажист",
+        "Бармен",
+        "Администратор отеля",
+        "Менеджер по персоналу",
+
+    ];
+    // Initialize autocomplete on the title input field
+    $("#title").autocomplete({
+        source: jobTitles // Use the array as the data source
+    });
+});

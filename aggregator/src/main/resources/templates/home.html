@@ -15,6 +15,17 @@
         border-color: #ffc107;
     }
 
+    .ui-autocomplete {
+        background-color: white; /* Set the background color to transparent */
+        color: black; /* Set the text color */
+    }
+
+    .ui-menu-item-wrapper.ui-state-active {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        color: black;
+    }
+
     .page-link {
         color: #ffc107
     }
@@ -294,5 +305,6 @@
 
 <div th:insert="~{/partials/footer :: footer}"></div>
 <script th:inline="javascript" th:src="@{/js/home.js}"></script>
+<!-- Include jQuery and jQuery UI -->
 </body>
 </html>
