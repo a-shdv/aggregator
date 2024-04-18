@@ -24,12 +24,14 @@ import java.util.concurrent.CompletableFuture;
 // 25 вакансий на одной странице
 public class HabrParserService {
 
-    @Value("${parsers.habr.num-of-pages}")
+    @Value("${parsers.habr.num-of-elements}")
     private Integer amount;
     private final RabbitMqSenderService rabbitMqSenderService;
 
     @Async
     public CompletableFuture<Void> findVacancies(ReceiveMessageDto receiveMessageDto) {
+        System.out.println("habr: " +Thread.currentThread().getName());
+
         String username = receiveMessageDto.getUsername();
         String query = receiveMessageDto.getTitle();
         BigDecimal salary = receiveMessageDto.getSalary();

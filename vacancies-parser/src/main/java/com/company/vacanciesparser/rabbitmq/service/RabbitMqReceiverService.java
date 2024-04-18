@@ -12,6 +12,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,10 +27,18 @@ public class RabbitMqReceiverService {
     @RabbitListener(queues = "${rabbitmq.queue-to-receive0}")
     public void receive(ReceiveMessageDto receiveMessageDto) {
         log.info("RECEIVED: {}", receiveMessageDto.toString());
+        System.out.println(Thread.currentThread().getName());
         if (receiveMessageDto.getUsername() != null) {
-            habrParserService.findVacancies(receiveMessageDto);
-            hhRuParserService.findVacancies(receiveMessageDto);
-            rabotaRuParserService.findVacancies(receiveMessageDto);
+            CompletableFuture<Void> habr = habrParserService.findVacancies(receiveMessageDto);
+            CompletableFuture<Void> hh = hhRuParserService.findVacancies(receiveMessageDto);
+            CompletableFuture<Void> rabota = rabotaRuParserService.findVacancies(receiveMessageDto);
+
+            habr.thenRun(() -> System.out.println("habr completed!"));
+            hh.thenRun(() -> System.out.println("hh completed!"));
+            rabota.thenRun(() -> System.out.println("rabota completed!"));
+
+            CompletableFuture<Void> allTasks = CompletableFuture.allOf(habr, hh, rabota);
+            allTasks.thenRun(() -> log.info("ALL TASKS COMPLETED SUCCESSFULLY"));
         }
     }
 

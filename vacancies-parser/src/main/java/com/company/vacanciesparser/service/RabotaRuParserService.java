@@ -23,12 +23,14 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 // 30 вакансий на одной странице
 public class RabotaRuParserService {
-    @Value("${parsers.rabota.num-of-pages}")
+    @Value("${parsers.rabota.num-of-elements}")
     private Integer amount;
     private final RabbitMqSenderService rabbitMqSenderService;
 
     @Async
     public CompletableFuture<Void> findVacancies(ReceiveMessageDto receiveMessageDto) {
+        System.out.println("rabota: " + Thread.currentThread().getName());
+
         String username = receiveMessageDto.getUsername();
         String query = receiveMessageDto.getTitle();
         BigDecimal salary = receiveMessageDto.getSalary();

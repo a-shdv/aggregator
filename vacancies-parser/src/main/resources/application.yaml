@@ -17,8 +17,8 @@ rabbitmq:
 
 parsers:
   habr:
-    num-of-pages: 25
+    num-of-elements: 25
   hh:
-    num-of-pages: 50
+    num-of-elements: 50
   rabota:
-    num-of-pages: 30
+    num-of-elements: 30
