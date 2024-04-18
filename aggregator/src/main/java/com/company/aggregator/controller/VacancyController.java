@@ -1,10 +1,13 @@
 package com.company.aggregator.controller;
 
-import com.company.aggregator.exception.VacancyNotFoundException;
+import com.company.aggregator.entity.Request;
 import com.company.aggregator.entity.User;
 import com.company.aggregator.entity.Vacancy;
+import com.company.aggregator.exception.VacancyNotFoundException;
 import com.company.aggregator.rabbitmq.dto.CancelParsingDto;
+import com.company.aggregator.rabbitmq.dto.vacancies.SendMessageDto;
 import com.company.aggregator.rabbitmq.service.RabbitMqService;
+import com.company.aggregator.service.RequestService;
 import com.company.aggregator.service.UserService;
 import com.company.aggregator.service.VacancyService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,7 @@ public class VacancyController {
     private final RabbitMqService rabbitMqService;
     private final RestTemplate restTemplate;
     private final UserService userService;
+    private final RequestService requestService;
     @Value("${constants.vacancies-heartbeat-url}")
     private String vacanciesHeartbeatUrl;
     private boolean isVacanciesParserAvailable;
@@ -81,6 +85,28 @@ public class VacancyController {
         CancelParsingDto cancelParsingDto = CancelParsingDto.builder().isParsingCancelled(true).build();
         rabbitMqService.sendToVacanciesParserCancel(cancelParsingDto);
         return "/home";
+    }
+
+    @PostMapping("/search-next")
+    public ResponseEntity<?> searchNext(@AuthenticationPrincipal User user) {
+        Request request = requestService.findByUser(user);
+        Integer numOfRequests = request.getNumOfRequests();
+        numOfRequests = numOfRequests + 1;
+        request.setNumOfRequests(numOfRequests);
+        requestService.save(request);
+
+        rabbitMqService.sendToVacanciesParser(SendMessageDto.builder()
+                .username(request.getUser().getUsername())
+                .title(request.getTitle())
+                .salary(request.getSalary())
+                .onlyWithSalary(request.getOnlyWithSalary())
+                .experience(request.getExperience())
+                .cityId(request.getCityId())
+                .isRemoteAvailable(request.getIsRemoteAvailable())
+                .numOfRequests(numOfRequests)
+                .build());
+
+        return ResponseEntity.ok().body("ok");
     }
 
     @Scheduled(initialDelay = 2_000, fixedDelay = 10_000)

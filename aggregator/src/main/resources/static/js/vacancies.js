@@ -102,3 +102,18 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = url;
     });
 });
+
+const searchNextForm = document.querySelector('#searchNextForm')
+searchNextForm.addEventListener('submit', (event) => {
+    event.preventDefault()
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/vacancies/search-next", true);
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            console.log(xhr.responseText);
+        }
+    };
+    xhr.send();
+
+})

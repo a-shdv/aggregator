@@ -49,6 +49,10 @@ public class User implements UserDetails {
     @JoinColumn(name = "avatar_id", referencedColumnName = "id")
     private Image avatar;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "request_id", referencedColumnName = "id")
+    private Request request;
+
     private int numOfRequests;
 
     @Override

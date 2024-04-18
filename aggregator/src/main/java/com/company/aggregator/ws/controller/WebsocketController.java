@@ -1,15 +1,13 @@
 package com.company.aggregator.ws.controller;
 
+import com.company.aggregator.dto.RequestDto;
 import com.company.aggregator.dto.VacancyDto;
 import com.company.aggregator.exception.FavouritesIsEmptyException;
 import com.company.aggregator.entity.Favourite;
 import com.company.aggregator.entity.User;
 import com.company.aggregator.rabbitmq.dto.vacancies.SendMessageDto;
 import com.company.aggregator.rabbitmq.service.RabbitMqService;
-import com.company.aggregator.service.EmailSenderService;
-import com.company.aggregator.service.FavouriteService;
-import com.company.aggregator.service.PdfGeneratorService;
-import com.company.aggregator.service.UserService;
+import com.company.aggregator.service.*;
 import com.company.aggregator.ws.dto.WebSocketReceiveMessageDto;
 import com.company.aggregator.ws.dto.WebSocketSendMessageDto;
 import jakarta.mail.MessagingException;
@@ -37,6 +35,7 @@ public class WebsocketController {
     private final EmailSenderService emailSenderService;
     private final UserService userService;
     private final SimpMessageSendingOperations messageSendingOperations;
+    private final RequestService requestService;
 
 
     //registry.setApplicationDestinationPrefixes("/app")
@@ -45,6 +44,8 @@ public class WebsocketController {
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
     public VacancyDto receiveMessageFromWs(@RequestBody VacancyDto vacancyDto) {
+        User user = userService.findUserByUsername(vacancyDto.getUsername());
+
         rabbitMqService.sendToVacanciesParser(SendMessageDto.builder()
                 .username(vacancyDto.getUsername())
                 .title(vacancyDto.getTitle())
@@ -53,8 +54,20 @@ public class WebsocketController {
                 .experience(vacancyDto.getExperience())
                 .cityId(vacancyDto.getCityId())
                 .isRemoteAvailable(vacancyDto.getIsRemoteAvailable())
-                .numOfRequests(vacancyDto.getNumOfRequests())
+                .numOfRequests(0)
                 .build());
+
+        requestService.save(new RequestDto(
+                vacancyDto.getUsername(),
+                vacancyDto.getTitle(),
+                vacancyDto.getSalary(),
+                vacancyDto.getOnlyWithSalary(),
+                vacancyDto.getExperience(),
+                vacancyDto.getCityId(),
+                vacancyDto.getIsRemoteAvailable(),
+                0
+                ));
+
         return vacancyDto;
     }
 
