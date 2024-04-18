@@ -14,3 +14,11 @@ rabbitmq:
   routing-key-to-send: jh-routing-key-to-aggregator-vacancies
   routing-key-to-receive0: jh-routing-key-to-vacancies
   routing-key-to-receive1: jh-routing-key-to-vacancies-cancel
+
+parsers:
+  habr:
+    num-of-pages: 25
+  hh:
+    num-of-pages: 50
+  rabota:
+    num-of-pages: 30
