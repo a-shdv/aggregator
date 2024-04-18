@@ -24,7 +24,7 @@ import java.util.concurrent.CompletableFuture;
 // 25 вакансий на одной странице
 public class HabrParserService {
 
-    @Value("${parsers.habr.num-of-elements}")
+    @Value("${websites.habr.num-of-elements-per-page}")
     private Integer amount;
     private final RabbitMqSenderService rabbitMqSenderService;
 

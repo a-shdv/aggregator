@@ -15,10 +15,13 @@ rabbitmq:
   routing-key-to-receive0: jh-routing-key-to-vacancies
   routing-key-to-receive1: jh-routing-key-to-vacancies-cancel
 
-parsers:
+websites:
   habr:
-    num-of-elements: 25
+#    num-of-elements: 25
+    num-of-elements-per-page: 25
   hh:
-    num-of-elements: 50
+#    num-of-elements: 50
+    num-of-elements-per-page: 50
   rabota:
-    num-of-elements: 30
+#    num-of-elements: 30
+    num-of-elements-per-page: 30

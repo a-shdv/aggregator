@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 // 30 вакансий на одной странице
 public class RabotaRuParserService {
-    @Value("${parsers.rabota.num-of-elements}")
+    @Value("${websites.rabota.num-of-elements-per-page}")
     private Integer amount;
     private final RabbitMqSenderService rabbitMqSenderService;
 

@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 // 50 вакансий на одной странице
 public class HhRuParserService {
-    @Value("${parsers.hh.num-of-elements}")
+    @Value("${websites.hh.num-of-elements-per-page}")
     private Integer amount;
     private final RabbitMqSenderService rabbitMqSenderService;
 
