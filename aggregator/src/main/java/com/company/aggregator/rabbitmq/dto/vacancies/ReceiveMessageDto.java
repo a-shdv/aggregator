@@ -59,18 +59,18 @@ public class ReceiveMessageDto implements Serializable {
         return vacancies;
     }
 
-    @Override
-    public String toString() {
-        return "\nReceiveMessageDto {" +
-                "\n\ttitle='" + title + '\'' +
-                ", \n\tdate='" + date + '\'' +
-                ", \n\tsalary='" + salary + '\'' +
-                ", \n\tcompany='" + company + '\'' +
-                ", \n\trequirements='" + requirements + '\'' +
-                ", \n\tdescription='" + description + '\'' +
-                ", \n\tschedule='" + schedule + '\'' +
-                ", \n\tsource='" + source + "\'" +
-                " \n\tlogo='" + logo + "\'" + "\n" +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "\nReceiveMessageDto {" +
+//                "\n\ttitle='" + title + '\'' +
+//                ", \n\tdate='" + date + '\'' +
+//                ", \n\tsalary='" + salary + '\'' +
+//                ", \n\tcompany='" + company + '\'' +
+//                ", \n\trequirements='" + requirements + '\'' +
+//                ", \n\tdescription='" + description + '\'' +
+//                ", \n\tschedule='" + schedule + '\'' +
+//                ", \n\tsource='" + source + "\'" +
+//                " \n\tlogo='" + logo + "\'" + "\n" +
+//                '}';
+//    }
 }
