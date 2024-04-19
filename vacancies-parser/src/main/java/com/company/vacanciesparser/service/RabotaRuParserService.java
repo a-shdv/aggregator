@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -67,9 +66,9 @@ public class RabotaRuParserService {
             List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
             while (currPage <= amount / elements.size()) {
-
-                CompletableFuture<?> firstHalfOfPage = CompletableFuture.runAsync(() -> {
-                    for (int i = 0; i < elements.size() / 2; i++) {
+                int tenElements = elements.size() / 3;
+                CompletableFuture<?> firstThirdOfPage = CompletableFuture.runAsync(() -> {
+                    for (int i = 0; i < tenElements; i++) {
                         String source = elements.get(i).getElementsByAttribute("href").first().absUrl("href");
                         String title = elements.get(i).getElementsByClass("vacancy-preview-card__title").first().text();
                         String date = parseUpdatedDate(source).toString();
@@ -100,8 +99,8 @@ public class RabotaRuParserService {
                     sendMessageDtoList.clear();
                 });
 
-                CompletableFuture<?> secondHalfOfPage = CompletableFuture.runAsync(() -> {
-                    for (int i =  elements.size() / 2; i < elements.size(); i++) {
+                CompletableFuture<?> secondThirdOfPage = CompletableFuture.runAsync(() -> {
+                    for (int i = tenElements; i < tenElements + tenElements; i++) {
                         String source = elements.get(i).getElementsByAttribute("href").first().absUrl("href");
                         String title = elements.get(i).getElementsByClass("vacancy-preview-card__title").first().text();
                         String date = parseUpdatedDate(source).toString();
@@ -132,7 +131,39 @@ public class RabotaRuParserService {
                     sendMessageDtoList.clear();
                 });
 
-                CompletableFuture.allOf(firstHalfOfPage, secondHalfOfPage).join();
+                CompletableFuture<?> thirdThirdOfPage = CompletableFuture.runAsync(() -> {
+                    for (int i = tenElements + tenElements; i < elements.size(); i++) {
+                        String source = elements.get(i).getElementsByAttribute("href").first().absUrl("href");
+                        String title = elements.get(i).getElementsByClass("vacancy-preview-card__title").first().text();
+                        String date = parseUpdatedDate(source).toString();
+                        String vacancySalary = elements.get(i).getElementsByClass("vacancy-preview-card__salary").first().text();
+                        String requirements = "Нет поддержки ключевых слов для rabota.ru.";
+                        String company = elements.get(i).getElementsByClass("vacancy-preview-card__company-name").first().text();
+                        String description = elements.get(i).getElementsByClass("vacancy-preview-card__short-description").first().text();
+                        String schedule = elements.get(i).getElementsByClass("vacancy-preview-location__address-text").first() != null ? elements.get(i).getElementsByClass("vacancy-preview-location__address-text").first().text() : "";
+                        String logo = elements.get(i).getElementsByClass("r-image__image").first() != null ? elements.get(i).getElementsByClass("r-image__image").first().absUrl("src") : null;
+
+                        SendMessageDto dto = SendMessageDto.builder()
+                                .username(username)
+                                .title(title)
+                                .date(date)
+                                .salary(vacancySalary)
+                                .company(company)
+                                .requirements(requirements)
+                                .description(description)
+                                .schedule(schedule)
+                                .source(source)
+                                .logo(logo)
+                                .build();
+
+                        sendMessageDtoList.add(dto);
+                    }
+                }).thenRun(() -> {
+                    rabbitMqSenderService.send(sendMessageDtoList);
+                    sendMessageDtoList.clear();
+                });
+
+                CompletableFuture.allOf(firstThirdOfPage, secondThirdOfPage, thirdThirdOfPage).join();
 
                 prevPage = currPage;
                 currPage++;

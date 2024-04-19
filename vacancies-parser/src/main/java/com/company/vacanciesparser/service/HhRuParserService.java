@@ -77,9 +77,9 @@ public class HhRuParserService {
             final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
             while (currentPage < amount / elements.size()) {
-
-                CompletableFuture<?> firstHalfOfPage = CompletableFuture.runAsync(() -> {
-                    for (int i = 0; i < elements.size() / 2; i++) {
+                int sixteenElements = elements.size() / 3;
+                CompletableFuture<?> firstThirdOfPage = CompletableFuture.runAsync(() -> {
+                    for (int i = 0; i < sixteenElements; i++) {
                         String vacancyUrl = elements.get(i).getElementsByClass("bloko-link").first().absUrl("href");
                         SendMessageDto sendMessageDto = parseVacancyWebPage(username, vacancyUrl);
                         sendMessageDtoList.add(sendMessageDto);
@@ -89,8 +89,8 @@ public class HhRuParserService {
                     sendMessageDtoList.clear();
                 });
 
-                CompletableFuture<?> secondHalfOfPage = CompletableFuture.runAsync(() -> {
-                    for (int i = elements.size() / 2; i < elements.size(); i++) {
+                CompletableFuture<?> secondThirdOfPage = CompletableFuture.runAsync(() -> {
+                    for (int i = sixteenElements; i < sixteenElements + sixteenElements; i++) {
                         String vacancyUrl = elements.get(i).getElementsByClass("bloko-link").first().absUrl("href");
                         SendMessageDto sendMessageDto = parseVacancyWebPage(username, vacancyUrl);
                         sendMessageDtoList.add(sendMessageDto);
@@ -100,7 +100,18 @@ public class HhRuParserService {
                     sendMessageDtoList.clear();
                 });
 
-                CompletableFuture.allOf(firstHalfOfPage, secondHalfOfPage).join();
+                CompletableFuture<?> thirdThirdOfPage = CompletableFuture.runAsync(() -> {
+                    for (int i = sixteenElements + sixteenElements; i < elements.size(); i++) {
+                        String vacancyUrl = elements.get(i).getElementsByClass("bloko-link").first().absUrl("href");
+                        SendMessageDto sendMessageDto = parseVacancyWebPage(username, vacancyUrl);
+                        sendMessageDtoList.add(sendMessageDto);
+                    }
+                }).thenRun(() -> {
+                    rabbitMqSenderService.send(sendMessageDtoList);
+                    sendMessageDtoList.clear();
+                });
+
+                CompletableFuture.allOf(firstThirdOfPage, secondThirdOfPage, thirdThirdOfPage).join();
 
                 previousPage = currentPage;
                 currentPage++;
