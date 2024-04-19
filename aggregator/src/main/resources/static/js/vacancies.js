@@ -104,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const searchNextForm = document.querySelector('#searchNextForm')
+const alertRequest = document.querySelector("#alertRequestSent")
 searchNextForm.addEventListener('submit', (event) => {
     event.preventDefault()
 
@@ -115,5 +116,8 @@ searchNextForm.addEventListener('submit', (event) => {
         }
     };
     xhr.send();
-
+    alertRequest.style.display = ''
+    setTimeout(() => {
+        alertRequest.style.display = 'none'
+    }, 1000);
 })

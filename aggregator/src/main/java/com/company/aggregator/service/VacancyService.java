@@ -30,7 +30,7 @@ public class VacancyService {
 
     @Transactional
     public Vacancy findBySource(String source) {
-        return vacancyRepository.findBySource(source).get();
+        return vacancyRepository.findBySource(source).orElse(null);
     }
 
     @Transactional

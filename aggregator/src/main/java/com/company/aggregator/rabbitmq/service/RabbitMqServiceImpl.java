@@ -37,7 +37,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     public void receiveVacanciesParser(List<com.company.aggregator.rabbitmq.dto.vacancies.ReceiveMessageDto> receiveMessageDtoList) {
         log.info("RECEIVED: {}", receiveMessageDtoList);
         User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername());
-//        receiveMessageDtoList.removeIf(dto -> vacancyService.findBySource(dto.getSource()) != null);
+        receiveMessageDtoList.removeIf(dto -> vacancyService.findBySource(dto.getSource()) != null);
         if (!receiveMessageDtoList.isEmpty()) {
             vacancyService.saveMessageList(receiveMessageDtoList, user);
         }

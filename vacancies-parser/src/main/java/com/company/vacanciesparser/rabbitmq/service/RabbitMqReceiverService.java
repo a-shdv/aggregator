@@ -38,7 +38,8 @@ public class RabbitMqReceiverService {
             rabota.thenRun(() -> System.out.println("rabota completed!"));
 
             CompletableFuture<Void> allTasks = CompletableFuture.allOf(habr, hh, rabota);
-            allTasks.thenRun(() -> log.info("ALL TASKS COMPLETED SUCCESSFULLY"));
+            allTasks.thenRun(() -> System.out.println("ALL TASKS COMPLETED SUCCESSFULLY"));
+            System.out.println("-----------------------------------------");
         }
     }
 

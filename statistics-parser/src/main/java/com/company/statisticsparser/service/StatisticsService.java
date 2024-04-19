@@ -45,7 +45,7 @@ public class StatisticsService {
         };
     }
 
-    @Async
+    @Async("asyncExecutor")
     public CompletableFuture<Void> findStatistics(ReceiveMessageDto receiveMessageDto) {
         StringBuilder url = new StringBuilder("https://gorodrabot.ru/salary");
 

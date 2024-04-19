@@ -28,7 +28,7 @@ public class HabrParserService {
     private Integer amount;
     private final RabbitMqSenderService rabbitMqSenderService;
 
-    @Async
+    @Async("asyncExecutor")
     public CompletableFuture<Void> findVacancies(ReceiveMessageDto receiveMessageDto) {
         System.out.println("habr: " +Thread.currentThread().getName());
 

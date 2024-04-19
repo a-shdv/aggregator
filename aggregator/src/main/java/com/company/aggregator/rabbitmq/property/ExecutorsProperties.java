@@ -10,5 +10,5 @@ public class ExecutorsProperties {
     /**
      * количество пула потоков для основного планировщика
      */
-    private Integer corePoolSize = Runtime.getRuntime().availableProcessors() / Runtime.getRuntime().availableProcessors();
+    private Integer corePoolSize = Runtime.getRuntime().availableProcessors();
 }

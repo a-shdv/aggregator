@@ -27,7 +27,7 @@ public class HhRuParserService {
     private Integer amount;
     private final RabbitMqSenderService rabbitMqSenderService;
 
-    @Async
+    @Async("asyncExecutor")
     public CompletableFuture<Void> findVacancies(ReceiveMessageDto receiveMessageDto) {
         System.out.println("hh: " + Thread.currentThread().getName());
 
