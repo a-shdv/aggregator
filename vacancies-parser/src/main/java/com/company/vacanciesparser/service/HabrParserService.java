@@ -58,38 +58,77 @@ public class HabrParserService {
         }
 
         Document doc = connectDocumentToUrl(url.toString());
-        Elements elements = null;
+        Elements elements;
         if (doc != null) {
             elements = doc
                     .getElementsByClass("section-group section-group--gap-medium").last()
                     .getElementsByClass("section-box");
+        } else {
+            elements = null;
         }
 
         if (elements != null && !elements.isEmpty()) {
             List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
             while (currentPage <= amount / elements.size()) {
-                for (int i = 0; i < elements.size(); i++) {
-                    String vacancyUrl = elements
-                            .get(i)
-                            .getElementsByClass("vacancy-card__title-link").first()
-                            .absUrl("href");
 
-                    SendMessageDto sendMessageDto = SendMessageDto.builder()
-                            .username(username)
-                            .title(elements.get(i).getElementsByClass("vacancy-card__title").text())
-                            .date(elements.get(i).getElementsByClass("vacancy-card__date").text())
-                            .salary(elements.get(i).getElementsByClass("vacancy-card__salary").text())
-                            .company(elements.get(i).getElementsByClass("vacancy-card__company-title").text())
-                            .requirements(elements.get(i).getElementsByClass("vacancy-card__skills").first().text())
-                            .schedule(elements.get(i).getElementsByClass("vacancy-card__meta").text())
-                            .description(parseWebPageDescription(vacancyUrl))
-                            .source(vacancyUrl)
-                            .logo(doc.getElementsByClass("vacancy-card__icon").get(i) != null ? doc.getElementsByClass("vacancy-card__icon").get(i).absUrl("src") : null)
-                            .build();
+                CompletableFuture<?> firstHalfOfPage = CompletableFuture.runAsync(() -> {
+                    for (int i = 0; i < elements.size() / 2; i++) {
+                        String vacancyUrl = elements
+                                .get(i)
+                                .getElementsByClass("vacancy-card__title-link").first()
+                                .absUrl("href");
 
-                    sendMessageDtoList.add(sendMessageDto);
-                }
+                        SendMessageDto sendMessageDto = SendMessageDto.builder()
+                                .username(username)
+                                .title(elements.get(i).getElementsByClass("vacancy-card__title").text())
+                                .date(elements.get(i).getElementsByClass("vacancy-card__date").text())
+                                .salary(elements.get(i).getElementsByClass("vacancy-card__salary").text())
+                                .company(elements.get(i).getElementsByClass("vacancy-card__company-title").text())
+                                .requirements(elements.get(i).getElementsByClass("vacancy-card__skills").first().text())
+                                .schedule(elements.get(i).getElementsByClass("vacancy-card__meta").text())
+                                .description(parseWebPageDescription(vacancyUrl))
+                                .source(vacancyUrl)
+                                .logo(doc.getElementsByClass("vacancy-card__icon").get(i) != null ? doc.getElementsByClass("vacancy-card__icon").get(i).absUrl("src") : null)
+                                .build();
+
+                        sendMessageDtoList.add(sendMessageDto);
+                    }
+                }).thenRun(() -> {
+                    rabbitMqSenderService.send(sendMessageDtoList);
+                    sendMessageDtoList.clear();
+                });
+
+                CompletableFuture<?> secondsHalfOfPage = CompletableFuture.runAsync(() -> {
+                    for (int i = elements.size() / 2; i < elements.size(); i++) {
+                        String vacancyUrl = elements
+                                .get(i)
+                                .getElementsByClass("vacancy-card__title-link").first()
+                                .absUrl("href");
+
+                        SendMessageDto sendMessageDto = SendMessageDto.builder()
+                                .username(username)
+                                .title(elements.get(i).getElementsByClass("vacancy-card__title").text())
+                                .date(elements.get(i).getElementsByClass("vacancy-card__date").text())
+                                .salary(elements.get(i).getElementsByClass("vacancy-card__salary").text())
+                                .company(elements.get(i).getElementsByClass("vacancy-card__company-title").text())
+                                .requirements(elements.get(i).getElementsByClass("vacancy-card__skills").first().text())
+                                .schedule(elements.get(i).getElementsByClass("vacancy-card__meta").text())
+                                .description(parseWebPageDescription(vacancyUrl))
+                                .source(vacancyUrl)
+                                .logo(doc.getElementsByClass("vacancy-card__icon").get(i) != null ? doc.getElementsByClass("vacancy-card__icon").get(i).absUrl("src") : null)
+                                .build();
+
+                        sendMessageDtoList.add(sendMessageDto);
+                    }
+                }).thenRun(() -> {
+                    rabbitMqSenderService.send(sendMessageDtoList);
+                    sendMessageDtoList.clear();
+                });
+
+                CompletableFuture.allOf(firstHalfOfPage, secondsHalfOfPage).join();
+
+
 
                 previousPage = currentPage;
                 currentPage++;
@@ -100,10 +139,10 @@ public class HabrParserService {
                         "?page=" + currentPage
                 );
 
-                if (sendMessageDtoList.size() == elements.size()) {
-                    rabbitMqSenderService.send(sendMessageDtoList);
-                    sendMessageDtoList.clear();
-                }
+//                if (sendMessageDtoList.size() == elements.size()) {
+//                    rabbitMqSenderService.send(sendMessageDtoList);
+//                    sendMessageDtoList.clear();
+//                }
 
             }
 

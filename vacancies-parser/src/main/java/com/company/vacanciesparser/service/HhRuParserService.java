@@ -62,24 +62,45 @@ public class HhRuParserService {
                 "&customDomain=1");
 
         Document doc = connectDocumentToUrl(url.toString());
-        Elements elements = null;
+        Elements elements;
         if (doc != null) {
             elements = doc
                     .getElementsByClass("vacancy-serp-content").first() != null ?
                     doc
                             .getElementsByClass("vacancy-serp-content").first()
                             .getElementsByClass("serp-item") : null;
+        } else {
+            elements = null;
         }
 
         if (elements != null && !elements.isEmpty()) {
             final List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
             while (currentPage < amount / elements.size()) {
-                elements.forEach(element -> {
-                    String vacancyUrl = element.getElementsByClass("bloko-link").first().absUrl("href");
-                    SendMessageDto sendMessageDto = parseVacancyWebPage(username, vacancyUrl);
-                    sendMessageDtoList.add(sendMessageDto);
+
+                CompletableFuture<?> firstHalfOfPage = CompletableFuture.runAsync(() -> {
+                    for (int i = 0; i < elements.size() / 2; i++) {
+                        String vacancyUrl = elements.get(i).getElementsByClass("bloko-link").first().absUrl("href");
+                        SendMessageDto sendMessageDto = parseVacancyWebPage(username, vacancyUrl);
+                        sendMessageDtoList.add(sendMessageDto);
+                    }
+                }).thenRun(() -> {
+                    rabbitMqSenderService.send(sendMessageDtoList);
+                    sendMessageDtoList.clear();
                 });
+
+                CompletableFuture<?> secondHalfOfPage = CompletableFuture.runAsync(() -> {
+                    for (int i = elements.size() / 2; i < elements.size(); i++) {
+                        String vacancyUrl = elements.get(i).getElementsByClass("bloko-link").first().absUrl("href");
+                        SendMessageDto sendMessageDto = parseVacancyWebPage(username, vacancyUrl);
+                        sendMessageDtoList.add(sendMessageDto);
+                    }
+                }).thenRun(() -> {
+                    rabbitMqSenderService.send(sendMessageDtoList);
+                    sendMessageDtoList.clear();
+                });
+
+                CompletableFuture.allOf(firstHalfOfPage, secondHalfOfPage).join();
 
                 previousPage = currentPage;
                 currentPage++;
@@ -89,10 +110,10 @@ public class HhRuParserService {
                         "&page=" + currentPage
                 );
 
-                if (sendMessageDtoList.size() == elements.size()) {
-                    rabbitMqSenderService.send(sendMessageDtoList);
-                    sendMessageDtoList.clear();
-                }
+//                if (sendMessageDtoList.size() == elements.size()) {
+//                    rabbitMqSenderService.send(sendMessageDtoList);
+//                    sendMessageDtoList.clear();
+//                }
             }
             // Отправка оставшихся сообщений, если в списке осталось < elements.size() сообщений после парсинга
             if (!sendMessageDtoList.isEmpty()) {
