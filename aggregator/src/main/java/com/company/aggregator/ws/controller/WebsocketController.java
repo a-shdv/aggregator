@@ -36,6 +36,7 @@ public class WebsocketController {
     private final UserService userService;
     private final SimpMessageSendingOperations messageSendingOperations;
     private final RequestService requestService;
+    private final VacancyService vacancyService;
 
 
     //registry.setApplicationDestinationPrefixes("/app")
@@ -45,6 +46,7 @@ public class WebsocketController {
     @SendTo("/topic/public")
     public VacancyDto receiveMessageFromWs(@RequestBody VacancyDto vacancyDto) {
         User user = userService.findUserByUsername(vacancyDto.getUsername());
+        vacancyService.deleteVacanciesByUser(user);
 
         rabbitMqService.sendToVacanciesParser(SendMessageDto.builder()
                 .username(vacancyDto.getUsername())

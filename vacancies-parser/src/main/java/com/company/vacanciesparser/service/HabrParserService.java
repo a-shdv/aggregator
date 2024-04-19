@@ -69,7 +69,6 @@ public class HabrParserService {
             List<SendMessageDto> sendMessageDtoList = new ArrayList<>();
 
             while (currentPage <= amount / elements.size()) {
-
                 for (int i = 0; i < elements.size(); i++) {
                     String vacancyUrl = elements
                             .get(i)

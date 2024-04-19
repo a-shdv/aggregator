@@ -60,10 +60,10 @@ public class RabbitMqServiceImpl implements RabbitMqService {
 
     @Override
     public void sendToVacanciesParser(com.company.aggregator.rabbitmq.dto.vacancies.SendMessageDto sendMessageDto) {
-        User user = userService.findUserByUsername(sendMessageDto.getUsername());
-        user.incrementNumOfRequests();
-        sendMessageDto.setNumOfRequests(user.getNumOfRequests());
-        userService.saveUser(user);
+//        User user = userService.findUserByUsername(sendMessageDto.getUsername());
+//        user.incrementNumOfRequests();
+//        sendMessageDto.setNumOfRequests(user.getNumOfRequests());
+//        userService.saveUser(user);
         rabbitTemplate.convertAndSend(rabbitProperties.getRoutingKeyToSend0(), sendMessageDto);
         progressbarLoaderCounter = 0;
         messageSendingOperations.convertAndSend("/topic/public", WebSocketSendMessageDto.builder().content(String.valueOf(progressbarLoaderCounter)).type("RECEIVE").build());
