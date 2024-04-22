@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface FavouriteRepository extends JpaRepository<Favourite, Long> {
-    List<Favourite> findListByUser(User user);
+    List<Favourite> findByUser(User user);
 
-    Page<Favourite> findListByUser(User user, PageRequest pageRequest);
+    Page<Favourite> findByUser(User user, PageRequest pageRequest);
 
     Favourite findByUserAndSource(User user, String source);
 }

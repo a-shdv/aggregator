@@ -18,7 +18,7 @@ public class StatisticsService {
 
     @Transactional
     public void deleteStatistics(User user) {
-        Statistics statistics = statisticsRepository.findStatisticsByUsername(user.getUsername());
+        Statistics statistics = statisticsRepository.findByUsername(user.getUsername());
         if (statistics != null) {
             user.setStatistics(null);
             userRepository.save(user);
@@ -37,14 +37,14 @@ public class StatisticsService {
 
     @Transactional
     public Statistics findStatisticsByUsername(String username) {
-        return statisticsRepository.findStatisticsByUsername(username);
+        return statisticsRepository.findByUsername(username);
     }
 
     @Transactional
     public void deleteStatistics(StatisticsDto statisticsDto) {
         User user = userRepository.findUserByUsername(statisticsDto.getUsername());
         if (user.getStatistics() != null) {
-            Statistics statistics = statisticsRepository.findStatisticsByUsername(user.getUsername());
+            Statistics statistics = statisticsRepository.findByUsername(user.getUsername());
             statisticsRepository.delete(statistics);
             user.setStatistics(null);
             userRepository.save(user);
