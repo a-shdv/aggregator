@@ -26,24 +26,16 @@ public class  FavouriteService {
 
     @Transactional
     public Page<Favourite> findFavourites(User user, PageRequest pageRequest) {
-        return favouriteRepository.findByUser(user, pageRequest);
+        return favouriteRepository.findByUser(user, pageRequest).get();
     }
 
     @Transactional
     public void addToFavourites(User user, Favourite favourite) throws FavouriteAlreadyExistsException {
-        if (favouriteRepository.findByUserAndSource(user, favourite.getSource()) != null) {
+        if (favouriteRepository.findByUserAndSource(user, favourite.getSource()).isPresent()) {
             throw new FavouriteAlreadyExistsException("Вакансия уже существует в избранном " + favourite.getSource());
         }
         favourite.setUser(user);
         favouriteRepository.save(favourite);
-    }
-
-    @Transactional
-    public void deleteFavourites(User user) {
-        List<Favourite> favourites = favouriteRepository.findByUser(user);
-        favourites.clear();
-        user.setFavourites(favourites);
-        userRepository.save(user);
     }
 
     @Transactional
@@ -52,7 +44,7 @@ public class  FavouriteService {
         if (favourite.isEmpty()) {
             throw new FavouriteNotFoundException("Вакансия не найдена!");
         }
-        List<Favourite> favourites = favouriteRepository.findByUser(user);
+        List<Favourite> favourites = favouriteRepository.findByUser(user).get();
         favourites.remove(favourite.get());
         user.setFavourites(favourites);
         userRepository.save(user);
@@ -60,11 +52,15 @@ public class  FavouriteService {
     }
 
     @Transactional
+    public void deleteFavourites(User user) {
+        List<Favourite> favourites = favouriteRepository.findByUser(user).get();
+        favourites.clear();
+        user.setFavourites(favourites);
+        userRepository.save(user);
+    }
+
+    @Transactional
     public List<Favourite> findByUser(User user) throws FavouritesIsEmptyException {
-        List<Favourite> favourites = favouriteRepository.findByUser(user);
-        if (favourites.isEmpty()) {
-            throw new FavouritesIsEmptyException("Список избранных вакансий пуст!");
-        }
-        return favourites;
+        return favouriteRepository.findByUser(user).orElseThrow( () -> new FavouritesIsEmptyException("Список избранных вакансий пуст!"));
     }
 }

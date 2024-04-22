@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface VacancyRepository extends JpaRepository<Vacancy, Long> {
     Optional<Vacancy> findBySource(String source);
 
-    Page<Vacancy> findByUser(User user, PageRequest pageRequest);
+    Optional<Page<Vacancy>> findByUser(User user, PageRequest pageRequest);
 
-    List<Vacancy> findByUser(User user);
+    Optional<List<Vacancy>> findByUser(User user);
 }

@@ -35,12 +35,12 @@ public class VacancyService {
 
     @Transactional
     public Page<Vacancy> findVacancies(User user, PageRequest pageRequest) {
-        return vacancyRepository.findByUser(user, pageRequest);
+        return vacancyRepository.findByUser(user, pageRequest).get();
     }
 
     @Transactional
     public void deleteVacanciesByUser(User user) {
-        List<Vacancy> vacancies = vacancyRepository.findByUser(user);
+        List<Vacancy> vacancies = vacancyRepository.findByUser(user).get();
         vacancies.clear();
         user.setVacancies(vacancies);
         userRepository.save(user);

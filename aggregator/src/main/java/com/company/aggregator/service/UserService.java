@@ -40,7 +40,7 @@ public class UserService implements UserDetailsService {
 
     @PostConstruct
     private void saveAdmin() {
-        if (loadUserByUsername(adminUsername) == null) {
+        if (userRepository.findByUsername(adminUsername).isEmpty()) {
             User admin = User.builder()
                     .email(adminEmail)
                     .username(adminUsername)
@@ -54,7 +54,7 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void signUpUser(User user) {
+    public void signUp(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(Role.USER));
         user.setAccountNonLocked(true);
@@ -110,6 +110,6 @@ public class UserService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findUserByUsername(username);
+        return userRepository.findByUsername(username).get();
     }
 }

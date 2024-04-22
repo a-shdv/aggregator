@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class StatisticsService {
@@ -18,11 +20,11 @@ public class StatisticsService {
 
     @Transactional
     public void deleteStatistics(User user) {
-        Statistics statistics = statisticsRepository.findByUsername(user.getUsername());
-        if (statistics != null) {
+        Optional<Statistics> statistics = statisticsRepository.findByUsername(user.getUsername());
+        if (statistics.isPresent()) {
             user.setStatistics(null);
             userRepository.save(user);
-            statisticsRepository.delete(statistics);
+            statisticsRepository.delete(statistics.get());
         }
     }
 
@@ -37,14 +39,14 @@ public class StatisticsService {
 
     @Transactional
     public Statistics findStatisticsByUsername(String username) {
-        return statisticsRepository.findByUsername(username);
+        return statisticsRepository.findByUsername(username).get();
     }
 
     @Transactional
     public void deleteStatistics(StatisticsDto statisticsDto) {
-        User user = userRepository.findUserByUsername(statisticsDto.getUsername());
+        User user = userRepository.findByUsername(statisticsDto.getUsername()).get();
         if (user.getStatistics() != null) {
-            Statistics statistics = statisticsRepository.findByUsername(user.getUsername());
+            Statistics statistics = statisticsRepository.findByUsername(user.getUsername()).get();
             statisticsRepository.delete(statistics);
             user.setStatistics(null);
             userRepository.save(user);

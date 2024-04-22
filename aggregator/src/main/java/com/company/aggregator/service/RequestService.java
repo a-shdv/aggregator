@@ -9,6 +9,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class RequestService {
@@ -17,11 +19,9 @@ public class RequestService {
 
     @Transactional
     public void save(RequestDto requestDto) {
-        User user = userRepository.findUserByUsername(requestDto.username());
-        Request requestFromDb = requestRepository.findByUser(user);
-        if (requestFromDb != null) {
-            requestRepository.delete(requestFromDb);
-        }
+        User user = userRepository.findByUsername(requestDto.username()).get();
+        Optional<Request> requestFromDb = requestRepository.findByUser(user);
+        requestFromDb.ifPresent(requestRepository::delete);
         Request request = Request.builder()
                 .title(requestDto.title())
                 .salary(requestDto.salary())
@@ -43,6 +43,6 @@ public class RequestService {
 
     @Transactional
     public Request findByUser(User user) {
-        return requestRepository.findByUser(user);
+        return requestRepository.findByUser(user).get();
     }
 }
