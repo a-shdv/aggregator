@@ -2,6 +2,7 @@ package com.company.aggregator.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "images")
@@ -10,15 +11,21 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString(exclude = {"data", "user"})
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Image {
-    @OneToOne(mappedBy = "avatar")
-    User user;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String type;
+    Long id;
+
+    String name;
+
+    String type;
+
     @Lob
     @Column
-    private byte[] data;
+    byte[] data;
+
+    @OneToOne
+    @JoinColumn
+    User user;
 }

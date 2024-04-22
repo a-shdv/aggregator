@@ -1,10 +1,8 @@
 package com.company.aggregator.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 
@@ -14,18 +12,27 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String title;
-    private BigDecimal salary;
-    private Boolean onlyWithSalary;
-    private Integer experience;
-    private Integer cityId;
-    private Boolean isRemoteAvailable;
-    private Integer numOfRequests;
+    Long id;
 
-    @OneToOne(mappedBy = "request")
-    private User user;
+    String title;
+
+    BigDecimal salary;
+
+    Boolean onlyWithSalary;
+
+    Integer experience;
+
+    Integer cityId;
+
+    Boolean isRemoteAvailable;
+
+    Integer numOfRequests;
+
+    @OneToOne
+    @JoinColumn
+    User user;
 }

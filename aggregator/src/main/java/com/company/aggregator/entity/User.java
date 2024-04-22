@@ -3,6 +3,7 @@ package com.company.aggregator.entity;
 import com.company.aggregator.enumeration.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -16,44 +17,43 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String email;
-    private String username;
-    private String password;
-    private boolean isAccountNonLocked;
+    Long id;
+
+    String email;
+
+    String username;
+
+    String password;
+
+    boolean isAccountNonLocked;
+
+    int numOfRequests;
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"))
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    private Set<Role> roles = new HashSet<>();
+    Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<Vacancy> vacancies = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Vacancy> vacancies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<Favourite> favourites = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Favourite> favourites = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "statistics_id", referencedColumnName = "id")
-    private Statistics statistics;
+    @OneToOne(mappedBy = "user")
+    Statistics statistics;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "avatar_id", referencedColumnName = "id")
-    private Image avatar;
+    @OneToOne(mappedBy = "user")
+    Image avatar;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "request_id", referencedColumnName = "id")
-    private Request request;
+    @OneToOne(mappedBy = "user")
+    Request request;
 
-    private int numOfRequests;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -78,9 +78,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public void incrementNumOfRequests() {
-        this.numOfRequests++;
     }
 }

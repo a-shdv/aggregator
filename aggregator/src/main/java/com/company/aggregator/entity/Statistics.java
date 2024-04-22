@@ -2,6 +2,7 @@ package com.company.aggregator.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table
@@ -11,21 +12,35 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Statistics {
-    String avgSalaryTitle;
-    String avgSalaryDescription;
-    String medianSalaryTitle;
-    String medianSalaryDescription;
-    String modalSalaryTitle;
-    String modalSalaryDescription;
-    String profession;
-    String city;
-    String year;
-    String currency;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String username;
-    @OneToOne(mappedBy = "statistics")
-    private User user;
+    Long id;
+
+    String avgSalaryTitle;
+
+    String avgSalaryDescription;
+
+    String medianSalaryTitle;
+
+    String medianSalaryDescription;
+
+    String modalSalaryTitle;
+
+    String modalSalaryDescription;
+
+    String profession;
+
+    String city;
+
+    String year;
+
+    String currency;
+
+    String username;
+
+    @OneToOne
+    @JoinColumn
+    User user;
 }
