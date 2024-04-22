@@ -25,8 +25,8 @@ public class  FavouriteService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Page<Favourite> findFavourites(User user, PageRequest pageRequest) {
-        return favouriteRepository.findByUser(user, pageRequest).get();
+    public Optional<Page<Favourite>> findFavourites(User user, PageRequest pageRequest) {
+        return favouriteRepository.findByUser(user, pageRequest);
     }
 
     @Transactional
@@ -44,19 +44,23 @@ public class  FavouriteService {
         if (favourite.isEmpty()) {
             throw new FavouriteNotFoundException("Вакансия не найдена!");
         }
-        List<Favourite> favourites = favouriteRepository.findByUser(user).get();
-        favourites.remove(favourite.get());
-        user.setFavourites(favourites);
-        userRepository.save(user);
-        favouriteRepository.deleteById(id);
+        Optional<List<Favourite>> favourites = favouriteRepository.findByUser(user);
+        if (favourites.isPresent()) {
+            favourites.get().remove(favourite.get());
+            user.setFavourites(favourites.get());
+            userRepository.save(user);
+            favouriteRepository.deleteById(id);
+        }
     }
 
     @Transactional
     public void deleteFavourites(User user) {
-        List<Favourite> favourites = favouriteRepository.findByUser(user).get();
-        favourites.clear();
-        user.setFavourites(favourites);
-        userRepository.save(user);
+        Optional<List<Favourite>> favourites = favouriteRepository.findByUser(user);
+        if (favourites.isPresent()) {
+            favourites.get().clear();
+            user.setFavourites(favourites.get());
+            userRepository.save(user);
+        }
     }
 
     @Transactional

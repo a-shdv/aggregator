@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('ADMIN')")
@@ -35,9 +37,11 @@ public class StatisticsController {
 
     @GetMapping
     public String findStatistics(@AuthenticationPrincipal User user, Model model) {
-        Statistics statistics = statisticsService.findStatisticsByUsername(user.getUsername());
+        Optional<Statistics> statistics = statisticsService.findStatisticsByUsername(user.getUsername());
         model.addAttribute("isParserAvailable", isStatisticsParserAvailable);
-        model.addAttribute("statistics", statistics);
+        if (statistics.isPresent()) {
+            model.addAttribute("statistics", statistics);
+        }
         return "statistics/statistics";
     }
 

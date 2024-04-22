@@ -45,7 +45,7 @@ public class WebsocketController {
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
     public VacancyDto receiveMessageFromWs(@RequestBody VacancyDto vacancyDto) {
-        User user = userService.findUserByUsername(vacancyDto.getUsername());
+        User user = userService.findUserByUsername(vacancyDto.getUsername()).get();
         vacancyService.deleteVacanciesByUser(user);
 
         rabbitMqService.sendToVacanciesParser(SendMessageDto.builder()
@@ -92,7 +92,7 @@ public class WebsocketController {
                     List<Favourite> favourites = null;
                     User user;
                     try {
-                        user = userService.findUserByUsername(webSocketReceiveMessageDto.getSender());
+                        user = userService.findUserByUsername(webSocketReceiveMessageDto.getSender()).get();
                         favourites = favouriteService.findByUser(user);
                     } catch (FavouritesIsEmptyException e) {
                         future.completeExceptionally(e);

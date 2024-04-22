@@ -1,8 +1,8 @@
 package com.company.aggregator.service;
 
-import com.company.aggregator.exception.VacancyNotFoundException;
 import com.company.aggregator.entity.User;
 import com.company.aggregator.entity.Vacancy;
+import com.company.aggregator.exception.VacancyNotFoundException;
 import com.company.aggregator.rabbitmq.dto.vacancies.ReceiveMessageDto;
 import com.company.aggregator.repository.UserRepository;
 import com.company.aggregator.repository.VacancyRepository;
@@ -35,7 +35,9 @@ public class VacancyService {
 
     @Transactional
     public Page<Vacancy> findVacancies(User user, PageRequest pageRequest) {
-        return vacancyRepository.findByUser(user, pageRequest).get();
+        Optional<Page<Vacancy>> vacancies = vacancyRepository.findByUser(user, pageRequest);
+        return vacancies.orElse(null);
+
     }
 
     @Transactional
@@ -47,10 +49,6 @@ public class VacancyService {
     }
 
     public Vacancy findById(Long id) throws VacancyNotFoundException {
-        Optional<Vacancy> vacancy = vacancyRepository.findById(id);
-        if (vacancy.isEmpty()) {
-            throw new VacancyNotFoundException("Вакансия не найдена!");
-        }
-        return vacancyRepository.findById(id).get();
+        return vacancyRepository.findById(id).orElseThrow(() -> new VacancyNotFoundException("Вакансия не найдена!"));
     }
 }

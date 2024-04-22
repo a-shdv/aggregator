@@ -1,6 +1,6 @@
 package com.company.aggregator.exception;
 
-public class VacancyNotFoundException extends Exception {
+public class VacancyNotFoundException extends RuntimeException {
     public VacancyNotFoundException() {
     }
 

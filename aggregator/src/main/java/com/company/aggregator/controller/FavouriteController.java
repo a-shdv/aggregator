@@ -1,10 +1,10 @@
 package com.company.aggregator.controller;
 
 import com.company.aggregator.dto.FavouriteDto;
-import com.company.aggregator.exception.FavouriteAlreadyExistsException;
-import com.company.aggregator.exception.FavouriteNotFoundException;
 import com.company.aggregator.entity.Favourite;
 import com.company.aggregator.entity.User;
+import com.company.aggregator.exception.FavouriteAlreadyExistsException;
+import com.company.aggregator.exception.FavouriteNotFoundException;
 import com.company.aggregator.service.FavouriteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +16,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -37,8 +39,10 @@ public class FavouriteController {
         if (success != null) {
             model.addAttribute("success", success);
         }
-        Page<Favourite> favourites = favouriteService.findFavourites(user, PageRequest.of(page, size));
-        model.addAttribute("favourites", favourites);
+        Optional<Page<Favourite>> favourites = favouriteService.findFavourites(user, PageRequest.of(page, size));
+        if (favourites.isPresent()) {
+            model.addAttribute("favourites", favourites);
+        }
         return "favourites/favourites";
     }
 

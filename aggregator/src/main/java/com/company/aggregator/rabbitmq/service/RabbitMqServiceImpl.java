@@ -36,7 +36,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     @RabbitListener(queues = "${rabbitmq.queue-to-receive0}")
     public void receiveVacanciesParser(List<com.company.aggregator.rabbitmq.dto.vacancies.ReceiveMessageDto> receiveMessageDtoList) {
         log.info("RECEIVED: {}", receiveMessageDtoList);
-        User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername());
+        User user = userService.findUserByUsername(receiveMessageDtoList.get(0).getUsername()).get();
         receiveMessageDtoList.removeIf(dto -> vacancyService.findBySource(dto.getSource()) != null);
         if (!receiveMessageDtoList.isEmpty()) {
             vacancyService.saveMessageList(receiveMessageDtoList, user);
@@ -52,7 +52,7 @@ public class RabbitMqServiceImpl implements RabbitMqService {
     public void receiveStatisticsParser(com.company.aggregator.rabbitmq.dto.statistics.ReceiveMessageDto message) {
         log.info("RECEIVED: {}", message);
         if (message.getUsername() != null) {
-            User user = userService.findUserByUsername(message.getUsername());
+            User user = userService.findUserByUsername(message.getUsername()).get();
             statisticsService.deleteStatistics(user);
             statisticsService.saveStatistics(user, message);
         }

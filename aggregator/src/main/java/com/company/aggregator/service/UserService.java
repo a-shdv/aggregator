@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,8 +76,8 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User findUserByUsername(String username) {
-        return (User) loadUserByUsername(username);
+    public Optional<User> findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Transactional
@@ -110,6 +111,7 @@ public class UserService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username).get();
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.orElse(null);
     }
 }

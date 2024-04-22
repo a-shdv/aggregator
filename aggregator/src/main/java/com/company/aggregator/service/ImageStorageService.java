@@ -43,6 +43,7 @@ public class ImageStorageService {
     @Transactional
     public byte[] downloadImage(String filename) {
         Optional<Image> image = imageStorageRepository.findByName(filename);
-        return ImageCompressor.decompressImage(image.get().getData()); // binary data
+        // binary data
+        return image.map(value -> ImageCompressor.decompressImage(value.getData())).orElse(null);
     }
 }

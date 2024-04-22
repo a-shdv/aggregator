@@ -19,22 +19,24 @@ public class RequestService {
 
     @Transactional
     public void save(RequestDto requestDto) {
-        User user = userRepository.findByUsername(requestDto.username()).get();
-        Optional<Request> requestFromDb = requestRepository.findByUser(user);
-        requestFromDb.ifPresent(requestRepository::delete);
-        Request request = Request.builder()
-                .title(requestDto.title())
-                .salary(requestDto.salary())
-                .onlyWithSalary(requestDto.onlyWithSalary())
-                .experience(requestDto.experience())
-                .cityId(requestDto.cityId())
-                .isRemoteAvailable(requestDto.isRemoteAvailable())
-                .numOfRequests(requestDto.numOfRequests())
-                .build();
-        request.setUser(user);
-        user.setRequest(request);
-        requestRepository.save(request);
-        userRepository.save(user);
+        Optional<User> user = userRepository.findByUsername(requestDto.username());
+        if (user.isPresent()) {
+            Optional<Request> requestFromDb = requestRepository.findByUser(user.get());
+            requestFromDb.ifPresent(requestRepository::delete);
+            Request request = Request.builder()
+                    .title(requestDto.title())
+                    .salary(requestDto.salary())
+                    .onlyWithSalary(requestDto.onlyWithSalary())
+                    .experience(requestDto.experience())
+                    .cityId(requestDto.cityId())
+                    .isRemoteAvailable(requestDto.isRemoteAvailable())
+                    .numOfRequests(requestDto.numOfRequests())
+                    .build();
+            request.setUser(user.get());
+            user.get().setRequest(request);
+            requestRepository.save(request);
+            userRepository.save(user.get());
+        }
     }
 
     public void save(Request request) {

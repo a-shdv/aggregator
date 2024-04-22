@@ -38,18 +38,20 @@ public class StatisticsService {
     }
 
     @Transactional
-    public Statistics findStatisticsByUsername(String username) {
-        return statisticsRepository.findByUsername(username).get();
+    public Optional<Statistics> findStatisticsByUsername(String username) {
+        return statisticsRepository.findByUsername(username);
     }
 
     @Transactional
     public void deleteStatistics(StatisticsDto statisticsDto) {
-        User user = userRepository.findByUsername(statisticsDto.getUsername()).get();
-        if (user.getStatistics() != null) {
-            Statistics statistics = statisticsRepository.findByUsername(user.getUsername()).get();
-            statisticsRepository.delete(statistics);
-            user.setStatistics(null);
-            userRepository.save(user);
+        Optional<User> user = userRepository.findByUsername(statisticsDto.getUsername());
+        if (user.isPresent() && user.get().getStatistics() != null) {
+            Optional<Statistics> statistics = statisticsRepository.findByUsername(user.get().getUsername());
+            if (statistics.isPresent()) {
+                statisticsRepository.delete(statistics.get());
+                user.get().setStatistics(null);
+                userRepository.save(user.get());
+            }
         }
     }
 }
