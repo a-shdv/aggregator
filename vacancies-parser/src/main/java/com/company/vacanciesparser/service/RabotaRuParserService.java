@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class RabotaRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
 
     @Async("asyncExecutor")
-    public CompletableFuture<Void> findVacancies(ReceiveMessageDto receiveMessageDto) {
+    public Future<Void> findVacancies(ReceiveMessageDto receiveMessageDto) {
         System.out.println("rabota: " + Thread.currentThread().getName());
 
         String username = receiveMessageDto.getUsername();
