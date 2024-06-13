@@ -40,7 +40,7 @@ public class StatisticsController {
         Optional<Statistics> statistics = statisticsService.findStatisticsByUsername(user.getUsername());
         model.addAttribute("isParserAvailable", isStatisticsParserAvailable);
         if (statistics.isPresent()) {
-            model.addAttribute("statistics", statistics);
+            model.addAttribute("statistics", statistics.get());
         }
         return "statistics/statistics";
     }

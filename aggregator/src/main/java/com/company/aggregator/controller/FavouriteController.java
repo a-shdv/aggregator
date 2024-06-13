@@ -41,7 +41,7 @@ public class FavouriteController {
         }
         Optional<Page<Favourite>> favourites = favouriteService.findFavourites(user, PageRequest.of(page, size));
         if (favourites.isPresent()) {
-            model.addAttribute("favourites", favourites);
+            model.addAttribute("favourites", favourites.get());
         }
         return "favourites/favourites";
     }

@@ -29,7 +29,7 @@ public class RabotaRuParserService {
     private final RabbitMqSenderService rabbitMqSenderService;
 
     @Async("asyncExecutor")
-    public Future<Void> findVacancies(ReceiveMessageDto receiveMessageDto) {
+    public CompletableFuture<Void> findVacancies(ReceiveMessageDto receiveMessageDto) {
         System.out.println("rabota: " + Thread.currentThread().getName());
 
         String username = receiveMessageDto.getUsername();
