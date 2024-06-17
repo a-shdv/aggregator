@@ -29,6 +29,16 @@ public class VacancyService {
     }
 
     @Transactional
+    public List<Vacancy> findAll() {
+        return vacancyRepository.findAll();
+    }
+
+    @Transactional
+    public Vacancy saveTest(Vacancy vacancy){
+        return vacancyRepository.save(vacancy);
+    }
+
+    @Transactional
     public Vacancy findBySource(String source) {
         return vacancyRepository.findBySource(source).orElse(null);
     }

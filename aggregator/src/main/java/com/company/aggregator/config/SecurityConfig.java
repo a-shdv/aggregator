@@ -32,6 +32,7 @@ public class SecurityConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/images/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/img/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/about/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/test/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/admin")).hasAuthority(Role.ADMIN.getAuthority())
                                 .requestMatchers(new AntPathRequestMatcher("/statistics")).hasAuthority(Role.ADMIN.getAuthority())
                                 .anyRequest().authenticated()

@@ -1,6 +1,7 @@
 package com.company.aggregator.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -44,5 +45,6 @@ public class Vacancy {
 
     @ManyToOne
     @JoinColumn
+    @JsonIgnore
     User user;
 }
